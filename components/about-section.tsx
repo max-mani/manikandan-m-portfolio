@@ -44,7 +44,7 @@ export default function AboutSection() {
               </p>
               <p className="text-green-400 text-xl">
                 <span className="text-green-500">$</span> Active on platforms like TryHackMe and Hack The Box (HTB
-                Username: manimarees #2176184).
+                Username: maxim2115 #2176184).
               </p>
               <p className="text-green-400 text-xl">
                 <span className="text-green-500">$</span> Developing skills in penetration testing, vulnerability

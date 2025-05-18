@@ -121,7 +121,7 @@ export default function ContactSection() {
                     rel="noopener noreferrer"
                   >
                     <Terminal className="h-5 w-5 mr-3 text-green-500" />
-                    HTB: manimarees (#2176184)
+                    HTB: maxim2115 (#2176184)
                   </a>
                 </div>
               </div>
@@ -158,13 +158,13 @@ export default function ContactSection() {
                     github.com/max-mani
                   </a>
                   <a
-                    href="https://leetcode.com/u/marees_2115/"
+                    href="https://leetcode.com/u/maxim2115/"
                     className="flex items-center text-gray-700 hover:text-gray-900 transition-colors text-xl"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     <Code className="h-5 w-5 mr-3 text-gray-500" />
-                    leetcode.com/u/marees_2115/
+                    leetcode.com/u/maxim2115/
                   </a>
                 </div>
               </div>
