@@ -8,6 +8,15 @@ import { Textarea } from "@/components/ui/textarea"
 import { Github, Linkedin, Mail, Terminal, Code } from "lucide-react"
 import { useInView } from "react-intersection-observer"
 import { motion } from "framer-motion"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import emailjs from '@emailjs/browser'
+
+type FormData = {
+  name: string
+  email: string
+  message: string
+}
 
 export default function ContactSection() {
   const { theme } = useTheme()
@@ -15,6 +24,37 @@ export default function ContactSection() {
     triggerOnce: false,
     threshold: 0.1,
   })
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = useForm<FormData>()
+
+  const onSubmit = async (data: FormData) => {
+    try {
+      const templateParams = {
+        from_name: data.name,
+        from_email: data.email,
+        message: data.message,
+        to_email: '19manikandan2005@gmail.com',
+      }
+
+      await emailjs.send(
+        'service_8kgavdi',
+        'template_4v43kj4',
+        templateParams,
+        'OgllbSbTWCBD5wrFd'
+      )
+      
+      toast.success("Message sent successfully!")
+      reset()
+    } catch (error) {
+      console.error('Error sending email:', error)
+      toast.error("Failed to send message. Please try again.")
+    }
+  }
 
   const variants = {
     hidden: { opacity: 0, y: 50 },
@@ -132,7 +172,7 @@ export default function ContactSection() {
           </div>
 
           <div>
-            <form className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>
                 <label
                   htmlFor="name"
@@ -150,6 +190,7 @@ export default function ContactSection() {
                       ? "bg-black border-green-500/50 text-green-400 font-mono placeholder:text-green-700"
                       : ""
                   }
+                  {...register("name", { required: "Name is required" })}
                 />
               </div>
               <div>
@@ -170,6 +211,13 @@ export default function ContactSection() {
                       ? "bg-black border-green-500/50 text-green-400 font-mono placeholder:text-green-700"
                       : ""
                   }
+                  {...register("email", { 
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Invalid email address"
+                    }
+                  })}
                 />
               </div>
               <div>
@@ -190,17 +238,22 @@ export default function ContactSection() {
                       ? "bg-black border-green-500/50 text-green-400 font-mono placeholder:text-green-700"
                       : ""
                   }
+                  {...register("message", { required: "Message is required" })}
                 />
               </div>
               <Button
                 type="submit"
+                disabled={isSubmitting}
                 className={
                   theme === "cybersecurity"
                     ? "bg-green-900/30 text-green-400 border border-green-500 hover:bg-green-900/50"
                     : ""
                 }
               >
-                {theme === "cybersecurity" ? "SEND MESSAGE" : "Send Message"}
+                {isSubmitting 
+                  ? (theme === "cybersecurity" ? "SENDING..." : "Sending...")
+                  : (theme === "cybersecurity" ? "SEND MESSAGE" : "Send Message")
+                }
               </Button>
             </form>
           </div>
