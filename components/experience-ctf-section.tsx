@@ -22,18 +22,18 @@ export default function ExperienceCtfSection() {
       period: "Oct 2024 – Feb 2025",
       description: "Contributed to drone innovation, organized workshops and events for students.",
       achievements: [],
-      image: "/placeholder.svg?height=200&width=300",
+      image: "/drone.jpg",
     },
     {
       title: "Hackathons & Competitions",
       period: "",
       description: "Participated in various hackathons and coding competitions:",
       achievements: [
-        "Sustainathon'25 Participant",
+        "UYIR'25 Hackathon Winners",
         "MathWorks Minidrone Competition 2024",
         "Winner – Python Coding Contest 2024",
       ],
-      image: "/placeholder.svg?height=200&width=300",
+      image: "/hackathon.jpeg",
     },
     {
       title: "Certifications & Courses",
@@ -44,7 +44,7 @@ export default function ExperienceCtfSection() {
         "GATE preparation for Cybersecurity at IIT",
         "Learning from Coursera, TryHackMe, Hack The Box",
       ],
-      image: "/placeholder.svg?height=200&width=300",
+      image: "/Certification.png",
     },
   ]
 
@@ -54,28 +54,28 @@ export default function ExperienceCtfSection() {
       platform: "Hack The Box",
       description: "Completed challenges involving SQL injection, XSS, and CSRF vulnerabilities.",
       techniques: ["SQL Injection", "XSS", "CSRF", "Authentication Bypass"],
-      image: "/placeholder.svg?height=200&width=300",
+      image: "/cif.jpeg",
     },
     {
       title: "Network Security",
       platform: "TryHackMe",
       description: "Solved rooms focused on network scanning, enumeration, and exploitation.",
       techniques: ["Port Scanning", "Service Enumeration", "Network Pivoting", "Traffic Analysis"],
-      image: "/placeholder.svg?height=200&width=300",
+      image: "/cif.jpeg",
     },
     {
       title: "Binary Exploitation",
       platform: "Hack The Box",
       description: "Tackled challenges involving buffer overflows and memory corruption.",
       techniques: ["Buffer Overflow", "Return-Oriented Programming", "Format String Vulnerabilities"],
-      image: "/placeholder.svg?height=200&width=300",
+      image: "/cif.jpeg",
     },
     {
       title: "Cryptography",
       platform: "TryHackMe & CTF Competitions",
       description: "Solved various cryptographic challenges and implemented secure systems.",
       techniques: ["Hash Cracking", "Encryption/Decryption", "Key Exchange", "Digital Signatures"],
-      image: "/placeholder.svg?height=200&width=300",
+      image: "/cif.jpeg",
     },
   ]
 
@@ -119,7 +119,7 @@ export default function ExperienceCtfSection() {
                   <CardContent>
                     <div className="mb-4">
                       <Image
-                        src={challenge.image || "/placeholder.svg"}
+                        src={challenge.image || "/cif.jpeg"}
                         alt={challenge.title}
                         width={300}
                         height={200}
@@ -154,7 +154,7 @@ export default function ExperienceCtfSection() {
                   </CardHeader>
                   <CardContent>
                     <Image
-                      src={exp.image || "/placeholder.svg"}
+                      src={exp.image || "/cif.jpeg"}
                       alt={exp.title}
                       width={300}
                       height={200}

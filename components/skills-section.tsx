@@ -6,6 +6,75 @@ import { Progress } from "@/components/ui/progress"
 import { useState, useEffect, useCallback } from "react"
 import { useInView } from "react-intersection-observer"
 import { motion } from "framer-motion"
+import {
+  SiPython,
+  SiJavascript,
+  SiDart,
+  SiReact,
+  SiFlutter,
+  SiNodedotjs,
+  SiFastapi,
+  SiFirebase,
+  SiMongodb,
+  SiGit,
+  SiDocker,
+  SiOpenai,
+  SiWebrtc,
+  SiWireshark,
+  SiBurpsuite,
+  SiMetasploit,
+  SiTryhackme,
+  SiHackthebox,
+  SiOwasp,
+} from "react-icons/si"
+import { 
+  FaShieldAlt, 
+  FaBug, 
+  FaTerminal, 
+  FaCode, 
+  FaNetworkWired, 
+  FaServer, 
+  FaTools 
+} from "react-icons/fa"
+
+// Icon mapping for software skills
+const softwareIcons: Record<string, any> = {
+  Python: SiPython,
+  JavaScript: SiJavascript,
+  Dart: SiDart,
+  Bash: FaTerminal,
+  "React.js": SiReact,
+  Flutter: SiFlutter,
+  "Node.js": SiNodedotjs,
+  FastAPI: SiFastapi,
+  Firebase: SiFirebase,
+  MongoDB: SiMongodb,
+  Git: SiGit,
+  Docker: SiDocker,
+  "VS Code": FaCode,
+  Postman: FaTools,
+  LLMs: SiOpenai,
+  "Image Processing": FaTerminal,
+  WebSockets: SiWebrtc,
+}
+
+// Icon mapping for security skills
+const securityIcons: Record<string, any> = {
+  Wireshark: SiWireshark,
+  "Burp Suite": SiBurpsuite,
+  Metasploit: SiMetasploit,
+  Nmap: FaNetworkWired,
+  Nikto: FaServer,
+  "Penetration Testing": FaBug,
+  CTFs: SiTryhackme,
+  "Vulnerability Scanning": FaShieldAlt,
+  Python: SiPython,
+  Bash: FaTerminal,
+  JavaScript: SiJavascript,
+  DVWA: FaServer,
+  "OWASP Juice Shop": SiOwasp,
+  "Docker-based labs": SiDocker,
+}
 
 export default function SkillsSection() {
   const { theme } = useTheme()
@@ -147,6 +216,15 @@ export default function SkillsSection() {
     visible: { opacity: 1, y: 0 },
   }
 
+  const getIcon = (skill: string) => {
+    const IconComponent = theme === "cybersecurity" ? securityIcons[skill] : softwareIcons[skill]
+    return IconComponent ? (
+      <IconComponent className="w-6 h-6 transition-transform duration-300 group-hover:scale-110" />
+    ) : (
+      <div className="w-6 h-6 bg-current opacity-50 rounded transition-transform duration-300 group-hover:scale-110" />
+    )
+  }
+
   return (
     <motion.section
       id="skills"
@@ -161,49 +239,67 @@ export default function SkillsSection() {
     >
       <div className="container mx-auto px-4">
         {theme === "cybersecurity" ? (
-          <GlitchText text="SKILLS" className="text-5xl font-mono font-bold mb-8" />
+          <GlitchText text="SKILLS" className="text-5xl font-mono font-bold mb-12 text-center" />
         ) : (
-          <h2 className="text-5xl font-bold mb-8">Skills & Technologies</h2>
+          <h2 className="text-5xl font-bold mb-12 text-center">Skills & Technologies</h2>
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {skillsData.map((category, index) => (
-            <div
+            <motion.div
               key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
               className={
                 theme === "cybersecurity"
-                  ? "border border-green-500/30 p-6 rounded-lg bg-black/50"
-                  : "border border-gray-200 p-6 rounded-lg shadow-sm"
+                  ? "border border-green-500/30 p-6 rounded-lg bg-black/50 backdrop-blur-sm hover:bg-black/70 transition-colors duration-300"
+                  : "border border-gray-200 p-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-300"
               }
             >
               {theme === "cybersecurity" ? (
                 <GlitchText
                   text={`> ${category.category.toUpperCase()}`}
-                  className="text-xl font-mono font-bold mb-4"
+                  className="text-xl font-mono font-bold mb-6 flex items-center gap-2"
                 />
               ) : (
-                <h3 className="text-xl font-semibold mb-4">{category.category}</h3>
+                <h3 className="text-xl font-semibold mb-6 flex items-center gap-2">{category.category}</h3>
               )}
 
-              <div className="space-y-4">
+              <div className="space-y-6">
                 {category.skills.map((skill, i) => (
-                  <div key={i}>
-                    <div className="flex justify-between mb-1">
-                      <span className={theme === "cybersecurity" ? "text-green-400 font-mono" : "text-gray-700"}>
-                        {skill}
-                      </span>
-                      <span className={theme === "cybersecurity" ? "text-green-500 font-mono" : "text-gray-500"}>
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: i * 0.1 }}
+                    className="group"
+                  >
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="flex items-center gap-3">
+                        <span className={`${theme === "cybersecurity" ? "text-green-400" : "text-gray-700"} transition-colors duration-300 group-hover:text-green-500`}>
+                          {getIcon(skill)}
+                        </span>
+                        <span className={`${theme === "cybersecurity" ? "text-green-400" : "text-gray-700"} font-mono transition-colors duration-300 group-hover:text-green-500`}>
+                          {skill}
+                        </span>
+                      </div>
+                      <span className={`${theme === "cybersecurity" ? "text-green-500" : "text-gray-500"} font-mono transition-colors duration-300 group-hover:text-green-400`}>
                         {Math.round(skillValues[skill] || 0)}%
                       </span>
                     </div>
                     <Progress
                       value={skillValues[skill] || 0}
-                      className={theme === "cybersecurity" ? "h-2 bg-green-900/30" : "h-2"}
+                      className={`h-2 transition-all duration-300 ${
+                        theme === "cybersecurity" 
+                          ? "bg-blue-900/80 group-hover:bg-blue-900/90" 
+                          : "group-hover:bg-gray-100"
+                      }`}
                     />
-                  </div>
+                  </motion.div>
                 ))}
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

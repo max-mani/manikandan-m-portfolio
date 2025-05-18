@@ -10,6 +10,15 @@ import Image from "next/image"
 import { useInView } from "react-intersection-observer"
 import { motion } from "framer-motion"
 
+interface Project {
+  title: string
+  description: string
+  tech: string[]
+  features: string[]
+  image: string
+  link: string
+}
+
 export default function ProjectsSection() {
   const { theme } = useTheme()
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -24,54 +33,57 @@ export default function ProjectsSection() {
   const [showLeftPaddle, setShowLeftPaddle] = useState(false)
   const [showRightPaddle, setShowRightPaddle] = useState(true)
 
-  const softwareProjects = [
+  const softwareProjects: Project[] = [
     {
       title: "Uyir – AI-Based Road Accident Detection System",
-      description:
-        "Real-time road accident detection using surveillance cameras and AI. Sends alerts to 108 services and ambulance drivers using a Flutter app.",
-      tech: ["Python", "FastAPI", "OpenCV", "Firebase", "Flutter", "Google Maps API"],
+      description: "An AI-driven system for real-time accident detection, emergency alerts, and traffic signal automation. Built for the UYIR Road Safety Hackathon 2025, it won Best Performing Team & ₹10,000. Developed using AI, FastAPI, Flutter & Firebase, it ensures faster response & safer roads.",
+      image: "/uyir-project (1).jpg",
+      link: "https://github.com/max-mani/Kapaan",
+      tech: ["Flutter", "FastAPI", "Firebase", "AI"],
       features: ["Live accident detection", "Firebase notification system", "Location tracking"],
-      image: "/placeholder.svg?height=300&width=500",
     },
     {
       title: "Hot Kore – Canteen Food Ordering Website",
-      description: "MERN stack-based ordering system with menu, cart, order tracking, and admin interface.",
-      tech: ["MongoDB", "Express", "React", "Node.js"],
+      description: "A full-stack MERN application for managing food orders, featuring user and admin interfaces for seamless order management and analytics.",
+      image: "/kore (1).png",
+      link: "https://github.com/max-mani/KoreConnect",
+      tech: ["React", "Node.js", "MongoDB", "Express"],
       features: ["Menu management", "Cart system", "Order tracking", "Admin dashboard"],
-      image: "/placeholder.svg?height=300&width=500",
     },
     {
       title: "Drone Line-Following System",
-      description:
-        "Developed a Simulink-based autonomous minidrone for line tracking using Model-Based Design for the MathWorks Minidrone Challenge.",
-      tech: ["MATLAB", "Simulink", "Embedded C"],
+      description: "A sophisticated drone system designed to autonomously follow lines using computer vision and PID control algorithms. Successfully implemented in the MathWorks Minidrone Competition 2024.",
+      image: "/parrot (1).jpg",
+      link: "https://github.com/max-mani/MinidroneCompetition",
+      tech: ["C++", "MATLAB", "PID Control", "Computer Vision"],
       features: ["Autonomous navigation", "Line detection", "Real-time control"],
-      image: "/placeholder.svg?height=300&width=500",
     },
   ]
 
-  const securityProjects = [
+  const securityProjects: Project[] = [
     {
-      title: "Website Vulnerability Scanner",
-      description:
-        "Python-based scanner for detecting XSS, SQLi, and security headers vulnerabilities in web applications.",
-      tech: ["Python", "Requests", "BeautifulSoup"],
-      features: ["XSS detection", "SQLi detection", "Security header analysis"],
-      image: "/placeholder.svg?height=300&width=500",
+      title: "Network Security Analysis Tool",
+      description: "A comprehensive network security analysis tool that performs vulnerability scanning, port enumeration, and security assessment.",
+      tech: ["Python", "Nmap", "Scapy", "SQLite"],
+      features: ["Vulnerability scanning", "Port enumeration", "Security assessment"],
+      image: "/network.jpg",
+      link: "#",
     },
     {
-      title: "CTF Labs & Writeups",
-      description: "Solved beginner-intermediate boxes on Hack The Box and documented the methodologies.",
-      tech: ["Kali Linux", "Burp Suite", "Metasploit", "Python"],
-      features: ["LFI attacks", "SSRF exploitation", "JWT Forgery", "XSS techniques"],
-      image: "/placeholder.svg?height=300&width=500",
+      title: "Web Application Firewall",
+      description: "A custom WAF implementation that protects web applications from common attacks like SQL injection and XSS.",
+      tech: ["Node.js", "Express", "Redis", "Docker"],
+      features: ["Attack detection", "Request filtering", "Rate limiting"],
+      image: "/firewall.png",
+      link: "#",
     },
     {
-      title: "Network Traffic Analyzer",
-      description: "Tool for analyzing network traffic and detecting suspicious patterns.",
-      tech: ["Python", "Scapy", "Wireshark"],
-      features: ["Packet analysis", "Traffic visualization", "Anomaly detection"],
-      image: "/placeholder.svg?height=300&width=500",
+      title: "Cryptographic File System",
+      description: "A secure file system implementation with transparent encryption and access control mechanisms.",
+      tech: ["C++", "OpenSSL", "FUSE", "Linux"],
+      features: ["Transparent encryption", "Access control", "Secure key management"],
+      image: "/crypto.jpg",
+      link: "#",
     },
   ]
 
@@ -161,6 +173,7 @@ export default function ProjectsSection() {
         })
         setCurrentIndex(prev => prev - 1)
       }
+      handleUserScroll()
     }
   }
 
@@ -186,6 +199,7 @@ export default function ProjectsSection() {
         })
         setCurrentIndex(prev => prev + 1)
       }
+      handleUserScroll()
     }
   }
 
@@ -211,7 +225,7 @@ export default function ProjectsSection() {
       animate={inView ? "visible" : "hidden"}
       variants={variants}
       transition={{ duration: 0.5 }}
-      className={`py-20 min-h-screen flex items-start ${
+      className={`py-20 min-h-screen flex items-center ${
         theme === "cybersecurity" ? "border-t border-green-500/30" : "border-t border-gray-200"
       }`}
     >
@@ -235,7 +249,7 @@ export default function ProjectsSection() {
 
             <div
               ref={carouselRef}
-              className="overflow-x-auto overflow-y-hidden h-[600px] relative"
+              className="overflow-hidden relative"
               onWheel={handleUserScroll}
               onTouchStart={handleUserScroll}
             >
@@ -288,36 +302,30 @@ export default function ProjectsSection() {
                           {project.tech.map((tech, i) => (
                             <Badge
                               key={i}
-                              variant={theme === "cybersecurity" ? "outline" : "default"}
-                              className={theme === "cybersecurity" ? "border-green-500 text-green-400" : ""}
+                              variant="outline"
+                              className={`border-${theme === "cybersecurity" ? "green" : "blue"}-500 text-${theme === "cybersecurity" ? "green" : "blue"}-400 transition-all duration-300 hover:scale-110 hover:bg-${theme === "cybersecurity" ? "green" : "blue"}-500/20 hover:shadow-lg hover:shadow-${theme === "cybersecurity" ? "green" : "blue"}-500/20`}
                             >
                               {tech}
                             </Badge>
                           ))}
                         </div>
                       </div>
-                      <div>
-                        <h4
-                          className={theme === "cybersecurity" ? "text-green-500 font-mono mb-2" : "font-semibold mb-2"}
-                        >
-                          {theme === "cybersecurity" ? "> FEATURES:" : "Features:"}
-                        </h4>
-                        <ul
-                          className={
-                            theme === "cybersecurity"
-                              ? "list-disc list-inside text-green-400 font-mono"
-                              : "list-disc list-inside text-gray-600"
-                          }
-                        >
-                          {project.features.map((feature, i) => (
-                            <li key={i}>{feature}</li>
-                          ))}
-                        </ul>
-                      </div>
+                      {project.features && (
+                        <div className="mt-4">
+                          <h4 className="font-semibold mb-2">Key Features:</h4>
+                          <ul className="list-disc list-inside text-gray-600">
+                            {project.features.map((feature: string, i: number) => (
+                              <li key={i}>{feature}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
                     </CardContent>
                     <CardFooter className="flex justify-end gap-2">
                       <a
-                        href="#"
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className={
                           theme === "cybersecurity"
                             ? "text-green-500 hover:text-green-400"
