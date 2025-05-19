@@ -23,7 +23,7 @@ export default function HeroSection() {
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
 
-    const fontSize = 14
+    const fontSize = 20
     const columns = canvas.width / fontSize
 
     const drops: number[] = []
@@ -36,7 +36,7 @@ export default function HeroSection() {
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
       ctx.fillStyle = "#0f0"
-      ctx.font = `${fontSize}px monospace`
+      ctx.font = `bold ${fontSize}px monospace`
 
       for (let i = 0; i < drops.length; i++) {
         const text = String.fromCharCode(Math.random() * 128)
@@ -48,6 +48,17 @@ export default function HeroSection() {
 
         drops[i]++
       }
+
+      // Trigger text glitch effect
+      const glitchElements = document.querySelectorAll('.glitch-text')
+      glitchElements.forEach(element => {
+        if (Math.random() > 0.95) {
+          element.classList.add('glitch-active')
+          setTimeout(() => {
+            element.classList.remove('glitch-active')
+          }, 100)
+        }
+      })
     }
 
     const interval = setInterval(matrix, 50)
@@ -113,7 +124,7 @@ export default function HeroSection() {
 
           <div className="md:w-1/2 order-1 md:order-2 flex justify-center">
             {theme === "cybersecurity" ? (
-              <div className="relative w-64 h-64 md:w-80 md:h-80 overflow-hidden rounded-lg border-2 border-green-500 glitch-container">
+              <div className="relative w-64 h-64 md:w-80 md:h-80 overflow-hidden rounded-lg border-2 border-green-500 glitch-container eye-glitch-container">
                 <div className="absolute inset-0 glitch-image">
                   <Image
                     src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/tmp_906cc714-df9c-43cd-ae43-ddcb23359be5-f7TXD45HUFxix0pxV1pv1ZPMhewAj7.jpeg"
@@ -124,6 +135,7 @@ export default function HeroSection() {
                   />
                   <div className="absolute inset-0 bg-green-500/10"></div>
                   <div className="absolute inset-0 glitch-lines"></div>
+                  <div className="eye-glitch"></div>
                 </div>
               </div>
             ) : (

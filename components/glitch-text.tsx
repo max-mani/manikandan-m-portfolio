@@ -19,13 +19,13 @@ export default function GlitchText({ text, className = "" }: GlitchTextProps) {
     if (theme !== "cybersecurity" || !textRef.current) return
 
     const interval = setInterval(() => {
-      if (Math.random() > 0.95) {
+      if (Math.random() > 0.98) {
         textRef.current!.classList.add("glitch-active")
         setTimeout(() => {
           textRef.current?.classList.remove("glitch-active")
-        }, 100)
+        }, 50)
       }
-    }, 500)
+    }, 1000)
 
     return () => clearInterval(interval)
   }, [theme])
