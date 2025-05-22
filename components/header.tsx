@@ -48,7 +48,9 @@ export default function Header() {
             {navItems.map((item) => (
               <li key={item}>
                 {theme === "cybersecurity" ? (
-                  <GlitchText text={item} className="cursor-pointer hover:text-green-400 transition-colors" />
+                  <a href={`#${item.toLowerCase()}`} className="hover:text-green-400 transition-colors">
+                    <GlitchText text={item} />
+                  </a>
                 ) : (
                   <a href={`#${item.toLowerCase()}`} className="hover:text-gray-600 transition-colors">
                     {item}
@@ -71,7 +73,13 @@ export default function Header() {
             {navItems.map((item) => (
               <li key={item}>
                 {theme === "cybersecurity" ? (
-                  <GlitchText text={item} className="cursor-pointer hover:text-green-400 transition-colors" />
+                  <a
+                    href={`#${item.toLowerCase()}`}
+                    className="hover:text-green-400 transition-colors block"
+                    onClick={toggleMenu}
+                  >
+                    <GlitchText text={item} />
+                  </a>
                 ) : (
                   <a
                     href={`#${item.toLowerCase()}`}
