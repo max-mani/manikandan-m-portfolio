@@ -9,7 +9,15 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "Manikandan M - Portfolio",
   description: "Software Engineer & Cybersecurity Specialist",
-    generator: 'v0.dev'
+  generator: 'v0.dev',
+  icons: {
+    icon: [
+      {
+        url: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/tmp_906cc714-df9c-43cd-ae43-ddcb23359be5-f7TXD45HUFxix0pxV1pv1ZPMhewAj7.jpeg",
+        type: "image/jpeg",
+      },
+    ],
+  },
 }
 
 export default function RootLayout({
