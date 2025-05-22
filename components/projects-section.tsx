@@ -32,6 +32,7 @@ export default function ProjectsSection() {
       tech: ["Python", "FastAPI", "OpenCV", "Firebase", "Flutter", "Google Maps API"],
       features: ["Live accident detection", "Firebase notification system", "Location tracking"],
       image: "/uyir-project (1).jpg",
+      github: "https://github.com/max-mani/Kapaan"
     },
     {
       title: "Hot Kore – Canteen Food Ordering Website",
@@ -39,6 +40,7 @@ export default function ProjectsSection() {
       tech: ["MongoDB", "Express", "React", "Node.js"],
       features: ["Menu management", "Cart system", "Order tracking", "Admin dashboard"],
       image: "/kore (1).png",
+      github: "https://github.com/max-mani/KoreConnect"
     },
     {
       title: "Drone Line-Following System",
@@ -47,31 +49,35 @@ export default function ProjectsSection() {
       tech: ["MATLAB", "Simulink", "Embedded C"],
       features: ["Autonomous navigation", "Line detection", "Real-time control"],
       image: "/parrot (1).jpg",
+      github: "https://github.com/max-mani/MinidroneCompetition"
     },
   ]
 
   const securityProjects = [
     {
-      title: "Website Vulnerability Scanner",
+      title: "Network Security Analysis Tool",
       description:
         "Python-based scanner for detecting XSS, SQLi, and security headers vulnerabilities in web applications.",
       tech: ["Python", "Requests", "BeautifulSoup"],
       features: ["XSS detection", "SQLi detection", "Security header analysis"],
       image: "/network.jpg",
+      github: "https://github.com/max-mani/WebVulnScanner"
     },
     {
-      title: "CTF Labs & Writeups",
-      description: "Solved beginner-intermediate boxes on Hack The Box and documented the methodologies.",
-      tech: ["Kali Linux", "Burp Suite", "Metasploit", "Python"],
-      features: ["LFI attacks", "SSRF exploitation", "JWT Forgery", "XSS techniques"],
-      image: "/hackathon.jpeg",
-    },
-    {
-      title: "Network Traffic Analyzer",
-      description: "Tool for analyzing network traffic and detecting suspicious patterns.",
-      tech: ["Python", "Scapy", "Wireshark"],
-      features: ["Packet analysis", "Traffic visualization", "Anomaly detection"],
+      title: "Web Application Firewall",
+      description: "A custom WAF implementation that protects web applications from common attacks like SQL injection and XSS.",
+      tech: ["Node.js", "Express", "Redis", "Docker"],
+      features: ["Attack detection", "Request filtering", "Rate limiting"],
       image: "/firewall.png",
+      github: "https://github.com/max-mani/CTF-Writeups"
+    },
+    {
+      title: "Cryptographic File System",
+      description: "A secure file system implementation with transparent encryption and access control mechanisms.",
+      tech: ["C++", "OpenSSL", "FUSE", "Linux"],
+      features: ["Transparent encryption", "Access control", "Secure key management"],
+      image: "/crypto.jpg",
+      github: "https://github.com/max-mani/NetworkAnalyzer"
     },
   ]
 
@@ -250,7 +256,9 @@ export default function ProjectsSection() {
                       </CardContent>
                       <CardFooter className="flex justify-end gap-2">
                         <a
-                          href="#"
+                          href={project.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className={
                             theme === "cybersecurity"
                               ? "text-green-500 hover:text-green-400"
@@ -258,16 +266,6 @@ export default function ProjectsSection() {
                           }
                         >
                           <Github size={20} />
-                        </a>
-                        <a
-                          href="#"
-                          className={
-                            theme === "cybersecurity"
-                              ? "text-green-500 hover:text-green-400"
-                              : "text-gray-600 hover:text-gray-900"
-                          }
-                        >
-                          <ExternalLink size={20} />
                         </a>
                       </CardFooter>
                     </Card>
