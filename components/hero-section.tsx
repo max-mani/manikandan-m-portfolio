@@ -84,7 +84,7 @@ export default function HeroSection() {
 
       <div className="container mx-auto px-4 z-10 py-20">
         <div className="flex flex-col md:flex-row items-center gap-8">
-          <div className="md:w-1/2 order-2 md:order-1">
+          <div className="md:w-1/2 order-2 md:order-2">
             {theme === "cybersecurity" ? (
               <>
                 <GlitchText text="MANIKANDAN M" className="text-4xl md:text-5xl font-mono font-bold mb-4" />
@@ -122,7 +122,7 @@ export default function HeroSection() {
             )}
           </div>
 
-          <div className="md:w-1/2 order-1 md:order-2 flex justify-center">
+          <div className="md:w-1/2 order-1 md:order-1 flex justify-center">
             {theme === "cybersecurity" ? (
               <div className="relative w-64 h-64 md:w-80 md:h-80 overflow-hidden rounded-lg border-2 border-green-500 glitch-container eye-glitch-container">
                 <div className="absolute inset-0 glitch-image">
