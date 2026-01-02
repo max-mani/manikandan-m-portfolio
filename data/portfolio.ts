@@ -268,8 +268,8 @@ export const skills: SkillsData = {
       { name: "Machine Learning Fundamentals", level: "Intermediate", percentage: 70 },
       { name: "Computer Vision & Image Processing", level: "Intermediate", percentage: 75 },
       { name: "Accident Detection & Video Analytics", level: "Applied ML" },
-      { name: "Model Training, Evaluation & Optimization" },
-      { name: "Data Analysis with Pandas & NumPy" },
+      { name: "Model Training, Evaluation & Optimization", level: "Intermediate" },
+      { name: "Data Analysis with Pandas & NumPy", level: "Intermediate" },
       { name: "scikit-learn", level: "Intermediate", percentage: 70 }
     ],
     "Cybersecurity": [
@@ -286,17 +286,17 @@ export const skills: SkillsData = {
       { name: "Git & GitHub", level: "Advanced" },
       { name: "Docker", level: "Foundational" },
       { name: "Linux", level: "Advanced" },
-      { name: "GDB, Radare2, Objdump (Reverse Engineering)" },
-      { name: "Burp Suite, Nmap (Security Testing)" },
-      { name: "Postman (API Testing)" },
-      { name: "VS Code, Android Studio" }
+      { name: "GDB, Radare2, Objdump (Reverse Engineering)", level: "Intermediate" },
+      { name: "Burp Suite, Nmap (Security Testing)", level: "Intermediate" },
+      { name: "Postman (API Testing)", level: "Intermediate" },
+      { name: "VS Code, Android Studio", level: "Advanced" }
     ],
     "Soft Skills": [
-      { name: "Problem Solving & Analytical Thinking" },
-      { name: "Team Collaboration & Leadership" },
-      { name: "Rapid Learning & Adaptability" },
-      { name: "Technical Documentation" },
-      { name: "Competitive Mindset (Hackathons & CTFs)" }
+      { name: "Problem Solving & Analytical Thinking", level: "Advanced" },
+      { name: "Team Collaboration & Leadership", level: "Intermediate" },
+      { name: "Rapid Learning & Adaptability", level: "Advanced" },
+      { name: "Technical Documentation", level: "Intermediate" },
+      { name: "Competitive Mindset (Hackathons & CTFs)", level: "Advanced" }
     ]
   }
 };
