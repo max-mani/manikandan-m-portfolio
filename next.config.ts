@@ -1,9 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Explicitly configure Turbopack to silence dev mode warnings
-  // Production builds (next build) use webpack by default
-  turbopack: {},
+  /* config options here */
+  // Turbopack is disabled via NEXT_EXPERIMENTAL_TURBOPACK=false in netlify.toml
+  // This ensures webpack is used for production builds on Netlify
 };
 
 export default nextConfig;

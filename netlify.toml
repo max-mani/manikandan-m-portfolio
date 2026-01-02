@@ -7,4 +7,6 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  # Disable Turbopack for production builds to avoid build errors
+  NEXT_EXPERIMENTAL_TURBOPACK = "false"
 
