@@ -16,9 +16,6 @@ export const metadata: Metadata = {
   title: "Manikandan M - Portfolio",
   description: "Full Stack & Mobile Application Developer | Application Security Analyst | Cybersecurity & AI Enthusiast",
   keywords: ["portfolio", "developer", "cybersecurity", "full stack", "mobile development"],
-  icons: {
-    icon: "/icon.ico",
-  },
 };
 
 export const viewport: Viewport = {
