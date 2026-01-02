@@ -1,0 +1,153 @@
+@import "tailwindcss";
+
+:root {
+  --background: #000000;
+  --foreground: #00ff00;
+  --terminal-green: #00ff00;
+  --terminal-cyan: #00ffff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-mono);
+}
+
+body {
+  background: #000000;
+  color: #f5f5f5;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  overflow: hidden;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+}
+
+/* Terminal styling */
+.terminal {
+  font-family: var(--font-mono), 'Courier New', monospace;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #111111;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00ffff;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00ff00;
+}
+
+/* Glassmorphism effect */
+.glass {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Glow effects */
+.glow-green {
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+.glow-cyan {
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+/* Scanline effect (optional) */
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+.scanline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(0, 255, 0, 0.1);
+  animation: scanline 8s linear infinite;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* Eye glitch effect */
+.eye-glitch {
+  background: rgba(0, 255, 0, 0.2);
+  pointer-events: none;
+  z-index: 2;
+  animation: eyeGlitch 0.5s infinite;
+  clip-path: polygon(0px 0px, 100% 0px, 100% 100%, 0px 100%);
+}
+
+.eye-glitch svg {
+  filter: drop-shadow(0 0 3px #00ff00);
+}
+
+@keyframes eyeGlitch {
+  0% {
+    transform: translate(0, 0);
+    clip-path: polygon(0px 0px, 100% 0px, 100% 100%, 0px 100%);
+  }
+  10% {
+    transform: translate(2px, -2px);
+    clip-path: polygon(0px 2px, 100% 0px, 98% 100%, 2px 98%);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+    clip-path: polygon(2px 0px, 98% 2px, 100% 98%, 0px 100%);
+  }
+  30% {
+    transform: translate(1px, -1px);
+    clip-path: polygon(0px 1px, 99% 0px, 99% 100%, 1px 99%);
+  }
+  40% {
+    transform: translate(-1px, 1px);
+    clip-path: polygon(1px 0px, 100% 1px, 99% 99%, 0px 100%);
+  }
+  50% {
+    transform: translate(2px, 1px);
+    clip-path: polygon(0px 0px, 98% 1px, 100% 99%, 2px 100%);
+  }
+  60% {
+    transform: translate(-2px, -1px);
+    clip-path: polygon(2px 1px, 100% 0px, 98% 100%, 0px 99%);
+  }
+  70% {
+    transform: translate(1px, 2px);
+    clip-path: polygon(0px 0px, 99% 2px, 99% 98%, 1px 100%);
+  }
+  80% {
+    transform: translate(-1px, -2px);
+    clip-path: polygon(1px 2px, 100% 0px, 99% 100%, 0px 98%);
+  }
+  90% {
+    transform: translate(2px, -1px);
+    clip-path: polygon(0px 1px, 98% 0px, 100% 99%, 2px 100%);
+  }
+  100% {
+    transform: translate(0, 0);
+    clip-path: polygon(0px 0px, 100% 0px, 100% 100%, 0px 100%);
+  }
+}
