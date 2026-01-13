@@ -437,8 +437,8 @@ export const certifications: Certification[] = [
 export const contact: ContactData = {
   email: "19manikandan2005@gmail.com",
   social: {
-    github: "https://github.com/Manikandan-M",
+    github: "https://github.com/max-mani",
     linkedin: "https://www.linkedin.com/in/19manikandan-m",
-    portfolio: "https://maxmani/"
+    portfolio: "https://maxmani.in/"
   }
 };

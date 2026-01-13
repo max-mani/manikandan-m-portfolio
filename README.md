@@ -127,7 +127,7 @@ The project can be deployed on any platform that supports Next.js:
 ## 📧 Contact
 
 - **Email**: 19manikandan2005@gmail.com
-- **GitHub**: [@Manikandan-M](https://github.com/Manikandan-M)
+- **GitHub**: [@max-mani](https://github.com/max-mani)
 - **LinkedIn**: [19manikandan-m](https://www.linkedin.com/in/19manikandan-m)
 
 ## 📄 License
