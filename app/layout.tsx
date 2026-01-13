@@ -17,7 +17,13 @@ export const metadata: Metadata = {
   description: "Full Stack & Mobile Application Developer | Application Security Analyst | Cybersecurity & AI Enthusiast",
   keywords: ["portfolio", "developer", "cybersecurity", "full stack", "mobile development"],
   icons: {
-    icon: "/icon.jpg",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.ico", sizes: "any" },
+      { url: "/icon.jpg", type: "image/jpeg" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/icon.jpg",
   },
 };
 
