@@ -28,8 +28,18 @@ export const metadata: Metadata = {
   title: "Manikandan M - Portfolio",
   description: "Full Stack & Mobile Application Developer | Application Security Analyst | Cybersecurity & AI Enthusiast",
   keywords: ["portfolio", "developer", "cybersecurity", "full stack", "mobile development"],
+  metadataBase: new URL("https://maxmani.in"),
+  alternates: {
+    canonical: "/",
+  },
   icons: {
-    icon: "/icon.ico",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.ico", sizes: "any" },
+      { url: "/icon.jpg", type: "image/jpeg" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/icon.jpg",
   },
 };
 
