@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maxim ~ Cyber Terminal</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --g:#00ff41;--gdim:#00aa2a;--gglow:rgba(0,255,65,0.13);
+  --c:#00e5ff;--y:#ffe600;--r:#ff3c3c;--m:#ff00ff;
+  --bg:#020d04;--panel:rgba(0,18,4,0.95);--border:#00ff4130;
+}
+
+html,body{height:100%;background:var(--bg);color:var(--g);font-family:'Share Tech Mono',monospace;overflow:hidden}
+
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.14) 2px,rgba(0,0,0,0.14) 4px);pointer-events:none;z-index:9999}
+body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,0.65) 100%);pointer-events:none;z-index:9998;animation:flicker 10s infinite}
+@keyframes flicker{0%,97%,100%{opacity:1}98.5%{opacity:0.82}}
+
+/* BOOT */
+#boot{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5000;font-size:0.85rem}
+#boot-lines{width:560px;max-width:92vw}
+.bl{overflow:hidden;white-space:nowrap;height:1.7em;opacity:0}
+.bl.show{animation:tyIn 0.5s steps(60,end) forwards}
+@keyframes tyIn{from{width:0;opacity:1}to{width:100%;opacity:1}}
+#boot-bar-wrap{margin-top:20px;width:560px;max-width:92vw}
+#boot-bar-label{font-size:0.72rem;color:var(--gdim);margin-bottom:5px}
+#boot-bar-out{height:5px;background:#001a05;border:1px solid var(--border);overflow:hidden}
+#boot-bar-fill{height:100%;width:0;background:var(--g);box-shadow:0 0 8px var(--g);transition:width 0.07s linear}
+#boot{animation:bootOut 0.3s ease 5.4s forwards}
+@keyframes bootOut{to{opacity:0;pointer-events:none;visibility:hidden}}
+
+/* TERMINAL */
+#terminal{display:flex;flex-direction:column;height:100vh;opacity:0;animation:fadeIn 0.5s ease 5.7s forwards}
+@keyframes fadeIn{to{opacity:1}}
+
+#titlebar{background:#001a05;border-bottom:1px solid var(--border);padding:5px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.dot{width:11px;height:11px;border-radius:50%}
+.dot.r{background:var(--r);box-shadow:0 0 5px var(--r)}
+.dot.y{background:var(--y);box-shadow:0 0 5px var(--y)}
+.dot.g{background:var(--g);box-shadow:0 0 5px var(--g)}
+#tb-title{flex:1;text-align:center;font-size:0.72rem;color:var(--gdim);letter-spacing:3px}
+#tb-time{font-size:0.7rem;color:var(--gdim)}
+
+#main{display:grid;grid-template-columns:280px 1fr;flex:1;overflow:hidden}
+
+/* LEFT */
+#left{border-right:1px solid var(--border);background:var(--panel);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0}
+
+#ascii-wrap{flex:1;overflow:hidden;display:flex;align-items:flex-start;justify-content:center;padding:6px 2px 0;min-height:0}
+#ascii-art{font-family:'Share Tech Mono',monospace;font-size:3.6px;line-height:1.05;letter-spacing:0.2px;color:var(--g);text-shadow:0 0 3px var(--g);white-space:pre;animation:glow 4s ease-in-out infinite}
+@keyframes glow{0%,100%{text-shadow:0 0 3px var(--g)}50%{text-shadow:0 0 9px var(--g),0 0 18px var(--gdim)}}
+
+#left-info{padding:8px 14px;border-top:1px solid var(--border);flex-shrink:0}
+#lname{font-family:'VT323',monospace;font-size:1.55rem;color:var(--c);text-shadow:0 0 10px var(--c);letter-spacing:3px}
+#lrole{font-size:0.62rem;color:var(--gdim);letter-spacing:1px;margin-bottom:8px}
+.stat{font-size:0.63rem;color:var(--gdim);margin-bottom:2px}
+.stat span{color:var(--g)}
+.online{color:#00ff88 !important}
+
+#left-btns{padding:8px 14px 12px;display:flex;gap:8px;border-top:1px solid var(--border);flex-shrink:0}
+.lbtn{flex:1;padding:7px 4px;background:transparent;border:1px solid var(--border);color:var(--gdim);font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:1px;cursor:pointer;text-align:center;transition:all 0.2s;border-radius:2px}
+.lbtn.con:hover{color:var(--c);border-color:var(--c);text-shadow:0 0 8px var(--c);background:rgba(0,229,255,0.07)}
+.lbtn.msg:hover{color:var(--m);border-color:var(--m);text-shadow:0 0 8px var(--m);background:rgba(255,0,255,0.07)}
+
+/* RIGHT */
+#right{display:flex;flex-direction:column;overflow:hidden}
+
+#welcome{padding:5px 18px;background:#010f03;border-bottom:1px solid var(--border);font-size:0.68rem;color:var(--gdim);flex-shrink:0;white-space:nowrap;overflow:hidden;position:relative}
+#welcome-inner{display:inline-block;animation:scroll 30s linear infinite}
+@keyframes scroll{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+
+#output{flex:1;overflow-y:auto;padding:14px 18px;scroll-behavior:smooth}
+#output::-webkit-scrollbar{width:3px}
+#output::-webkit-scrollbar-thumb{background:var(--gdim)}
+
+.line{font-size:0.79rem;line-height:1.75;white-space:pre-wrap;word-break:break-word}
+.prompt{color:var(--g)}.prompt::before{content:'maxim@terminal:~$ ';color:var(--c)}
+.out{color:#88ff99;padding-left:2px}
+.hdr{color:var(--c);font-family:'VT323',monospace;font-size:1.05rem;letter-spacing:2px}
+.acc{color:var(--y)}.dim{color:var(--gdim)}.err{color:var(--r)}.ok{color:#00ff88}.mg{color:var(--m)}
+
+.sbar-row{margin:2px 0;font-size:0.71rem}
+.sbar-lbl{color:var(--gdim);display:inline-block;width:130px}
+.sbar{display:inline-block;background:#001a05;height:7px;width:145px;vertical-align:middle;border:1px solid #004410;overflow:hidden}
+.sbar-fill{height:100%;background:var(--g);box-shadow:0 0 5px var(--g);animation:fillA 1s ease both}
+@keyframes fillA{from{width:0!important}}
+
+#hints{padding:3px 18px 5px;display:flex;gap:5px;flex-wrap:wrap;background:#010b03;border-top:1px solid var(--border);flex-shrink:0}
+.hint{font-size:0.62rem;color:var(--gdim);cursor:pointer;border:1px solid #002808;padding:1px 7px;border-radius:2px;transition:all 0.15s}
+.hint:hover{color:var(--g);border-color:var(--g);background:var(--gglow)}
+
+#input-bar{border-top:1px solid var(--border);padding:8px 18px;display:flex;align-items:center;gap:8px;background:#010b03;flex-shrink:0}
+#plbl{color:var(--c);font-size:0.79rem;white-space:nowrap}
+#cmd{flex:1;background:transparent;border:none;outline:none;color:var(--g);font-family:'Share Tech Mono',monospace;font-size:0.79rem;caret-color:var(--g)}
+#cmd::placeholder{color:#003a10}
+
+#mc{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;opacity:0.04}
+
+/* MODAL */
+#modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:4000;align-items:center;justify-content:center}
+#modal.open{display:flex}
+#mbox{background:#020d04;border:1px solid var(--g);box-shadow:0 0 40px rgba(0,255,65,0.15);padding:26px 30px;width:400px;max-width:90vw;position:relative}
+#mtitle{font-family:'VT323',monospace;font-size:1.45rem;margin-bottom:14px;letter-spacing:2px}
+.mfield{margin-bottom:11px}
+.mlabel{color:var(--gdim);font-size:0.67rem;margin-bottom:3px}
+.minput,.mtextarea{width:100%;background:#010f03;border:1px solid var(--border);color:var(--g);font-family:'Share Tech Mono',monospace;font-size:0.73rem;padding:6px 8px;outline:none;resize:none}
+.minput:focus,.mtextarea:focus{border-color:var(--g);box-shadow:0 0 6px var(--gglow)}
+.mtextarea{height:80px}
+#mclose{position:absolute;top:9px;right:13px;background:none;border:none;color:var(--gdim);cursor:pointer;font-size:1rem;font-family:'Share Tech Mono',monospace}
+#mclose:hover{color:var(--r)}
+.mbtn{margin-top:6px;background:transparent;font-family:'Share Tech Mono',monospace;font-size:0.73rem;padding:6px 18px;cursor:pointer;letter-spacing:1px;transition:all 0.2s}
+.mbtn.g{border:1px solid var(--g);color:var(--g)}.mbtn.g:hover{background:var(--gglow)}
+.mbtn.m{border:1px solid var(--m);color:var(--m)}.mbtn.m:hover{background:rgba(255,0,255,0.07)}
+.mbtn.c{border:1px solid var(--c);color:var(--c)}
+</style>
+</head>
+<body>
+<canvas id="mc"></canvas>
+
+<!-- BOOT -->
+<div id="boot">
+  <div id="boot-lines">
+    <div class="bl" id="b0">&gt; BOOTING MAXIM-PORTFOLIO TERMINAL [1984 MODE]...</div>
+    <div class="bl" id="b1">&gt; Loading cyber modules...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#00ff88">OK</span></div>
+    <div class="bl" id="b2">&gt; Initializing neon grid...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#00ff88">OK</span></div>
+    <div class="bl" id="b3">&gt; Client IP: <span style="color:#00e5ff">2401:4900:cae7:3247:99fd:5baa:86d7:7432</span></div>
+    <div class="bl" id="b4">&gt; Client Location: <span style="color:#ffe600">Chennai, India</span></div>
+    <div class="bl" id="b5">&gt; Mounting /home/maxim...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#00ff88">OK</span></div>
+    <div class="bl" id="b6">&gt; Launching terminal interface...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#00ff88">OK</span></div>
+  </div>
+  <div id="boot-bar-wrap">
+    <div id="boot-bar-label">&gt; SYSTEM INIT [<span id="bpct">0</span>%]</div>
+    <div id="boot-bar-out"><div id="boot-bar-fill"></div></div>
+  </div>
+</div>
+
+<!-- TERMINAL -->
+<div id="terminal">
+  <div id="titlebar">
+    <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+    <div id="tb-title">maxim@portfolio ~ bash — CYBER TERMINAL 1984</div>
+    <div id="tb-time"></div>
+  </div>
+
+  <div id="main">
+    <div id="left">
+      <div id="ascii-wrap"><pre id="ascii-art"></pre></div>
+      <div id="left-info">
+        <div id="lname">MANIKANDAN</div>
+        <div id="lrole">> MAXIM | Full Stack Dev</div>
+        <div class="stat">OS: <span>Ubuntu 24.04 LTS</span></div>
+        <div class="stat">Shell: <span>bash 5.2</span></div>
+        <div class="stat">Location: <span>Chennai, IN</span></div>
+        <div class="stat">Status: <span class="online">● ONLINE</span></div>
+      </div>
+      <div id="left-btns">
+        <button class="lbtn con" onclick="openModal('contact')">[ CONTACT ]</button>
+        <button class="lbtn msg" onclick="openModal('message')">[ MESSAGE ]</button>
+      </div>
+    </div>
+
+    <div id="right">
+      <div id="welcome">
+        <span id="welcome-inner">&gt;&gt; Welcome to Maxim's cyber terminal. Type "help" to see available commands. &nbsp;|&nbsp; Chennai, India &nbsp;|&nbsp; 1984 MODE ACTIVE &nbsp;|&nbsp; ALL SYSTEMS NOMINAL &nbsp;|&nbsp; IP: 2401:4900:cae7:3247:99fd:5baa:86d7:7432 &nbsp;|&nbsp;&nbsp;</span>
+      </div>
+      <div id="output"></div>
+      <div id="hints">
+        <span class="hint" onclick="runCmd('whoami')">whoami</span>
+        <span class="hint" onclick="runCmd('skills')">skills</span>
+        <span class="hint" onclick="runCmd('projects')">projects</span>
+        <span class="hint" onclick="runCmd('education')">education</span>
+        <span class="hint" onclick="runCmd('experience')">experience</span>
+        <span class="hint" onclick="runCmd('contact')">contact</span>
+        <span class="hint" onclick="runCmd('clear')">clear</span>
+        <span class="hint" onclick="runCmd('help')">help</span>
+      </div>
+      <div id="input-bar">
+        <span id="plbl">maxim@terminal:~$</span>
+        <input id="cmd" type="text" autocomplete="off" spellcheck="false" placeholder="enter command...">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div id="modal">
+  <div id="mbox">
+    <button id="mclose" onclick="closeModal()">[ X ]</button>
+    <div id="mtitle"></div>
+    <div id="mbody"></div>
+  </div>
+</div>
+
+<script>
+// ── ASCII ART (from uploaded ascii-art.txt, trimmed) ──────────────────
+const RAW_ASCII = `                                                          @@@@@@@@@@@@@@@@@                                                                           
+                                                       @@@@@-@+   @=.=*%@@@@@@@@@@@@@                                                                 
+                                                      %@-*%@-=@+*- .*    :-. .   -**@@@@%                                                             
+                                                     @@+++- =  :@+-+. .+%:.*@%@#-  ::--@@@@@@                                                         
+                                                   @@@=      +* @:                ..  .+   =@@@                                                       
+                                                 +@@@ .-:@@=-*=         :            .:  -    .@@                                                     
+                                                @@%          .            :              .++ -  @@@                                                   
+                                              =@@-+ @=                 :     .             +#+    @@                                                  
+                                              @@     .                  .     +-         .. .-%*+  @                                                  
+                                             +@   .                :                              *@                                                  
+                                             +@. .=          ::         .                    +=-  #@.                                                 
+                                              @@        .        -#@@@@@@@@@@@@@@@@@       .      *@                                                  
+                                               @@:    :.   ..-@@@@@@@%@@%#*#@%%@@@@@@@.      .:.  =@+                                                 
+                                                @@   .    =+==..:::+=-:=+#**=*+*+*%%*#%-=    -.-+  @@                                                 
+                                                *@       =--:::-.:-==**-##+##%#*+-.:.=+**          @@                                                 
+                                                =@       --::=::=+##%@@@@%%%%@@@@@@@%**+%@        :@@                                                 
+                                                -@       =-.  -+@@@@@@@@@@@@@@@@@@@@%%#+*%@     -  @@                                                 
+                                                 @@     .-: .*@@*:**#@@@@@@@@@@@#@@@@@@+==@.    .  @%                                                 
+                                                 *@     +--@@@@#****++++=:  =+--+#@@@@@@@=#%  ::  :@.                                                 
+                                                  @     #=@                              @%@      @@                                                  
+                                                  @@    @@- =@@+.        +-.       -+%#:  @@-     @:                                                  
+                                                 =@@    @%         @     @@+     *      -:+@@     @                                                   
+                                                @@      @+     --.      @@@#+     :%@#::  -@@  @@-@@@                                                 
+                                               :@   @#  @+=#%#:   =+@#: *@@@#%@@@     +@@@@%@       @@                                                
+                                               #@ +@-  .@***@@@@@@@@@  .@@%@+==@@@@@@@@@@@@@@- @@@@  @                                                
+                                               .@ -   = @-:=%@@@@@@* @@@@@@@@@@=  @@@@@@*+*%@:    @ @@                                                
+                                                @@ = -  @.-+=++.:. :*@#*=:=+%@@@#   -*#+#%*#@  @  --@@                                                
+                                                -@+ @@  @..-. -   :-=    **.   %@@@  :-=+*-*@ -#+%%@#                                                 
+                                                 @@: :  +. :   .+ =*+=         @@@%@+   - :*  @@+@@@                                                  
+                                                  @@@@@@:           ==   :++  =*%   :-   .:+@@+%@@@                                                   
+                                                       @@ ..  ..     =@@@: @@@%      *: :-= @-%@%                                                     
+                                                       +@ .::.:-.=@#=-:*@@@@- +@@@@:+*:-++ @@                                                         
+                                                        @@ :==::.  :=-       :=:-.  -::-+. @+                                                         
+                                                        :@@ ..:-:.   .--:  ..:  :---:===. @@                                                          
+                                                         +@-  ..   :. :-.-=-=-:=**.+=-:  @@                                                           
+                                                         -@ =:     .. -::   #@:=+- .   ::@@                                                           
+                                                          @  *-                    :  -+ @#                                                           
+                                                          @: .-=-                    --=-@                                                            
+                                                          @: .  .:                 -:-+*#@@*                                                          
+                                                        @@@ :--. ..:           .-===**+*@  @@@#                                                       
+                                                       @@@..:::---.: .:::. .++*+==-+*#++@   @@@                                                       
+                                                      =@@@# --:::::::-:..:=**-=-++++*=**@@  @%@@                                                      
+                                                     .@@%@@  :----:   ....++=+++*+**+++++@ @@%@@@                                                     
+                                                   :@@@%%%@@  ..:::.::..    :-=++=*++++**.*@@%%@@@@@@:                                                
+                                               @@@@@@@%%%%%@@   ..-----+=:--=+*++++#**-=:%@@%%%%%%@@@@@@@@+                                           
+                                          .@@@@@@%%%%%%%@@@@@@- .:.....-==+**#*+++=:-+= :@@%%%%%%%%%%%%%@@@@@@@:                                      
+                                      =@@@@@@%%%%%%%%%@@@  ..=@   ----...:.::--======- @@@@@@@%%%%%%%%%%%%%%%@@@@@@@-                                 
+                                  *@@@@@@%%%%%%%%%%%%@@     -- @-  :-===+++**+=+=+---:@@@@   @@@%%%%%%%%%%%%%%%%%%@@@@@@:                             
+                              %@@@@@%%%%%%%%%%%%%%%@@%  =@=  #::@@   --:-.....:==+*@@@@@       @@@@@%%%%%%%%%%%%%%%%%%@@@@@@                          
+                          -@@@@@%%%%%%%%%%%%%%%%%%%=  *@@@@@+:== @=@ .+==-===+**@@@@#    .==-      @%%%%%%%%%%%%%%%%%%%%%%@@@@*                       
+                        @@@@@%%%%%%%%%%%%%%%%%%%%%%@@@@@@@@@@@%%#*:+@@%+%%%#=-:@@@# .*@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%@@@@@%                    
+                      @@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@@+. -@##**=@@@@ +@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@@                  
+                   .@@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@@=+@=*@@@ =%@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@*                
+                  @@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@@#:*@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@                
+                 @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@%@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@              
+                *@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@   @%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@+             
+                @@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@ @@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@-            
+               %@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@            
+               @@%%%%%%%%%%*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@*           
+              *@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@           
+              @@%%%%%%%%%%%%*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@.          
+              @@%%%%%%%%%%%@+@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@+          
+             +@%%%%%%%%%%%%@#@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@          
+             @@%%%%%%%%%%%%%#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@          
+             @@%%%%%%%%%%%%@%*@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@#@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%@##@%%%%%%%%%%%%%%%@=         
+             @@%%%%%%%%%%%%##=@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@@%%%%%%%%%%%@     @%%%%%%%%%%%%%%%%%%%%%%%%@@-%-%%%%%%%%%%%%%%%@@         
+            =@%%%%#%%%%%%%%@+++@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@   @%%%%%%%%%%%@     @%%%%%%%%%%%%%%%%%%%%%%%@@-:*@%%%%%%%%%%%%%%%@@         
+            #@%%%%%%%%%%%%%##:*@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@   @%%%%%%%%%%%@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%@ .@@@%%%%%%%%%%%%%%%%@=        
+            @@%%%*+%%%%%%%%@@  @%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@ =:@%%%%%%%%%%%%%%%%%@@        
+            @@%%%@*@%%%%%%%%@- @%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@  @@%%%%%%%%%%%%%%%%%@@        
+            @@%%%%#%%%@@@@%%@#.@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@%%%%%%%%%%%%%%%%%%%@:       
+            @+++++=+++   =++*  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++* #++++++++++++++++++++@.       `;
+
+// Trim the massive left whitespace for the sidebar
+function trimAscii(raw) {
+  const lines = raw.split('\n');
+  // find minimum indentation of non-empty lines
+  let minIndent = Infinity;
+  lines.forEach(l => {
+    if (l.trim().length > 0) {
+      const spaces = l.match(/^(\s*)/)[1].length;
+      if (spaces < minIndent) minIndent = spaces;
+    }
+  });
+  // Remove top empty lines
+  const trimmed = lines.map(l => l.slice(minIndent)).join('\n').replace(/^\n+/, '');
+  return trimmed;
+}
+document.getElementById('ascii-art').textContent = trimAscii(RAW_ASCII);
+
+// ── MATRIX RAIN ────────────────────────────────────────────────────────
+const mc = document.getElementById('mc');
+const ctx = mc.getContext('2d');
+function rz(){mc.width=innerWidth;mc.height=innerHeight}rz();window.addEventListener('resize',rz);
+const CHARS='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*<>/\\|+=マニカンダン';
+let drops=[];
+function initD(){drops=Array.from({length:Math.floor(mc.width/14)},()=>Math.random()*mc.height/14)}
+initD();
+setInterval(()=>{
+  ctx.fillStyle='rgba(2,13,4,0.05)';ctx.fillRect(0,0,mc.width,mc.height);
+  ctx.fillStyle='#00ff41';ctx.font='13px Share Tech Mono';
+  drops.forEach((y,i)=>{
+    ctx.fillText(CHARS[Math.floor(Math.random()*CHARS.length)],i*14,y*14);
+    if(y*14>mc.height&&Math.random()>0.975)drops[i]=0;
+    drops[i]+=0.5;
+  });
+},50);
+
+// ── CLOCK ──────────────────────────────────────────────────────────────
+function clock(){
+  const n=new Date(),p=x=>String(x).padStart(2,'0');
+  document.getElementById('tb-time').textContent=`${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;
+}
+clock();setInterval(clock,1000);
+
+// ── BOOT SEQUENCE ──────────────────────────────────────────────────────
+[0,1,2,3,4,5,6].forEach(i=>{
+  setTimeout(()=>document.getElementById('b'+i).classList.add('show'),300+i*620);
+});
+const bf=document.getElementById('boot-bar-fill'),bp=document.getElementById('bpct');
+let pct=0;
+const pi=setInterval(()=>{
+  pct=Math.min(pct+((Math.random()*4+1)|0),100);
+  bf.style.width=pct+'%';bp.textContent=pct;
+  if(pct>=100)clearInterval(pi);
+},80);
+
+// ── TERMINAL ENGINE ────────────────────────────────────────────────────
+const out=document.getElementById('output'),inp=document.getElementById('cmd');
+let hist=[],hidx=-1;
+
+function print(text,cls='out',delay=0){
+  return new Promise(res=>setTimeout(()=>{
+    const d=document.createElement('div');
+    d.className='line '+cls;d.innerHTML=text;
+    out.appendChild(d);out.scrollTop=out.scrollHeight;res();
+  },delay));
+}
+async function seq(lines){for(let i=0;i<lines.length;i++)await print(lines[i][0],lines[i][1]||'out',i*28);}
+
+function sbar(lbl,pct){
+  return `<div class="sbar-row"><span class="sbar-lbl">${lbl}</span><span class="sbar"><span class="sbar-fill" style="width:${pct}%"></span></span> <span class="dim">${pct}%</span></div>`;
+}
+
+const CMDS={
+  help:async()=>seq([
+    ['','dim'],
+    ['╔══════════════════════════════════════════════╗','hdr'],
+    ['║      MAXIM-TERMINAL :: COMMAND REFERENCE     ║','hdr'],
+    ['╠══════════════════════════════════════════════╣','hdr'],
+    ['║  whoami     →  Identity & about me           ║','out'],
+    ['║  skills     →  Tech stack & proficiency      ║','out'],
+    ['║  projects   →  Project showcase              ║','out'],
+    ['║  education  →  Academic background           ║','out'],
+    ['║  experience →  Work history                  ║','out'],
+    ['║  contact    →  Links & social media          ║','out'],
+    ['║  clear      →  Clear terminal output         ║','dim'],
+    ['║  banner     →  Show welcome banner           ║','dim'],
+    ['╚══════════════════════════════════════════════╝','hdr'],
+    ['','dim'],
+  ]),
+
+  whoami:async()=>seq([
+    ['','dim'],
+    ['┌─[ IDENTITY FILE ]──────────────────────────────────┐','acc'],
+    ['│  Name      :  Manikandan  (alias: Maxim)            │','out'],
+    ['│  Role      :  Full Stack Developer                  │','out'],
+    ['│  Location  :  Chennai, Tamil Nadu, India            │','out'],
+    ['│  IP        :  2401:4900:cae7:3247:99fd:5baa...      │','out'],
+    ['│                                                      │','dim'],
+    ['│  I build modern, scalable web applications           │','out'],
+    ['│  with clean code and bold ideas. Passionate          │','out'],
+    ['│  about turning complex problems into elegant         │','out'],
+    ['│  digital solutions. Always in 1984 mode.             │','out'],
+    ['│                                                      │','dim'],
+    ['│  Mode: <span style="color:#ff00ff">CYBER TERMINAL 1984</span> // neon & grit          │','out'],
+    ['└──────────────────────────────────────────────────────┘','acc'],
+    ['','dim'],
+  ]),
+
+  skills:async()=>{
+    await print('','dim');
+    await print('╔══[ TECH STACK ]══════════════════════════════╗','hdr');
+    await print('','dim',30);
+    await print('  ► Frontend','acc',60);
+    await print(sbar('HTML / CSS',93),'out',90);
+    await print(sbar('JavaScript',88),'out',120);
+    await print(sbar('React.js',84),'out',150);
+    await print(sbar('Tailwind CSS',86),'out',180);
+    await print('','dim',210);
+    await print('  ► Backend','acc',240);
+    await print(sbar('Node.js',79),'out',270);
+    await print(sbar('Python',76),'out',300);
+    await print(sbar('Express.js',77),'out',330);
+    await print('','dim',360);
+    await print('  ► Database & Tools','acc',390);
+    await print(sbar('MongoDB',73),'out',420);
+    await print(sbar('MySQL',71),'out',450);
+    await print(sbar('Git / GitHub',90),'out',480);
+    await print(sbar('Docker',62),'out',510);
+    await print('╚══════════════════════════════════════════════╝','hdr',550);
+    await print('','dim',580);
+  },
+
+  projects:async()=>seq([
+    ['','dim'],
+    ['╔══[ PROJECT MANIFEST ]══════════════════════════════╗','hdr'],
+    ['│','dim'],
+    ['│  [01] <span class="acc">Cyber Terminal Portfolio</span>                      │','out'],
+    ['│      Hacker-style interactive terminal website     │','out'],
+    ['│      Stack: HTML · CSS · JavaScript               │','dim'],
+    ['│','dim'],
+    ['│  [02] <span class="acc">E-Commerce Platform</span>                           │','out'],
+    ['│      Full-stack store: auth, cart, payments        │','out'],
+    ['│      Stack: React · Node.js · MongoDB · Stripe    │','dim'],
+    ['│','dim'],
+    ['│  [03] <span class="acc">AI Chat Application</span>                           │','out'],
+    ['│      Real-time AI-powered messaging platform       │','out'],
+    ['│      Stack: React · Socket.io · OpenAI API        │','dim'],
+    ['│','dim'],
+    ['│  [04] <span class="acc">Task Management System</span>                        │','out'],
+    ['│      Kanban-style project manager with teams       │','out'],
+    ['│      Stack: React · Express · PostgreSQL           │','dim'],
+    ['│','dim'],
+    ['╚════════════════════════════════════════════════════╝','hdr'],
+    ['','dim'],
+  ]),
+
+  education:async()=>seq([
+    ['','dim'],
+    ['╔══[ EDUCATION ]══════════════════════════════════════╗','hdr'],
+    ['│','dim'],
+    ['│  🎓  <span class="acc">Bachelor of Engineering</span>                        │','out'],
+    ['│      Computer Science & Engineering                 │','out'],
+    ['│      Tamil Nadu, India  |  2021 – 2025              │','out'],
+    ['│','dim'],
+    ['│  📚  Relevant Coursework:','acc'],
+    ['│      Data Structures & Algorithms                   │','out'],
+    ['│      Database Management Systems                    │','out'],
+    ['│      Web Technologies & Cloud Computing             │','out'],
+    ['│      Operating Systems & Computer Networks          │','out'],
+    ['│','dim'],
+    ['╚══════════════════════════════════════════════════════╝','hdr'],
+    ['','dim'],
+  ]),
+
+  experience:async()=>seq([
+    ['','dim'],
+    ['╔══[ WORK EXPERIENCE ]════════════════════════════════╗','hdr'],
+    ['│','dim'],
+    ['│  ▶  <span class="acc">Web Development Intern</span>                         │','out'],
+    ['│     Tech Company · Chennai, Tamil Nadu              │','out'],
+    ['│     June 2024 – August 2024                         │','dim'],
+    ['│     • Built responsive UI components                │','out'],
+    ['│     • Integrated REST APIs with React frontend      │','out'],
+    ['│     • Improved page load performance by 35%         │','ok'],
+    ['│','dim'],
+    ['│  ▶  <span class="acc">Freelance Developer</span>                             │','out'],
+    ['│     Self-employed · Remote  |  2023 – Present       │','dim'],
+    ['│     • Delivered 5+ full-stack client projects       │','out'],
+    ['│     • Landing pages, web apps & dashboards          │','out'],
+    ['│','dim'],
+    ['╚══════════════════════════════════════════════════════╝','hdr'],
+    ['','dim'],
+  ]),
+
+  contact:async()=>seq([
+    ['','dim'],
+    ['╔══[ CONTACT ]════════════════════════════════════════╗','hdr'],
+    ['│','dim'],
+    ['│  📧  Email    :  manikandan@dev.io                  │','out'],
+    ['│  💼  LinkedIn :  linkedin.com/in/manikandan         │','out'],
+    ['│  🐙  GitHub   :  github.com/manikandan              │','out'],
+    ['│  🌐  Website  :  manikandan.dev                     │','out'],
+    ['│  📍  Location :  Chennai, Tamil Nadu, India         │','out'],
+    ['│','dim'],
+    ['│  <span class="ok">Open to:</span>                                        │','out'],
+    ['│  → Full-time opportunities                          │','ok'],
+    ['│  → Freelance & contract work                        │','ok'],
+    ['│  → Open source collaborations                       │','ok'],
+    ['│','dim'],
+    ['│  Or use <span class="mg">[ MESSAGE ]</span> button on the sidebar ←        │','mg'],
+    ['│','dim'],
+    ['╚══════════════════════════════════════════════════════╝','hdr'],
+    ['','dim'],
+  ]),
+
+  clear:async()=>{out.innerHTML='';await CMDS.banner();},
+
+  banner:async()=>seq([
+    ['','dim'],
+    [' ███╗   ███╗ █████╗ ██╗  ██╗██╗███╗   ███╗','hdr'],
+    [' ████╗ ████║██╔══██╗╚██╗██╔╝██║████╗ ████║','hdr'],
+    [' ██╔████╔██║███████║ ╚███╔╝ ██║██╔████╔██║','hdr'],
+    [' ██║╚██╔╝██║██╔══██║ ██╔██╗ ██║██║╚██╔╝██║','hdr'],
+    [' ██║ ╚═╝ ██║██║  ██║██╔╝ ██╗██║██║ ╚═╝ ██║','hdr'],
+    [' ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝     ╚═╝','hdr'],
+    ['','dim'],
+    ['  Welcome to Maxim\'s cyber terminal.','acc'],
+    ['  Type <span style="color:#00ff41">help</span> to see available commands.','dim'],
+    ['','dim'],
+  ]),
+};
+
+async function runCmd(raw){
+  const cmd=raw.trim().toLowerCase();
+  if(!cmd)return;
+  hist.unshift(cmd);hidx=-1;
+  await print(cmd,'prompt');
+  if(CMDS[cmd])await CMDS[cmd]();
+  else{
+    await print(`bash: ${cmd}: command not found`,'err');
+    await print('Type <span style="color:#00ff41">help</span> for available commands.','dim');
+    await print('','dim');
+  }
+}
+
+inp.addEventListener('keydown',async e=>{
+  if(e.key==='Enter'){const v=inp.value;inp.value='';await runCmd(v);}
+  else if(e.key==='ArrowUp'){e.preventDefault();if(hidx<hist.length-1){hidx++;inp.value=hist[hidx];}}
+  else if(e.key==='ArrowDown'){e.preventDefault();if(hidx>0){hidx--;inp.value=hist[hidx];}else{hidx=-1;inp.value='';}}
+  else if(e.key==='Tab'){e.preventDefault();const p=inp.value.toLowerCase();const m=Object.keys(CMDS).filter(c=>c.startsWith(p));if(m.length===1)inp.value=m[0];}
+});
+document.addEventListener('click',e=>{if(!e.target.closest('#modal'))inp.focus();});
+
+// ── MODAL ──────────────────────────────────────────────────────────────
+function openModal(type){
+  const modal=document.getElementById('modal');
+  const mtitle=document.getElementById('mtitle');
+  const mbody=document.getElementById('mbody');
+  if(type==='contact'){
+    mtitle.textContent='>> CONTACT INFO';
+    mtitle.style.color='var(--c)';
+    mbody.innerHTML=`
+      <div class="mfield"><div class="mlabel">&gt; EMAIL</div><div class="line out">manikandan@dev.io</div></div>
+      <div class="mfield"><div class="mlabel">&gt; LINKEDIN</div><div class="line out">linkedin.com/in/manikandan</div></div>
+      <div class="mfield"><div class="mlabel">&gt; GITHUB</div><div class="line out">github.com/manikandan</div></div>
+      <div class="mfield"><div class="mlabel">&gt; WEBSITE</div><div class="line out">manikandan.dev</div></div>
+      <div class="mfield"><div class="mlabel">&gt; LOCATION</div><div class="line out">Chennai, Tamil Nadu, India</div></div>
+      <button class="mbtn c" onclick="closeModal()">[ CLOSE ]</button>`;
+  } else {
+    mtitle.textContent='>> SEND MESSAGE';
+    mtitle.style.color='var(--m)';
+    mbody.innerHTML=`
+      <div class="mfield"><div class="mlabel">&gt; YOUR NAME</div><input class="minput" id="mn" placeholder="Enter name..."></div>
+      <div class="mfield"><div class="mlabel">&gt; YOUR EMAIL</div><input class="minput" id="me" placeholder="Enter email..."></div>
+      <div class="mfield"><div class="mlabel">&gt; MESSAGE</div><textarea class="mtextarea" id="mm" placeholder="Type your message..."></textarea></div>
+      <button class="mbtn m" id="msend" onclick="sendMsg()">[ TRANSMIT ]</button>`;
+  }
+  modal.classList.add('open');
+  setTimeout(()=>{const f=mbody.querySelector('input,button');if(f)f.focus();},80);
+}
+
+function closeModal(){document.getElementById('modal').classList.remove('open');inp.focus();}
+
+function sendMsg(){
+  const n=document.getElementById('mn')?.value||'';
+  const e=document.getElementById('me')?.value||'';
+  const m=document.getElementById('mm')?.value||'';
+  if(!n||!e||!m){
+    const b=document.getElementById('msend');b.textContent='[ FILL ALL FIELDS ]';
+    setTimeout(()=>{b.textContent='[ TRANSMIT ]';},1500);return;
+  }
+  document.getElementById('mbody').innerHTML=`
+    <div class="line ok" style="margin-bottom:8px">&gt;&gt; TRANSMISSION SUCCESSFUL</div>
+    <div class="line dim">Signal encrypted and sent to Maxim.</div>
+    <div class="line dim">Expect a response within 24 hours.</div>
+    <br><button class="mbtn m" onclick="closeModal()">[ CLOSE ]</button>`;
+}
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+// ── INIT ───────────────────────────────────────────────────────────────
+setTimeout(async()=>{
+  inp.focus();
+  await CMDS.banner();
+  await print('','dim');
+},6000);
+</script>
+</body>
+</html>

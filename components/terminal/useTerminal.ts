@@ -11,13 +11,36 @@ export interface TerminalLine {
   timestamp: number;
 }
 
-export function useTerminal() {
+interface UseTerminalOptions {
+  onOpenMessage?: () => void;
+}
+
+const rawBannerLines = [
+  ' ███╗   ███╗ █████╗ ██╗  ██╗██╗███╗   ███╗',
+  ' ████╗ ████║██╔══██╗╚██╗██╔╝██║████╗ ████║',
+  ' ██╔████╔██║███████║ ╚███╔╝ ██║██╔████╔██║',
+  ' ██║╚██╔╝██║██╔══██║ ██╔██╗ ██║██║╚██╔╝██║',
+  ' ██║ ╚═╝ ██║██║  ██║██╔╝ ██╗██║██║ ╚═╝ ██║',
+  ' ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝     ╚═╝',
+  '',
+  "  Welcome to Maxim's cyber terminal.",
+  '  Type help to see available commands.',
+];
+
+const BANNER_TEXT = (() => {
+  const maxLen = rawBannerLines.reduce((m, line) => Math.max(m, line.length), 0);
+  return rawBannerLines
+    .map((line) => line.padEnd(maxLen, ' '))
+    .join('\n');
+})();
+
+export function useTerminal(options?: UseTerminalOptions) {
   const { setView, addToHistory } = useUI();
   const [lines, setLines] = useState<TerminalLine[]>([
     {
-      id: '1',
+      id: 'banner',
       type: 'output',
-      content: 'Welcome! Type "help" to see available commands.',
+      content: BANNER_TEXT,
       timestamp: Date.now(),
     },
   ]);
@@ -37,103 +60,101 @@ export function useTerminal() {
     ]);
   }, []);
 
-  const executeCommand = useCallback((input: string) => {
-    if (!input.trim()) return;
+  const executeCommand = useCallback(
+    (input: string) => {
+      if (!input.trim()) return;
 
-    // Add input line
-    const inputLine: TerminalLine = {
-      id: Date.now().toString(),
-      type: 'input',
-      content: input,
-      timestamp: Date.now(),
-    };
-    setLines(prev => [...prev, inputLine]);
-    addToHistory(input);
-
-    // Update history
-    setHistory(prev => {
-      const newHistory = [...prev, input];
-      return newHistory.slice(-50); // Keep last 50 commands
-    });
-    setHistoryIndex(-1);
-
-    // Parse and execute command
-    const { command, args } = parseCommand(input);
-    const cmd = findCommand(command);
-
-    if (!cmd) {
-      const errorLine: TerminalLine = {
-        id: (Date.now() + 1).toString(),
-        type: 'error',
-        content: `Command not found: ${command}. Type "help" for available commands.`,
+      const inputLine: TerminalLine = {
+        id: Date.now().toString(),
+        type: 'input',
+        content: input,
         timestamp: Date.now(),
       };
-      setLines(prev => [...prev, errorLine]);
-      return;
-    }
+      setLines(prev => [...prev, inputLine]);
+      addToHistory(input);
 
-    // Execute command handler
-    const output = cmd.handler(args, setView, clearTerminal);
-    if (output) {
-      const outputLine: TerminalLine = {
-        id: (Date.now() + 1).toString(),
-        type: 'output',
-        content: output,
-        timestamp: Date.now(),
-      };
-      setLines(prev => [...prev, outputLine]);
-    }
-  }, [setView, addToHistory, clearTerminal]);
+      setHistory(prev => {
+        const newHistory = [...prev, input];
+        return newHistory.slice(-50);
+      });
+      setHistoryIndex(-1);
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      executeCommand(currentInput);
-      setCurrentInput('');
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      if (history.length > 0) {
-        const newIndex = historyIndex === -1 
-          ? history.length - 1 
-          : Math.max(0, historyIndex - 1);
-        setHistoryIndex(newIndex);
-        setCurrentInput(history[newIndex]);
+      const { command, args } = parseCommand(input);
+      const cmd = findCommand(command);
+
+      if (!cmd) {
+        const errorLine: TerminalLine = {
+          id: (Date.now() + 1).toString(),
+          type: 'error',
+          content: `Command not found: ${command}. Type "help" for available commands.`,
+          timestamp: Date.now(),
+        };
+        setLines(prev => [...prev, errorLine]);
+        return;
       }
-    } else if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      if (historyIndex >= 0) {
-        const newIndex = historyIndex + 1;
-        if (newIndex >= history.length) {
-          setHistoryIndex(-1);
-          setCurrentInput('');
-        } else {
-          setHistoryIndex(newIndex);
-          setCurrentInput(history[newIndex]);
-        }
-      }
-    } else if (e.key === 'Tab') {
-      e.preventDefault();
-      const suggestions = getAutocompleteSuggestions(currentInput);
-      if (suggestions.length === 1) {
-        setCurrentInput(suggestions[0] + ' ');
-      } else if (suggestions.length > 1) {
+
+      const output = cmd.handler(args, setView, clearTerminal, options?.onOpenMessage);
+      if (output) {
         const outputLine: TerminalLine = {
-          id: Date.now().toString(),
+          id: (Date.now() + 1).toString(),
           type: 'output',
-          content: `Suggestions: ${suggestions.join(', ')}`,
+          content: output,
           timestamp: Date.now(),
         };
         setLines(prev => [...prev, outputLine]);
       }
-    }
-  }, [currentInput, history, historyIndex, executeCommand]);
+    },
+    [setView, addToHistory, clearTerminal, options?.onOpenMessage]
+  );
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') {
+        executeCommand(currentInput);
+        setCurrentInput('');
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (history.length > 0) {
+          const newIndex = historyIndex === -1 ? history.length - 1 : Math.max(0, historyIndex - 1);
+          setHistoryIndex(newIndex);
+          setCurrentInput(history[newIndex]);
+        }
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (historyIndex >= 0) {
+          const newIndex = historyIndex + 1;
+          if (newIndex >= history.length) {
+            setHistoryIndex(-1);
+            setCurrentInput('');
+          } else {
+            setHistoryIndex(newIndex);
+            setCurrentInput(history[newIndex]);
+          }
+        }
+      } else if (e.key === 'Tab') {
+        e.preventDefault();
+        const suggestions = getAutocompleteSuggestions(currentInput);
+        if (suggestions.length === 1) {
+          setCurrentInput(suggestions[0] + ' ');
+        } else if (suggestions.length > 1) {
+          const outputLine: TerminalLine = {
+            id: Date.now().toString(),
+            type: 'output',
+            content: `Suggestions: ${suggestions.join(', ')}`,
+            timestamp: Date.now(),
+          };
+          setLines(prev => [...prev, outputLine]);
+        }
+      }
+    },
+    [currentInput, history, historyIndex, executeCommand]
+  );
 
   useEffect(() => {
-    // Focus input on mount
     inputRef.current?.focus();
   }, []);
 
   useEffect(() => {
-    // Refocus input after command execution
     const timer = setTimeout(() => {
       inputRef.current?.focus();
     }, 100);
@@ -150,4 +171,5 @@ export function useTerminal() {
     inputRef,
   };
 }
+
 
