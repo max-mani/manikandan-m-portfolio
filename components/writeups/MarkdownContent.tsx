@@ -45,7 +45,7 @@ export default function WriteupsMarkdownContent({ content }: MarkdownContentProp
               <CopyButton content={extractCodeContent(props.children)} />
             </div>
           ),
-          code: ({ node, inline, ...props }) => {
+          code: ({ node, inline, ...props }: any) => {
             if (inline) {
               return <code className="text-primary bg-primary/10 px-2 py-1 rounded text-sm font-mono" {...props} />
             }
