@@ -25,7 +25,7 @@ export default function Home() {
         <div className="relative z-20 h-full flex flex-col scanline">
           <TitleBar />
           {/* Main layout: left ASCII + contact/message, right terminal */}
-          <div className="flex flex-1 overflow-hidden">
+          <div className="flex flex-1 flex-col md:flex-row overflow-hidden gap-3 md:gap-0">
             <AsciiPanel />
             <div className="w-full md:w-[70%] h-full flex flex-col pr-3 py-4 bg-[var(--panel)]">
               {/* Welcome marquee */}
