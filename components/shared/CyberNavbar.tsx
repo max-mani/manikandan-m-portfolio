@@ -26,18 +26,12 @@ export function CyberNavbar({ brandLabel, brandColor, navLinks, linkColor }: Cyb
     }
   };
 
-  const brandColorClass =
+  const brandStyle =
     brandColor === 'primary'
-      ? 'text-[var(--primary)]'
-      : 'text-[var(--cyan)]';
-  const linkColorClass =
-    linkColor === 'primary-dim'
-      ? 'text-[var(--primary-dim)] hover:text-[var(--cyan)]'
-      : 'text-[var(--cyan)] hover:opacity-80';
-  const brandGlow =
-    brandColor === 'primary'
-      ? 'drop-shadow-[0_0_8px_rgba(0,255,65,0.5)]'
-      : 'drop-shadow-[0_0_8px_rgba(0,229,255,0.5)]';
+      ? { color: '#00ff88', textShadow: '0 0 12px rgba(0,255,136,0.8)' }
+      : { color: '#00ffff', textShadow: '0 0 12px rgba(0,255,255,0.8)' };
+  const linkStyle = { color: '#00ffff', textShadow: '0 0 6px rgba(0,255,255,0.6)' };
+  const terminalStyle = { color: '#00ff88', textShadow: '0 0 6px rgba(0,255,136,0.6)' };
 
   return (
     <nav
@@ -49,7 +43,8 @@ export function CyberNavbar({ brandLabel, brandColor, navLinks, linkColor }: Cyb
     >
       <Link
         href={navLinks[0]?.href ?? '/'}
-        className={`font-[family-name:var(--font-vt323)] text-xl font-bold ${brandColorClass} ${brandGlow} transition-opacity hover:opacity-90`}
+        className="font-[family-name:var(--font-vt323)] text-xl font-bold transition-opacity hover:opacity-90"
+        style={brandStyle}
       >
         [ {brandLabel} ]
       </Link>
@@ -59,14 +54,16 @@ export function CyberNavbar({ brandLabel, brandColor, navLinks, linkColor }: Cyb
           <Link
             key={link.href}
             href={link.href}
-            className={`font-mono text-sm transition-colors ${linkColorClass}`}
+            className="font-mono text-sm transition-opacity hover:opacity-90"
+            style={linkStyle}
           >
             {link.label}
           </Link>
         ))}
         <button
           onClick={handleBackToTerminal}
-          className="font-mono text-sm text-[var(--primary-dim)] hover:text-[var(--cyan)] transition-colors"
+          className="font-mono text-sm transition-opacity hover:opacity-90"
+          style={terminalStyle}
         >
           [ ← terminal ]
         </button>

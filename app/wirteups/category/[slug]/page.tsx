@@ -96,7 +96,7 @@ export default async function WriteupsCategoryPage({ params }: PageProps) {
 
       <footer className="border-t border-border py-12 px-4 bg-background/50">
         <div className="max-w-6xl mx-auto text-center text-sm text-muted-foreground">
-          <p>© 2026 Team ZERO. All writeups and solutions are for educational purposes.</p>
+          <p>© {new Date().getFullYear()} Team ZERO. All writeups and solutions are for educational purposes.</p>
         </div>
       </footer>
     </div>

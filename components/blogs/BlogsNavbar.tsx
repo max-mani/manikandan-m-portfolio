@@ -14,7 +14,7 @@ export default function BlogsNavbar() {
       brandLabel="MAXIM.BLOG"
       brandColor="primary"
       navLinks={navLinks}
-      linkColor="primary-dim"
+      linkColor="cyan"
     />
   );
 }

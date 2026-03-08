@@ -40,7 +40,7 @@ export default function WriteupsHomePage() {
         <div className="relative z-10 max-w-4xl mx-auto">
           <p
             className="font-mono text-sm mb-4"
-            style={{ color: 'var(--primary-dim)' }}
+            style={{ color: 'var(--primary)' }}
           >
             &gt; whoami --ctf
           </p>
@@ -206,7 +206,7 @@ export default function WriteupsHomePage() {
           className="font-mono text-sm mb-4"
           style={{ color: 'var(--primary-dim)' }}
         >
-          All solutions are for educational purposes.
+          © {new Date().getFullYear()} — All solutions are for educational purposes.
         </p>
         <Link
           href="/"

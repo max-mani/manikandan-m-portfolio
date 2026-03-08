@@ -37,7 +37,7 @@ export default function BlogsHomePage() {
         <div className="relative z-10 max-w-4xl mx-auto">
           <p
             className="font-mono text-sm mb-4"
-            style={{ color: 'var(--primary-dim)' }}
+            style={{ color: 'var(--primary)' }}
           >
             &gt; log init --author=&quot;maxim&quot;
           </p>
@@ -52,7 +52,7 @@ export default function BlogsHomePage() {
           </h1>
           <p
             className="font-mono text-lg mb-4"
-            style={{ color: 'var(--primary-dim)' }}
+            style={{ color: 'var(--primary)' }}
           >
             aka Maxim
           </p>
@@ -260,7 +260,7 @@ export default function BlogsHomePage() {
           className="font-mono text-sm mb-4"
           style={{ color: 'var(--primary-dim)' }}
         >
-          Chennai, India | Est. 2025
+          Chennai, India | Est. {new Date().getFullYear()}
         </p>
         <Link
           href="/"

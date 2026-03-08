@@ -3,7 +3,7 @@
   --background: #020d04;
   --foreground: #88ff99;
   --primary: #00ff41;
-  --primary-dim: #00aa2a;
+  --primary-dim: #00dd40;
   --cyan: #00e5ff;
   --yellow: #ffe600;
   --magenta: #ff00ff;
@@ -15,7 +15,7 @@
   --color-background: #020d04;
   --color-foreground: #88ff99;
   --color-primary: #00ff41;
-  --color-muted-foreground: #00aa2a;
+  --color-muted-foreground: #00dd40;
   --color-accent: #00e5ff;
   --color-border: rgba(0, 255, 65, 0.18);
   --radius: 4px;
