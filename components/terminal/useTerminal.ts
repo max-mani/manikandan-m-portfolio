@@ -15,32 +15,25 @@ interface UseTerminalOptions {
   onOpenMessage?: () => void;
 }
 
-const rawBannerLines = [
-  ' ███╗   ███╗ █████╗ ██╗  ██╗██╗███╗   ███╗',
-  ' ████╗ ████║██╔══██╗╚██╗██╔╝██║████╗ ████║',
-  ' ██╔████╔██║███████║ ╚███╔╝ ██║██╔████╔██║',
-  ' ██║╚██╔╝██║██╔══██║ ██╔██╗ ██║██║╚██╔╝██║',
-  ' ██║ ╚═╝ ██║██║  ██║██╔╝ ██╗██║██║ ╚═╝ ██║',
-  ' ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝     ╚═╝',
+const BANNER_WELCOME_TEXT = [
   '',
   "  Welcome to Maxim's cyber terminal.",
   '  Type help to see available commands.',
-];
-
-const BANNER_TEXT = (() => {
-  const maxLen = rawBannerLines.reduce((m, line) => Math.max(m, line.length), 0);
-  return rawBannerLines
-    .map((line) => line.padEnd(maxLen, ' '))
-    .join('\n');
-})();
+].join('\n');
 
 export function useTerminal(options?: UseTerminalOptions) {
   const { setView, addToHistory } = useUI();
   const [lines, setLines] = useState<TerminalLine[]>([
     {
+      id: 'banner-ascii',
+      type: 'output',
+      content: '',
+      timestamp: Date.now(),
+    },
+    {
       id: 'banner',
       type: 'output',
-      content: BANNER_TEXT,
+      content: BANNER_WELCOME_TEXT,
       timestamp: Date.now(),
     },
   ]);

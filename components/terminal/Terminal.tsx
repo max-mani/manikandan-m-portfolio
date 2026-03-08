@@ -95,6 +95,20 @@ export function Terminal({ onOpenMessage }: TerminalProps) {
             : line.content;
           const contentLines = rawContent.split('\n');
           
+          if (line.id === 'banner-ascii') {
+            return (
+              <div key={line.id} className="mb-1">
+                <img
+                  src="/images/ascii-banner.png"
+                  alt="MAXIM"
+                  className="h-auto w-full max-w-[320px] block"
+                  width={480}
+                  height={112}
+                />
+              </div>
+            );
+          }
+
           return (
             <div key={line.id}>
               {contentLines.map((contentLine, lineIndex) => (
@@ -114,7 +128,10 @@ export function Terminal({ onOpenMessage }: TerminalProps) {
                       ></span>
                     )}
                   {(() => {
-                    const common = 'whitespace-pre-wrap break-words text-sm md:text-base';
+                    const isBanner = line.id === 'banner';
+                    const common = isBanner
+                      ? 'whitespace-pre text-sm md:text-base'
+                      : 'whitespace-pre-wrap break-words text-sm md:text-base';
 
                     // Special coloring for the banner help word
                     if (line.id === 'banner' && contentLine.includes('help')) {
