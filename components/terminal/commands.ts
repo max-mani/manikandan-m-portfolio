@@ -11,6 +11,7 @@ import {
   buildWhoamiText,
   buildEducationText,
   buildBannerText,
+  buildHelpText,
 } from '../../data/terminalContent';
 
 export interface Command {
@@ -29,26 +30,7 @@ export const commands: Command[] = [
   {
     name: 'help',
     description: 'Show list of available commands',
-    handler: () => {
-      const lines = [
-        '╔══════════════════════════════════════════════╗',
-        '║      MAXIM-TERMINAL :: COMMAND REFERENCE     ║',
-        '╠══════════════════════════════════════════════╣',
-        '║  whoami     →  Identity & about me           ║',
-        '║  skills     →  Tech stack & proficiency      ║',
-        '║  projects   →  Project showcase              ║',
-        '║  education  →  Academic background           ║',
-        '║  experience →  Work history                  ║',
-        '║  contact    →  Links & social media          ║',
-        '║  clear      →  Clear terminal output         ║',
-        '║  banner     →  Show welcome banner           ║',
-        '║  help       →  Show this help screen         ║',
-        '║  message    →  Open message form overlay     ║',
-        '║  writeups   →  Open CTF writeups in new tab  ║',
-        '╚══════════════════════════════════════════════╝',
-      ];
-      return lines.join('\n');
-    },
+    handler: () => buildHelpText(),
   },
   {
     name: 'whoami',
@@ -114,7 +96,7 @@ export const commands: Command[] = [
       if (openMessage) {
         openMessage();
       }
-      return 'Opening secure message channel...';
+      return 'Opening message form...';
     },
   },
   {
@@ -130,6 +112,16 @@ export const commands: Command[] = [
         window.open('/wirteups', '_blank');
       }
       return 'Opening writeups in new tab...';
+    },
+  },
+  {
+    name: 'blogs',
+    description: 'Open blog posts in a new tab',
+    handler: () => {
+      if (typeof window !== 'undefined') {
+        window.open('/blogs', '_blank');
+      }
+      return 'Opening blogs in new tab...';
     },
   },
   {

@@ -4,7 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { contact } from '@/data/portfolio';
 import { Mail, Github, Linkedin } from 'lucide-react';
-import { GlitchEffect } from '../effects/GlitchEffect';
+import { GlitchEffect } from '@/components/shared/GlitchEffect';
 
 export function ContactModal() {
   return (

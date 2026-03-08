@@ -14,7 +14,7 @@ import { ExperienceTimeline } from '../sections/ExperienceTimeline';
 import { CTFShowcase } from '../sections/CTFShowcase';
 import { CertificationsGrid } from '../sections/CertificationsGrid';
 import { ContactModal } from '../sections/ContactModal';
-import { MatrixRain } from '../effects/MatrixRain';
+import { MatrixRain } from '@/components/shared/MatrixRain';
 
 export function TopPanel() {
   const { currentView, currentProject } = useUI();

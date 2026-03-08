@@ -68,7 +68,7 @@ export default async function WriteupsCategoryPage({ params }: PageProps) {
         <div className="max-w-6xl mx-auto">
           <div className="space-y-4">
             {category.challenges.map((challenge) => (
-              <Link key={challenge.slug} href={`/wirteups/challenge/${challenge.slug}`}>
+              <Link key={challenge.slug} href={`/wirteups/event/${challenge.eventSlug}/${challenge.slug}`}>
                 <div className="group relative overflow-hidden rounded-lg border border-primary/20 bg-card p-6 transition-all hover:border-primary hover:shadow-lg hover:shadow-primary/20 hover:bg-card/80">
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/0 to-accent/0 group-hover:from-primary/5 group-hover:via-primary/5 group-hover:to-accent/5 transition-all pointer-events-none" />
                   <div className="relative z-10 flex items-start justify-between">

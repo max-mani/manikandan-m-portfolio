@@ -1,8 +1,8 @@
-# 🏴 ZERO – KICTF 2026 Official Writeup
-
-**Team Name:** ZERO
-**Event:** KICTF 2026
-
+---
+title: "KICTF 2026"
+slug: "kictf-2026"
+year: 2026
+description: "KICTF 2026 CTF event writeups"
 ---
 
 # Heart Beat

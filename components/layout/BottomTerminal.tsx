@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { Terminal } from '../terminal/Terminal';
-import { HintPanel } from './HintPanel';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 
 export function BottomTerminal() {
@@ -26,10 +25,6 @@ export function BottomTerminal() {
         <div className="flex-1 overflow-hidden flex">
           <div className="flex-1">
             <Terminal />
-          </div>
-          {/* Hint Panel inside terminal view */}
-          <div className="hidden md:block w-[20%] border-l border-green-800">
-            <HintPanel />
           </div>
         </div>
       )}

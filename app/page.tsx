@@ -1,14 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { UIProvider } from '@/context/UIContext';
-import { Terminal } from '@/components/terminal/Terminal';
-import { HintPanel } from '@/components/layout/HintPanel';
-import { MatrixRain } from '@/components/effects/MatrixRain';
-import { MessageOverlay } from '@/components/terminal/MessageOverlay';
-import { AsciiPanel } from '@/components/layout/AsciiPanel';
-import { BootOverlay } from '@/components/layout/BootOverlay';
-import { TitleBar } from '@/components/layout/TitleBar';
+import { MatrixRain } from '@/components/shared/MatrixRain';
+import { ScanLine } from '@/components/shared/ScanLine';
+import { BootOverlay } from '@/components/home/BootOverlay';
+import { TitleBar } from '@/components/home/TitleBar';
+import { AsciiPanel } from '@/components/home/AsciiPanel';
+import { TerminalPanel } from '@/components/home/TerminalPanel';
+import { MessageModal } from '@/components/home/MessageModal';
 
 export default function Home() {
   const [isMessageOpen, setIsMessageOpen] = useState(false);
@@ -16,36 +16,21 @@ export default function Home() {
 
   return (
     <UIProvider>
-      <div className="relative h-screen bg-[var(--bg)] overflow-hidden text-[var(--g)] terminal-root">
-        {/* Matrix rain background */}
-        <div className="pointer-events-none absolute inset-0 opacity-25 z-0">
-          <MatrixRain />
-        </div>
+      <div className="h-screen overflow-hidden bg-[var(--bg)] text-[var(--g)] terminal-root">
+        <MatrixRain />
+        <ScanLine />
+        {!bootDone && <BootOverlay onDone={() => setBootDone(true)} />}
 
-        <div className="relative z-20 h-full flex flex-col scanline">
+        <div className="h-full flex flex-col">
           <TitleBar />
-          {/* Main layout: left ASCII + contact/message, right terminal */}
-          <div className="flex flex-1 flex-col md:flex-row overflow-hidden gap-3 md:gap-0">
-            <AsciiPanel />
-            <div className="w-full md:w-[70%] h-full flex flex-col pr-3 py-4 bg-[var(--panel)]">
-              {/* Welcome marquee */}
-              <div className="hidden md:block mb-3 bg-[#010f03] border-b border-[var(--border)] px-[18px] py-[5px] text-[0.68rem] text-[var(--gdim)] whitespace-nowrap overflow-hidden">
-                <span className="inline-block animate-[welcome-scroll_30s_linear_infinite]">
-                  &gt;&gt; Welcome to Maxim&apos;s cyber terminal. Type &quot;help&quot; to see available commands.  |  Chennai, India  |  1984 MODE ACTIVE  |  ALL SYSTEMS NOMINAL  |  IP: 2401:4900:cae7:3247:99fd:5baa:86d7:7432  |&nbsp;&nbsp;
-                </span>
-              </div>
-              <div className="flex-1 min-h-0">
-                <Terminal onOpenMessage={() => setIsMessageOpen(true)} />
-              </div>
-            </div>
+          <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+            <AsciiPanel onOpenMessage={() => setIsMessageOpen(true)} />
+            <TerminalPanel onOpenMessage={() => setIsMessageOpen(true)} />
           </div>
         </div>
 
-        {!bootDone && <BootOverlay onDone={() => setBootDone(true)} />}
-
-        {/* Message overlay */}
         {isMessageOpen && (
-          <MessageOverlay onClose={() => setIsMessageOpen(false)} />
+          <MessageModal onClose={() => setIsMessageOpen(false)} />
         )}
       </div>
     </UIProvider>

@@ -4,7 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ctfs } from '@/data/portfolio';
 import { Trophy } from 'lucide-react';
-import { GlitchEffect } from '../effects/GlitchEffect';
+import { GlitchEffect } from '@/components/shared/GlitchEffect';
 
 export function CTFShowcase() {
   return (

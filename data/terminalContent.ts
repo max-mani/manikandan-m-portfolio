@@ -9,6 +9,28 @@ import {
   contact,
 } from '@/data/portfolio';
 
+function wrapText(text: string, width = 88): string {
+  const words = text.split(' ');
+  const lines: string[] = [];
+  let current = '';
+  for (const word of words) {
+    if ((current + ' ' + word).trim().length > width) {
+      lines.push(current.trim());
+      current = word;
+    } else {
+      current = current ? current + ' ' + word : word;
+    }
+  }
+  if (current.trim()) lines.push(current.trim());
+  return lines.join('\n');
+}
+
+function skillBar(pct: number): string {
+  const filled = Math.round((pct / 100) * 10);
+  const empty = 10 - filled;
+  return '[' + '#'.repeat(filled) + '-'.repeat(empty) + ']';
+}
+
 export function buildAboutText(): string {
   const lines: string[] = [];
   lines.push(`== ABOUT ${hero.name} ==`);
@@ -36,116 +58,134 @@ export function buildProjectsList(): string {
   const lines: string[] = [];
   lines.push('== PROJECTS ==');
   lines.push('');
-  for (const project of projects) {
-    lines.push('┌──────────────────────────────────────────────────────────────┐');
-    lines.push(`│ [${project.id}] ${project.name}`);
-    lines.push('│');
-    lines.push(`│   ${project.description}`);
-    if (project.technologies?.length) {
-      lines.push('│');
-      lines.push(`│   Tech: ${project.technologies.join(', ')}`);
-    }
-    if (project.github || project.live) {
-      lines.push('│');
-      if (project.github) lines.push(`│   GitHub: ${project.github}`);
-      if (project.live) lines.push(`│   Live:   ${project.live}`);
-    }
-    lines.push('└──────────────────────────────────────────────────────────────┘');
+  projects.forEach((project, idx) => {
+    const num = String(idx + 1).padStart(2, '0');
+    const shortDesc = project.description.length > 60
+      ? project.description.slice(0, 57) + '...'
+      : project.description;
+    const stack = project.technologies?.slice(0, 4).join(' · ') || '';
+    lines.push(`[${num}] ${project.name}`);
+    lines.push(`     ${shortDesc}`);
+    lines.push(`     Stack: ${stack}`);
     lines.push('');
-  }
-  lines.push('Tip: type `project <id>` to see details for a specific project.');
+  });
   return lines.join('\n');
 }
 
 export function buildWhoamiText(): string {
-  const lines: string[] = [];
-  lines.push('┌─[ IDENTITY FILE ]──────────────────────────────────┐');
-  lines.push(`│  Name      :  ${hero.name} (alias: Maxim)            │`);
-  lines.push('│  Role      :  Full Stack Developer, Hacker          │');
-  lines.push('│  Location  :  Madurai, Tamil Nadu, India            │');
-  lines.push('│                                                    │');
-  lines.push('│  I build modern, scalable web applications         │');
-  lines.push('│  with clean code and bold ideas. Passionate        │');
-  lines.push('│  about turning complex problems into elegant       │');
-  lines.push('│  digital solutions.                                │');
-  lines.push('└────────────────────────────────────────────────────┘');
-  return lines.join('\n');
+  const focus = hero.focusAreas.slice(0, 2).join(', ');
+  const bioLines = wrapText(hero.description, 42).split('\n');
+  return [
+    'Name      : Manikandan (alias: Maxim)',
+    'Role      : Full Stack Developer',
+    'Location  : Chennai, Tamil Nadu, India',
+    `Focus     : ${focus}`,
+    '',
+    ...bioLines,
+  ].join('\n');
 }
 
 export function buildEducationText(): string {
-  const lines: string[] = [];
-  lines.push('┌─[ EDUCATION ]───────────────────────────────────────────────┐');
-  lines.push(`│  ${about.education.degree}`);
-  lines.push(`│  ${about.education.institution}`);
-  lines.push(`│  ${about.education.period} – ${about.education.status}`);
-  lines.push('└─────────────────────────────────────────────────────────────┘');
-  return lines.join('\n');
+  const edu = about.education;
+  const coursework = 'Data Structures, DBMS, Web Technologies, OS, Computer Networks';
+  return [
+    edu.degree,
+    edu.institution,
+    `Tamil Nadu, India  |  ${edu.period}`,
+    '',
+    `Coursework: ${coursework}`,
+  ].join('\n');
 }
 
 export function buildBannerText(): string {
-  return '>> Welcome to Maxim\'s cyber terminal. Type "help" to see available commands.';
+  return "Welcome to Maxim's cyber terminal. Type \"help\" to see available commands.";
 }
 
 export function buildProjectDetails(id: string): string {
-  const project = projects.find(p => p.id.toLowerCase() === id.toLowerCase());
+  const project = projects.find((p) => p.id.toLowerCase() === id.toLowerCase());
   if (!project) {
-    return `Project not found: ${id}. Type \"projects\" to see available IDs.`;
+    return `Project not found: ${id}. Type "projects" to see available IDs.`;
   }
   const lines: string[] = [];
-  lines.push('┌─[ PROJECT DETAILS ]─────────────────────────────────────────┐');
-  lines.push(`│  ${project.name} [${project.id}]`);
-  lines.push('│');
-  lines.push(`│  ${project.description}`);
+  lines.push(`+--[ PROJECT: ${project.name} ]--+`);
+  lines.push(`|`);
+  lines.push(`|  ${project.description}`);
   if (project.technologies?.length) {
-    lines.push('│');
-    lines.push(`│  Tech stack: ${project.technologies.join(', ')}`);
+    lines.push(`|`);
+    lines.push(`|  Tech: ${project.technologies.join(', ')}`);
   }
   if (project.keyFeatures?.length) {
-    lines.push('│');
-    lines.push('│  Key features:');
+    lines.push(`|`);
+    lines.push('|  Key features:');
     for (const feat of project.keyFeatures) {
-      lines.push(`│    • ${feat}`);
+      lines.push(`|    • ${feat}`);
     }
   }
   if (project.github || project.live) {
-    lines.push('│');
-    if (project.github) lines.push(`│  GitHub: ${project.github}`);
-    if (project.live) lines.push(`│  Live:   ${project.live}`);
+    lines.push(`|`);
+    if (project.github) lines.push(`|  GitHub: ${project.github}`);
+    if (project.live) lines.push(`|  Live:   ${project.live}`);
   }
-  lines.push('└─────────────────────────────────────────────────────────────┘');
+  lines.push('+---------------------------+');
   return lines.join('\n');
 }
 
 export function buildSkillsText(): string {
   const lines: string[] = [];
-  lines.push('== SKILLS MATRIX ==');
-  lines.push('');
-  for (const [category, items] of Object.entries(skills.categories)) {
-    lines.push(category.toUpperCase());
+  const categoryOrder = [
+    'Programming Languages',
+    'Web & Mobile Development',
+    'AI / Machine Learning',
+    'Cybersecurity',
+    'Tools & Platforms',
+  ];
+
+  for (const cat of categoryOrder) {
+    const items = skills.categories[cat];
+    if (!items?.length) continue;
+
+    lines.push(`-- ${cat} --`);
     for (const item of items) {
-      const level = item.level ?? '';
-      const pct = item.percentage ? ` (${item.percentage}%)` : '';
-      lines.push(`  • ${item.name} – ${level}${pct}`);
+      const pct = item.percentage ?? 70;
+      const bar = skillBar(pct);
+      const name = item.name.padEnd(28);
+      lines.push(`${name} ${bar}  ${pct}%`);
+    }
+    lines.push('');
+  }
+
+  return lines.join('\n');
+}
+
+export function buildExperienceText(): string {
+  const lines: string[] = [];
+  for (const exp of experience) {
+    lines.push(`${exp.role}`);
+    lines.push(`${exp.company} · Chennai  |  ${exp.period}`);
+    for (const d of exp.description.slice(0, 3)) {
+      lines.push(`- ${d.slice(0, 80)}${d.length > 80 ? '...' : ''}`);
     }
     lines.push('');
   }
   return lines.join('\n');
 }
 
-export function buildExperienceText(): string {
+export function buildContactBlock(): string {
   const lines: string[] = [];
-  lines.push('== EXPERIENCE ==');
-  lines.push('');
-  for (const exp of experience) {
-    lines.push('┌──────────────────────────────────────────────────────────────┐');
-    lines.push(`│  ${exp.company} – ${exp.role} (${exp.period})`);
-    lines.push('│');
-    for (const line of exp.description) {
-      lines.push(`│    • ${line}`);
-    }
-    lines.push('└──────────────────────────────────────────────────────────────┘');
-    lines.push('');
+  lines.push(`Email    : ${contact.email}`);
+  if (contact.social.github) {
+    lines.push(`GitHub   : ${contact.social.github.replace(/^https?:\/\//, '')}`);
   }
+  if (contact.social.linkedin) {
+    lines.push(`LinkedIn : ${contact.social.linkedin.replace(/^https?:\/\//, '')}`);
+  }
+  if (contact.social.portfolio) {
+    lines.push(`Website  : ${contact.social.portfolio.replace(/^https?:\/\//, '').replace(/\/$/, '')}`);
+  }
+  lines.push('Location : Chennai, Tamil Nadu, India');
+  lines.push('');
+  lines.push('Open to: full-time · freelance · open source');
+  lines.push('Or type "message" to send a direct message.');
   return lines.join('\n');
 }
 
@@ -189,35 +229,23 @@ export function buildCertificationsText(): string {
   return lines.join('\n');
 }
 
-export function buildContactBlock(): string {
-  const lines: string[] = [];
-  lines.push('== CONTACT == ');
-  lines.push('');
-  lines.push(`Email: ${contact.email}`);
-  lines.push('');
-  lines.push('Profiles:');
-  for (const [key, url] of Object.entries(contact.social)) {
-    if (!url) continue;
-    lines.push(`  • ${key}: ${url}`);
-  }
-  lines.push('');
-  lines.push('Tip: type `message` to open a secure message form overlay.');
-  return lines.join('\n');
+export function buildHelpText(): string {
+  return [
+    '+----------------------------------------------+',
+    '|      MAXIM-TERMINAL :: COMMAND REFERENCE     |',
+    '+----------------------------------------------+',
+    '  whoami     ->  Identity & about me',
+    '  skills     ->  Tech stack & proficiency',
+    '  projects   ->  Project showcase',
+    '  education  ->  Academic background',
+    '  experience ->  Work history',
+    '  contact    ->  Links & social media',
+    '  writeups   ->  Open CTF writeups in new tab',
+    '  blogs      ->  Open blog posts in new tab',
+    '  message    ->  Open message form overlay',
+    '  clear      ->  Clear terminal output',
+    '  banner     ->  Show welcome banner',
+    '  help       ->  Show this help screen',
+    '+----------------------------------------------+',
+  ].join('\n');
 }
-
-function wrapText(text: string, width = 88): string {
-  const words = text.split(' ');
-  const lines: string[] = [];
-  let current = '';
-  for (const word of words) {
-    if ((current + ' ' + word).trim().length > width) {
-      lines.push(current.trim());
-      current = word;
-    } else {
-      current += ' ' + word;
-    }
-  }
-  if (current.trim()) lines.push(current.trim());
-  return lines.join('\n      ');
-}
-

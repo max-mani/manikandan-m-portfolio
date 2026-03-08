@@ -179,7 +179,7 @@ export function Terminal({ onOpenMessage }: TerminalProps) {
       </div>
       {/* Hints row */}
       <div className="border-t border-[var(--border)] bg-[#010b03] px-[18px] py-[4px] flex flex-wrap gap-[5px]">
-        {['whoami', 'skills', 'projects', 'education', 'experience', 'contact', 'writeups', 'clear', 'help'].map(cmd => (
+        {['whoami', 'skills', 'projects', 'education', 'experience', 'contact', 'writeups', 'blogs', 'clear', 'help'].map(cmd => (
           <button
             key={cmd}
             onClick={() => runHint(cmd)}

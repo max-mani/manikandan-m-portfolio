@@ -191,6 +191,15 @@ export function getChallengeBySlug(slug: string): Challenge | undefined {
   return challenges.find(c => c.slug === slug)
 }
 
+export function getChallengeByEventAndSlug(
+  eventSlug: string,
+  challengeSlug: string
+): Challenge | undefined {
+  const event = getEventBySlug(eventSlug)
+  if (!event) return undefined
+  return event.challenges.find(c => c.slug === challengeSlug)
+}
+
 export function getAllCategories(): CategoryData[] {
   const challenges = getAllChallenges()
   return buildCategories(challenges)

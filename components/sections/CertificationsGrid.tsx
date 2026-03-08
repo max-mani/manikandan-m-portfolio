@@ -4,7 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { certifications } from '@/data/portfolio';
 import { Award, ExternalLink } from 'lucide-react';
-import { GlitchEffect } from '../effects/GlitchEffect';
+import { GlitchEffect } from '@/components/shared/GlitchEffect';
 
 export function CertificationsGrid() {
   return (

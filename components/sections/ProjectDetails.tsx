@@ -4,7 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { projects } from '@/data/portfolio';
 import { ExternalLink, Github, ArrowLeft } from 'lucide-react';
-import { GlitchEffect } from '../effects/GlitchEffect';
+import { GlitchEffect } from '@/components/shared/GlitchEffect';
 
 interface ProjectDetailsProps {
   projectId: string;

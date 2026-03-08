@@ -17,8 +17,8 @@ interface UseTerminalOptions {
 
 const BANNER_WELCOME_TEXT = [
   '',
-  "  Welcome to Maxim's cyber terminal.",
-  '  Type help to see available commands.',
+  "Welcome to Maxim's cyber terminal. Type help to see available commands.",
+  '',
 ].join('\n');
 
 export function useTerminal(options?: UseTerminalOptions) {
@@ -45,9 +45,15 @@ export function useTerminal(options?: UseTerminalOptions) {
   const clearTerminal = useCallback(() => {
     setLines([
       {
-        id: '1',
+        id: 'banner-ascii',
         type: 'output',
-        content: 'Terminal cleared. Type "help" to see available commands.',
+        content: '',
+        timestamp: Date.now(),
+      },
+      {
+        id: 'banner',
+        type: 'output',
+        content: BANNER_WELCOME_TEXT,
         timestamp: Date.now(),
       },
     ]);
@@ -79,7 +85,7 @@ export function useTerminal(options?: UseTerminalOptions) {
         const errorLine: TerminalLine = {
           id: (Date.now() + 1).toString(),
           type: 'error',
-          content: `Command not found: ${command}. Type "help" for available commands.`,
+          content: `bash: ${command}: command not found\nType "help" for available commands.`,
           timestamp: Date.now(),
         };
         setLines(prev => [...prev, errorLine]);

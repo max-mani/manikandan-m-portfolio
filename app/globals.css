@@ -11,8 +11,6 @@
   --bg: #020d04;
   --panel: rgba(0, 18, 4, 0.95);
   --border: #00ff4130;
-  --terminal-green: #00ff41;
-  --terminal-cyan: #00e5ff;
 }
 
 @theme inline {
@@ -56,10 +54,10 @@ body::after {
   background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.65) 100%);
   pointer-events: none;
   z-index: 9998;
-  animation: bodyFlicker 10s infinite;
+  animation: flicker 10s infinite;
 }
 
-@keyframes bodyFlicker {
+@keyframes flicker {
   0%,
   97%,
   100% {
@@ -71,7 +69,7 @@ body::after {
 }
 
 .terminal-root {
-  color: var(--terminal-green);
+  color: var(--g);
 }
 
 .scanline {
@@ -87,6 +85,65 @@ body::after {
   }
 }
 
+@keyframes marqueeScroll {
+  from {
+    transform: translateX(100vw);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes asciiGlow {
+  0%,
+  100% {
+    text-shadow: 0 0 3px var(--g);
+  }
+  50% {
+    text-shadow: 0 0 9px var(--g), 0 0 18px var(--gdim);
+  }
+}
+
+@keyframes scanMove {
+  from {
+    top: 0;
+  }
+  to {
+    top: 100vh;
+  }
+}
+
+@keyframes glitchEffect {
+  0% {
+    transform: translate(0);
+    filter: none;
+  }
+  20% {
+    transform: translate(-2px, 1px);
+    filter: hue-rotate(90deg) brightness(1.5);
+  }
+  40% {
+    transform: translate(2px, -1px);
+    filter: hue-rotate(-90deg);
+  }
+  60% {
+    transform: translate(-1px, 2px);
+    filter: brightness(0.8);
+  }
+  80% {
+    transform: translate(1px, -2px);
+    filter: hue-rotate(45deg);
+  }
+  100% {
+    transform: translate(0);
+    filter: none;
+  }
+}
+
+.animate-glitch-effect {
+  animation: glitchEffect 0.4s steps(4, end);
+}
+
 /* Terminal styling */
 .terminal {
   font-family: var(--font-mono), 'Courier New', monospace;
@@ -94,8 +151,8 @@ body::after {
 
 /* Scrollbar styling */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 3px;
+  height: 3px;
 }
 
 ::-webkit-scrollbar-track {
@@ -103,12 +160,12 @@ body::after {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #00ffff;
+  background: var(--gdim);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #00ff00;
+  background: var(--g);
 }
 
 /* Glassmorphism effect */

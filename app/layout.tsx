@@ -1,11 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, JetBrains_Mono, Share_Tech_Mono, VT323 } from "next/font/google";
+import { JetBrains_Mono, Share_Tech_Mono, VT323 } from "next/font/google";
 import "./globals.css";
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
@@ -57,7 +52,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} ${shareTechMono.variable} ${vt323.variable} antialiased`}
+        className={`${jetbrainsMono.variable} ${shareTechMono.variable} ${vt323.variable} antialiased`}
         suppressHydrationWarning
       >
         {children}

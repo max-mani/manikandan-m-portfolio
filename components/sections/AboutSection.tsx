@@ -3,7 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { about } from '@/data/portfolio';
-import { GlitchEffect } from '../effects/GlitchEffect';
+import { GlitchEffect } from '@/components/shared/GlitchEffect';
 
 export function AboutSection() {
   return (

@@ -1,24 +1,24 @@
-/* Scoped theme for /wirteups – cyber dark style. Tailwind v4 uses --color-* from theme. */
+/* Writeups theme - cyber terminal aesthetic, cyan accent for CTF */
 .writeups-theme {
-  --color-background: #050716;
-  --color-foreground: #e4e6eb;
-  --color-card: #0c1024;
-  --color-card-foreground: #e4e6eb;
-  --color-primary: #00ff41; /* neon green */
-  --color-primary-foreground: #050716;
-  --color-secondary: #1b1033; /* deep purple */
-  --color-muted: #141829;
-  --color-muted-foreground: #8b8fb0;
-  --color-accent: #ff00ff; /* magenta accent */
-  --color-accent-foreground: #050716;
-  --color-border: #252a4a;
-  --color-input: #141829;
-  --color-ring: #00ff41;
-  --radius: 0.625rem;
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --background: #020d04;
+  --foreground: #88ff99;
+  --primary: #00ff41;
+  --primary-dim: #00aa2a;
+  --cyan: #00e5ff;
+  --yellow: #ffe600;
+  --magenta: #ff00ff;
+  --red: #ff3c3c;
+  --card: rgba(0, 18, 4, 0.95);
+  --border: rgba(0, 255, 65, 0.18);
+  --border-bright: rgba(0, 255, 65, 0.45);
+  /* Tailwind v4 compatibility */
+  --color-background: #020d04;
+  --color-foreground: #88ff99;
+  --color-primary: #00ff41;
+  --color-muted-foreground: #00aa2a;
+  --color-accent: #00e5ff;
+  --color-border: rgba(0, 255, 65, 0.18);
+  --radius: 4px;
 }
 
 .writeups-theme body {
