@@ -27,11 +27,18 @@ const CATEGORY_META: {
   'Soft Skills': { icon: Sparkles, accent: 'violet' },
 };
 
-const ACCENT_BAR: Record<Accent, string> = {
-  cyan: 'from-cyan-400 to-cyan-200',
-  violet: 'from-fuchsia-500 to-violet-300',
-  green: 'from-emerald-400 to-emerald-200',
-  magenta: 'from-pink-500 to-fuchsia-300',
+const BAR_COLOR: Record<Accent, string> = {
+  cyan: '#00e5ff',
+  violet: '#00ff41',
+  green: '#4caf50',
+  magenta: '#ff00ff',
+};
+
+const ICON_BOX: Record<Accent, string> = {
+  cyan: 'border-[#00e5ff] text-[#00e5ff] bg-[#0a140a] shadow-[2px_2px_0_0_#00e5ff]',
+  violet: 'border-[#00ff41] text-[#00ff41] bg-[#0a140a] shadow-[2px_2px_0_0_#00ff41]',
+  green: 'border-[#4caf50] text-[#4caf50] bg-[#0a140a] shadow-[2px_2px_0_0_#4caf50]',
+  magenta: 'border-[#ff00ff] text-[#ff00ff] bg-[#0a140a] shadow-[2px_2px_0_0_#ff00ff]',
 };
 
 export function SkillsBento() {
@@ -43,7 +50,7 @@ export function SkillsBento() {
         <SectionHeading
           eyebrow="> ./skills --tree"
           title="The Loadout"
-          description="Built by shipping side-by-side: production code on the dev side, real attack surface on the security side. Every percentage is what I can ship right now, not aspirational."
+          description="Built by shipping side-by-side: production code on the dev side, real attack surface on the security side. Bars show rough depth — not a flex score."
         />
 
         <div className="mt-12 grid grid-cols-1 md:grid-cols-6 gap-4 md:gap-5 auto-rows-fr">
@@ -58,14 +65,14 @@ export function SkillsBento() {
               idx === 0
                 ? 'md:col-span-3'
                 : idx === 1
-                ? 'md:col-span-3'
-                : idx === 2
-                ? 'md:col-span-2'
-                : idx === 3
-                ? 'md:col-span-4'
-                : idx === 4
-                ? 'md:col-span-3'
-                : 'md:col-span-3';
+                  ? 'md:col-span-3'
+                  : idx === 2
+                    ? 'md:col-span-2'
+                    : idx === 3
+                      ? 'md:col-span-4'
+                      : idx === 4
+                        ? 'md:col-span-3'
+                        : 'md:col-span-3';
 
             return (
               <motion.div
@@ -73,69 +80,49 @@ export function SkillsBento() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.55, delay: idx * 0.05 }}
+                transition={{ duration: 0.15, delay: idx * 0.03, ease: [1, 0, 0, 1] }}
                 className={span}
               >
                 <GlowCard accent={meta.accent} className="h-full">
                   <div className="flex items-center gap-3">
                     <span
                       className={[
-                        'inline-flex h-9 w-9 items-center justify-center rounded-md border',
-                        meta.accent === 'cyan' &&
-                          'border-cyan-400/45 text-cyan-300 bg-cyan-400/10',
-                        meta.accent === 'violet' &&
-                          'border-fuchsia-400/45 text-fuchsia-300 bg-fuchsia-400/10',
-                        meta.accent === 'green' &&
-                          'border-emerald-400/45 text-emerald-300 bg-emerald-400/10',
-                        meta.accent === 'magenta' &&
-                          'border-pink-400/45 text-pink-300 bg-pink-400/10',
-                      ]
-                        .filter(Boolean)
-                        .join(' ')}
+                        'inline-flex h-8 w-8 items-center justify-center border-2',
+                        ICON_BOX[meta.accent],
+                      ].join(' ')}
                     >
-                      <Icon size={16} />
+                      <Icon size={14} />
                     </span>
                     <div>
-                      <h3 className="font-[family-name:var(--font-display)] text-lg text-white font-bold leading-tight">
-                        {category}
-                      </h3>
-                      <p className="font-[family-name:var(--font-share-tech-mono)] text-[0.65rem] uppercase tracking-[0.3em] text-white/45">
+                      <h3 className="text-[12px] font-bold text-[#00ff41] leading-tight">{category}</h3>
+                      <p className="text-[8px] uppercase tracking-[0.2em] text-[#4caf50]">
                         {items.length} entries
                       </p>
                     </div>
                   </div>
 
-                  <ul className="mt-5 space-y-3">
+                  <ul className="mt-4 space-y-2">
                     {items.map((item) => {
                       const pct = item.percentage ?? null;
                       return (
                         <li key={item.name}>
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-white/85">{item.name}</span>
-                            <span className="font-[family-name:var(--font-share-tech-mono)] text-[0.7rem] tracking-wider text-white/55">
+                          <div className="flex items-center justify-between text-[10px]">
+                            <span className="text-[#e8f5e9]/85">{item.name}</span>
+                            <span className="text-[8px] tracking-wider text-[#4caf50]">
                               {pct ? `${pct}%` : item.level}
                             </span>
                           </div>
                           {pct !== null && (
-                            <div className="mt-1.5 h-1 rounded-full bg-white/[0.05] overflow-hidden">
+                            <div className="mt-1 h-1 bg-[#1a2e1a] overflow-hidden border border-[#050a05]">
                               <motion.span
                                 initial={{ width: 0 }}
                                 whileInView={{ width: `${pct}%` }}
                                 viewport={{ once: true, margin: '-40px' }}
-                                transition={{ duration: 0.9, ease: 'easeOut' }}
-                                className={[
-                                  'block h-full rounded-full bg-gradient-to-r',
-                                  ACCENT_BAR[meta.accent],
-                                ].join(' ')}
+                                transition={{ duration: 0.25, ease: [1, 0, 0, 1] }}
+                                className="block h-full"
                                 style={{
-                                  boxShadow:
-                                    meta.accent === 'cyan'
-                                      ? '0 0 8px rgba(0,229,255,0.55)'
-                                      : meta.accent === 'violet'
-                                      ? '0 0 8px rgba(168,85,247,0.55)'
-                                      : meta.accent === 'green'
-                                      ? '0 0 8px rgba(0,255,65,0.45)'
-                                      : '0 0 8px rgba(255,0,255,0.45)',
+                                  backgroundColor: BAR_COLOR[meta.accent],
+                                  boxShadow: `0 0 6px ${BAR_COLOR[meta.accent]}`,
                                 }}
                               />
                             </div>

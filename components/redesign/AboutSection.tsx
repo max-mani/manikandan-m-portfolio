@@ -22,38 +22,34 @@ export function AboutSection() {
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.25, ease: [1, 0, 0, 1] }}
             className="lg:col-span-7"
           >
             <GlowCard accent="violet" className="h-full">
-              <p className="font-[family-name:var(--font-share-tech-mono)] text-xs uppercase tracking-[0.3em] text-fuchsia-300/85">
-                &gt; cat /home/maxim/bio.md
-              </p>
-              <p className="mt-4 text-base md:text-lg text-white/80 leading-relaxed font-[family-name:var(--font-body)]">
-                {about.bio}
-              </p>
-              <ul className="mt-6 space-y-3">
+              <p className="term-label uppercase tracking-[0.25em]">&gt; cat /home/maxim/bio.md</p>
+              <p className="mt-3 text-[10px] leading-[2em] text-[#e8f5e9]/85">{about.bio}</p>
+              <ul className="mt-5 space-y-2">
                 {about.summary.map((s) => (
-                  <li key={s} className="flex gap-3 text-sm md:text-base text-white/75">
-                    <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_8px_#00e5ff] flex-shrink-0" />
+                  <li key={s} className="flex gap-2 text-[10px] leading-[2em] text-[#e8f5e9]/80">
+                    <span className="mt-2 inline-block h-1 w-1 shrink-0 bg-[#00ff41]" />
                     <span>{s}</span>
                   </li>
                 ))}
               </ul>
 
-              <div className="mt-7 flex flex-wrap items-center gap-4">
+              <div className="mt-6 flex flex-wrap items-center gap-3">
                 <a
                   href={contact.social.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-cyan-400/40 text-cyan-300 text-sm font-[family-name:var(--font-share-tech-mono)] hover:bg-cyan-400/10 hover:border-cyan-300 hover:shadow-[0_0_18px_rgba(0,229,255,0.4)] transition-all"
+                  className="inline-flex items-center gap-2 px-3 py-2 border-2 border-[#00e5ff] text-[#00e5ff] text-[10px] bg-[#0a140a] shadow-[2px_2px_0_0_#00e5ff] hover:text-[#00ff41] hover:border-[#00ff41] hover:shadow-[2px_2px_0_0_#00ff41] transition-none active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
                 >
-                  <Github size={14} />
+                  <Github size={12} />
                   github.com/max-mani
-                  <ArrowUpRight size={14} />
+                  <ArrowUpRight size={12} />
                 </a>
-                <span className="inline-flex items-center gap-2 text-sm text-white/55 font-[family-name:var(--font-share-tech-mono)]">
-                  <MapPin size={14} className="text-fuchsia-300" />
+                <span className="inline-flex items-center gap-2 text-[10px] text-[#4caf50]">
+                  <MapPin size={12} className="text-[#00e5ff]" />
                   Madurai · Coimbatore · Chennai, IN
                 </span>
               </div>
@@ -64,54 +60,38 @@ export function AboutSection() {
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.65, delay: 0.05 }}
+            transition={{ duration: 0.25, delay: 0.05, ease: [1, 0, 0, 1] }}
             className="lg:col-span-5 grid grid-cols-2 gap-4"
           >
             {stats.map((s, idx) => (
               <GlowCard
                 key={s.label}
                 accent={
-                  idx === 0
-                    ? 'magenta'
-                    : idx === 1
-                    ? 'cyan'
-                    : idx === 2
-                    ? 'green'
-                    : 'violet'
+                  idx === 0 ? 'magenta' : idx === 1 ? 'cyan' : idx === 2 ? 'green' : 'violet'
                 }
                 interactive
                 className="!p-0"
               >
-                <div className="p-5">
-                  <div className="font-[family-name:var(--font-display)] text-3xl md:text-4xl font-bold text-gradient-cyber">
-                    {s.value}
-                  </div>
-                  <div className="mt-1 font-[family-name:var(--font-share-tech-mono)] text-[0.7rem] uppercase tracking-[0.25em] text-cyan-300/85">
+                <div className="p-4">
+                  <div className="text-[14px] font-bold text-[#00ff41]">{s.value}</div>
+                  <div className="mt-1 text-[8px] uppercase tracking-[0.2em] text-[#4caf50]">
                     {s.label}
                   </div>
-                  {s.hint && (
-                    <p className="mt-2 text-xs text-white/55 leading-snug">{s.hint}</p>
-                  )}
+                  {s.hint && <p className="mt-2 text-[8px] text-[#e8f5e9]/55 leading-snug">{s.hint}</p>}
                 </div>
               </GlowCard>
             ))}
 
             <GlowCard accent="cyan" className="col-span-2">
               <div className="flex items-start gap-3">
-                <span className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-cyan-400/50 bg-cyan-400/10 text-cyan-300 flex-shrink-0">
-                  <GraduationCap size={16} />
+                <span className="inline-flex h-8 w-8 items-center justify-center border-2 border-[#00e5ff] bg-[#0a140a] text-[#00e5ff] shadow-[2px_2px_0_0_#00e5ff] flex-shrink-0">
+                  <GraduationCap size={14} />
                 </span>
                 <div>
-                  <p className="font-[family-name:var(--font-share-tech-mono)] text-[0.68rem] tracking-[0.3em] text-cyan-300/85 uppercase">
-                    Education
-                  </p>
-                  <p className="mt-1 font-medium text-white">
-                    {about.education.degree}
-                  </p>
-                  <p className="text-sm text-white/65">
-                    {about.education.institution}
-                  </p>
-                  <p className="text-xs text-white/45 mt-1 font-[family-name:var(--font-share-tech-mono)]">
+                  <p className="text-[8px] tracking-[0.25em] text-[#4caf50] uppercase">Education</p>
+                  <p className="mt-1 font-bold text-[10px] text-[#e8f5e9]">{about.education.degree}</p>
+                  <p className="text-[10px] text-[#e8f5e9]/70">{about.education.institution}</p>
+                  <p className="text-[8px] text-[#4caf50] mt-1">
                     {about.education.period} · {about.education.status}
                   </p>
                 </div>
@@ -124,20 +104,18 @@ export function AboutSection() {
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6, delay: 0.1 }}
+          transition={{ duration: 0.25, delay: 0.1, ease: [1, 0, 0, 1] }}
           className="mt-10 grid grid-cols-2 md:grid-cols-5 gap-3"
         >
           {hero.focusAreas.map((area, i) => (
             <div
               key={area}
-              className="cyber-card-static px-4 py-3 hover:border-cyan-400/40 transition-colors"
+              className="cyber-card-static px-3 py-3 hover:border-[#00ff41] transition-none"
             >
-              <span className="block font-[family-name:var(--font-share-tech-mono)] text-[0.65rem] tracking-[0.3em] text-fuchsia-300/85">
+              <span className="block text-[8px] tracking-[0.2em] text-[#00e5ff] uppercase">
                 {String(i + 1).padStart(2, '0')} / FOCUS
               </span>
-              <span className="block mt-1 text-sm text-white/85 leading-snug">
-                {area}
-              </span>
+              <span className="block mt-1 text-[10px] text-[#e8f5e9]/85 leading-snug">{area}</span>
             </div>
           ))}
         </motion.div>

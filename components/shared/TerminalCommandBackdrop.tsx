@@ -53,6 +53,8 @@ export function TerminalCommandBackdrop() {
   );
   const particlesRef = useRef<Particle[]>([]);
   const rafRef = useRef(0);
+  /** Pointer in container-local pixels; invalid until first pointer move inside window. */
+  const pointerRef = useRef({ x: -1e6, y: -1e6, valid: false });
 
   useEffect(() => {
     const container = containerRef.current;
@@ -61,6 +63,10 @@ export function TerminalCommandBackdrop() {
     const wallDamp = 0.92;
     const maxSpeed = 0.52;
     const wander = 0.005;
+    /** Radius (px) around cursor where lines start easing away */
+    const repelRadius = 200;
+    /** How much extra velocity per frame at cursor center (keeps motion gentle) */
+    const repelStrength = 0.085;
 
     const syncParticlesSize = () => {
       const w = container.clientWidth;
@@ -85,15 +91,26 @@ export function TerminalCommandBackdrop() {
       particlesRef.current = createParticles(w, h);
     };
 
+    const onPointerMove = (e: PointerEvent) => {
+      const r = container.getBoundingClientRect();
+      pointerRef.current = {
+        x: e.clientX - r.left,
+        y: e.clientY - r.top,
+        valid: true,
+      };
+    };
+
     syncParticlesSize();
     const ro = new ResizeObserver(onResize);
     ro.observe(container);
+    window.addEventListener('pointermove', onPointerMove, { passive: true });
 
     const tick = () => {
       const w = container.clientWidth;
       const h = container.clientHeight;
       const particles = particlesRef.current;
       const els = spansRef.current;
+      const ptr = pointerRef.current;
 
       if (particles.length && w > 40 && h > 40) {
         const n = particles.length;
@@ -102,6 +119,20 @@ export function TerminalCommandBackdrop() {
           const p = particles[i];
           p.vx += (Math.random() - 0.5) * wander;
           p.vy += (Math.random() - 0.5) * wander;
+
+          if (ptr.valid) {
+            const dx = p.x - ptr.x;
+            const dy = p.y - ptr.y;
+            const dist = Math.hypot(dx, dy);
+            if (dist < repelRadius && dist > 0.5) {
+              const nx = dx / dist;
+              const ny = dy / dist;
+              const t = 1 - dist / repelRadius;
+              const push = t * t * repelStrength;
+              p.vx += nx * push;
+              p.vy += ny * push;
+            }
+          }
 
           const sp = Math.hypot(p.vx, p.vy);
           if (sp > maxSpeed) {
@@ -146,6 +177,7 @@ export function TerminalCommandBackdrop() {
     return () => {
       cancelAnimationFrame(rafRef.current);
       ro.disconnect();
+      window.removeEventListener('pointermove', onPointerMove);
     };
   }, []);
 
@@ -156,6 +188,7 @@ export function TerminalCommandBackdrop() {
   return (
     <div
       ref={containerRef}
+      data-chaos-fall-block
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
       aria-hidden
     >

@@ -25,13 +25,13 @@ export function SectionHeading({
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.55, ease: 'easeOut' }}
+      transition={{ duration: 0.1, ease: [1, 0, 0, 1] }}
       className={[isCenter ? 'text-center mx-auto max-w-2xl' : 'max-w-3xl', className].join(' ')}
     >
       {eyebrow && (
         <p
           className={[
-            'font-[family-name:var(--font-share-tech-mono)] text-xs md:text-sm uppercase tracking-[0.3em] text-cyan-400/80',
+            'term-label uppercase tracking-[0.2em] text-[#4caf50]',
             isCenter ? 'mx-auto' : '',
           ].join(' ')}
         >
@@ -40,8 +40,8 @@ export function SectionHeading({
       )}
       <h2
         className={[
-          'mt-2 sm:mt-3 font-[family-name:var(--font-display)] text-2xl sm:text-4xl md:text-5xl font-bold leading-tight',
-          'text-gradient-cyber',
+          'mt-2 font-bold leading-snug text-[12px] text-[#00ff41]',
+          isCenter ? 'mx-auto' : '',
         ].join(' ')}
       >
         {title}
@@ -49,7 +49,7 @@ export function SectionHeading({
       {description && (
         <p
           className={[
-            'mt-3 sm:mt-4 text-sm sm:text-base md:text-lg text-white/70 font-[family-name:var(--font-body)] leading-relaxed',
+            'mt-3 text-[10px] leading-[2em] text-[#e8f5e9]/80',
             isCenter ? 'mx-auto' : '',
           ].join(' ')}
         >
@@ -58,8 +58,10 @@ export function SectionHeading({
       )}
       <div
         className={[
-          'mt-5 h-px w-32 bg-gradient-to-r',
-          isCenter ? 'mx-auto from-transparent via-cyan-400 to-transparent' : 'from-cyan-400 via-fuchsia-400 to-transparent',
+          'mt-4 h-0.5 w-24 bg-gradient-to-r',
+          isCenter
+            ? 'mx-auto from-transparent via-[#00ff41] to-transparent'
+            : 'from-[#00ff41] via-[#00e5ff] to-transparent',
         ].join(' ')}
       />
     </motion.div>

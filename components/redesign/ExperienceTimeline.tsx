@@ -19,7 +19,7 @@ export function ExperienceTimeline() {
         <ol className="mt-12 relative">
           <span
             aria-hidden
-            className="absolute left-5 md:left-1/2 top-2 bottom-2 w-px bg-gradient-to-b from-cyan-400/60 via-fuchsia-400/40 to-transparent"
+            className="absolute left-5 md:left-1/2 top-2 bottom-2 w-0.5 bg-gradient-to-b from-[#00ff41]/70 via-[#00e5ff]/50 to-transparent"
           />
 
           {experience.map((exp, idx) => {
@@ -30,57 +30,48 @@ export function ExperienceTimeline() {
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.55, delay: idx * 0.05 }}
-                className={[
-                  'relative pl-12 md:pl-0 mb-10 md:mb-14 md:grid md:grid-cols-2 md:gap-10',
-                ].join(' ')}
+                transition={{ duration: 0.15, delay: idx * 0.04, ease: [1, 0, 0, 1] }}
+                className="relative pl-12 md:pl-0 mb-8 md:mb-12 md:grid md:grid-cols-2 md:gap-10"
               >
                 <span
                   aria-hidden
-                  className="absolute left-3 md:left-1/2 md:-translate-x-1/2 top-1.5 inline-flex h-6 w-6 items-center justify-center rounded-full border border-cyan-400/60 bg-[#080a16] shadow-[0_0_18px_rgba(0,229,255,0.45)]"
+                  className="absolute left-2.5 md:left-1/2 md:-translate-x-1/2 top-1.5 inline-flex h-5 w-5 items-center justify-center border-2 border-[#00e5ff] bg-[#0a140a] shadow-[2px_2px_0_0_#00e5ff]"
                 >
-                  <span className="h-2 w-2 rounded-full bg-cyan-300 animate-pulse" />
+                  <span className="h-1.5 w-1.5 bg-[#00ff41] animate-pulse" />
                 </span>
 
                 <div
                   className={[
-                    'cyber-card-static p-5 md:p-6 transition-colors hover:border-cyan-400/45',
+                    'cyber-card-static p-4 md:p-5 hover:border-[#00ff41] transition-none',
                     isLeft ? 'md:col-start-1' : 'md:col-start-2',
                   ].join(' ')}
                 >
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-fuchsia-400/45 bg-fuchsia-400/10 text-fuchsia-300">
-                      <Briefcase size={12} />
+                    <span className="inline-flex h-7 w-7 items-center justify-center border-2 border-[#00ff41] bg-[#0a140a] text-[#00ff41] shadow-[2px_2px_0_0_#00ff41]">
+                      <Briefcase size={11} />
                     </span>
-                    <span className="font-[family-name:var(--font-share-tech-mono)] text-[0.7rem] tracking-[0.3em] uppercase text-fuchsia-300/85">
+                    <span className="text-[8px] tracking-[0.2em] uppercase text-[#00e5ff]">
                       {exp.period}
                     </span>
                   </div>
-                  <h3 className="font-[family-name:var(--font-display)] text-lg md:text-xl font-bold text-white">
-                    {exp.role}
-                  </h3>
-                  <p className="text-sm text-cyan-300/90 font-[family-name:var(--font-share-tech-mono)]">
-                    @ {exp.company}
-                  </p>
+                  <h3 className="text-[12px] font-bold text-[#00ff41]">{exp.role}</h3>
+                  <p className="text-[10px] text-[#4caf50]">@ {exp.company}</p>
 
-                  <ul className="mt-3 space-y-1.5">
+                  <ul className="mt-3 space-y-1">
                     {exp.description.slice(0, 4).map((d, i) => (
-                      <li
-                        key={i}
-                        className="text-sm text-white/70 leading-relaxed flex gap-2"
-                      >
-                        <span className="mt-2 inline-block h-1 w-1 rounded-full bg-cyan-300/80 flex-shrink-0" />
+                      <li key={i} className="text-[10px] text-[#e8f5e9]/75 leading-[2em] flex gap-2">
+                        <span className="mt-2 inline-block h-1 w-1 shrink-0 bg-[#00e5ff]" />
                         <span>{d}</span>
                       </li>
                     ))}
                   </ul>
 
                   {exp.technologies && exp.technologies.length > 0 && (
-                    <div className="mt-4 flex flex-wrap gap-1.5">
+                    <div className="mt-3 flex flex-wrap gap-1">
                       {exp.technologies.map((t) => (
                         <span
                           key={t}
-                          className="px-2 py-0.5 rounded text-[0.7rem] font-[family-name:var(--font-share-tech-mono)] text-cyan-200 bg-cyan-500/10 border border-cyan-400/25"
+                          className="px-1.5 py-0.5 text-[8px] text-[#00e5ff] bg-[#050a05] border border-[#1a2e1a]"
                         >
                           {t}
                         </span>

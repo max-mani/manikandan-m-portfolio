@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Github, ExternalLink, Star } from 'lucide-react';
@@ -13,96 +13,92 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
   const { name, description, technologies, github, live, image, featured, year, categories } = project;
+  const [imageFailed, setImageFailed] = useState(false);
+  const showImage = Boolean(image) && !imageFailed;
 
   return (
     <motion.article
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.55, delay: Math.min(index, 6) * 0.04 }}
-      whileHover={{ y: -4 }}
-      className="group relative h-full rounded-2xl overflow-hidden border border-fuchsia-400/15 bg-gradient-to-b from-[rgba(20,22,40,0.85)] to-[rgba(8,10,22,0.95)] backdrop-blur-md transition-all duration-300 hover:border-cyan-400/55 hover:shadow-[0_8px_30px_rgba(0,229,255,0.18),0_0_40px_rgba(168,85,247,0.18)]"
+      transition={{ duration: 0.15, delay: Math.min(index, 6) * 0.03, ease: [1, 0, 0, 1] }}
+      whileHover={{ x: -2, y: -2 }}
+      className="group relative h-full overflow-hidden border-2 border-[#1a2e1a] bg-[#0a140a] shadow-[4px_4px_0_0_#1a2e1a] transition-none hover:border-[#00e5ff] hover:shadow-[4px_4px_0_0_#00e5ff]"
     >
-      <div className="relative aspect-[16/9] w-full overflow-hidden bg-gradient-to-br from-fuchsia-500/15 via-cyan-500/10 to-transparent">
-        {image ? (
+      <div className="relative aspect-[16/9] w-full overflow-hidden bg-[#050a05]">
+        {showImage ? (
           <Image
-            src={image}
+            src={image!}
             alt={name}
             fill
-            className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+            className="object-cover"
             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            onError={() => setImageFailed(true)}
           />
         ) : (
-          <div className="absolute inset-0 grid place-items-center">
-            <div className="absolute inset-0 grid-bg opacity-50" />
-            <div
-              aria-hidden
-              className="absolute inset-0"
-              style={{
-                background:
-                  'radial-gradient(circle at 30% 30%, rgba(0,229,255,0.18), transparent 50%), radial-gradient(circle at 70% 70%, rgba(168,85,247,0.22), transparent 55%)',
-              }}
-            />
-            <span className="relative font-[family-name:var(--font-display)] font-bold text-3xl text-gradient-cyber px-6 text-center leading-tight">
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-4">
+            <div className="absolute inset-0 grid-bg opacity-50" aria-hidden />
+            <span className="relative text-[9px] sm:text-[10px] tracking-wide text-[#00ff41] text-center leading-tight border-2 border-[#00ff41] px-3 py-2 bg-[#0a140a] shadow-[2px_2px_0_0_#00ff41]">
+              [ SCREENSHOT ]
+            </span>
+            <span className="relative text-[10px] font-bold text-center text-[#00e5ff] leading-tight line-clamp-2">
               {name.split(' ')[0]}
             </span>
           </div>
         )}
         <span
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent to-[rgba(5,6,10,0.85)]"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent to-[#050a05]/90"
         />
 
         {featured && (
-          <span className="absolute top-3 left-3 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[0.65rem] font-[family-name:var(--font-share-tech-mono)] tracking-[0.2em] text-amber-200 bg-amber-400/15 border border-amber-300/40">
-            <Star size={10} className="fill-amber-300 text-amber-300" />
+          <span className="absolute top-2 left-2 inline-flex items-center gap-1 px-2 py-0.5 text-[8px] tracking-[0.15em] text-[#ffb300] bg-[#0a140a] border-2 border-[#ffb300] shadow-[2px_2px_0_0_#ffb300]">
+            <Star size={8} className="text-[#ffb300]" />
             FEATURED
           </span>
         )}
 
         {year && (
-          <span className="absolute top-3 right-3 px-2 py-0.5 rounded-full text-[0.65rem] font-[family-name:var(--font-share-tech-mono)] tracking-widest text-cyan-200 bg-cyan-500/10 border border-cyan-400/40">
+          <span className="absolute top-2 right-2 px-2 py-0.5 text-[8px] tracking-widest text-[#00e5ff] bg-[#0a140a] border-2 border-[#00e5ff]">
             {year}
           </span>
         )}
       </div>
 
-      <div className="relative p-5">
-        <h3 className="font-[family-name:var(--font-display)] text-xl text-white font-bold leading-tight group-hover:text-cyan-200 transition-colors">
+      <div className="relative p-4">
+        <h3 className="text-[12px] font-bold text-[#00ff41] leading-tight group-hover:text-[#00e5ff] transition-none">
           {name}
         </h3>
-        <p className="mt-2 text-sm text-white/65 line-clamp-3 leading-relaxed">
-          {description}
-        </p>
+        <p className="mt-2 text-[10px] leading-[2em] text-[#e8f5e9]/65 line-clamp-3">{description}</p>
 
-        <div className="mt-4 flex flex-wrap gap-1.5">
+        <div className="mt-3 flex flex-wrap gap-1">
           {technologies.slice(0, 6).map((tech) => (
             <span
               key={tech}
-              className="px-2 py-0.5 rounded text-[0.7rem] font-[family-name:var(--font-share-tech-mono)] text-fuchsia-200 bg-fuchsia-500/10 border border-fuchsia-400/25"
+              className="px-1.5 py-0.5 text-[8px] text-[#00e5ff] bg-[#050a05] border border-[#1a2e1a]"
             >
               {tech}
             </span>
           ))}
           {technologies.length > 6 && (
-            <span className="px-2 py-0.5 rounded text-[0.7rem] font-[family-name:var(--font-share-tech-mono)] text-white/55 bg-white/5 border border-white/10">
+            <span className="px-1.5 py-0.5 text-[8px] text-[#4caf50] bg-[#050a05] border border-[#1a2e1a]">
               +{technologies.length - 6}
             </span>
           )}
         </div>
 
-        <div className="mt-5 flex items-center justify-between gap-3 pt-4 border-t border-white/[0.06]">
+        <div className="mt-4 flex items-center justify-between gap-2 pt-3 border-t-2 border-[#1a2e1a]">
           <div className="flex flex-wrap gap-1">
             {(categories || []).map((c) => (
               <span
                 key={c}
-                className="px-2 py-0.5 rounded-full text-[0.6rem] font-[family-name:var(--font-share-tech-mono)] tracking-widest uppercase text-cyan-200/85 bg-cyan-400/5 border border-cyan-400/20"
+                className="px-1.5 py-0.5 text-[7px] tracking-widest uppercase text-[#4caf50] border border-[#1a2e1a] bg-[#050a05]"
               >
                 {c}
               </span>
             ))}
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             {github && (
               <a
                 href={github}
@@ -110,9 +106,9 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
                 rel="noopener noreferrer"
                 aria-label={`${name} GitHub repository`}
                 title="GitHub"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/10 text-white/75 hover:text-cyan-300 hover:border-cyan-400/55 hover:bg-cyan-400/5 transition-colors"
+                className="inline-flex h-8 w-8 items-center justify-center border-2 border-[#1a2e1a] text-[#e8f5e9]/75 hover:text-[#00ff41] hover:border-[#00ff41] transition-none"
               >
-                <Github size={14} />
+                <Github size={12} />
               </a>
             )}
             {live && (
@@ -122,9 +118,9 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
                 rel="noopener noreferrer"
                 aria-label={`${name} live site`}
                 title="Live"
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md border border-fuchsia-400/45 text-fuchsia-200 text-xs font-[family-name:var(--font-share-tech-mono)] hover:border-fuchsia-300 hover:bg-fuchsia-400/10 hover:shadow-[0_0_18px_rgba(168,85,247,0.45)] transition-all"
+                className="inline-flex items-center gap-1 px-2 py-1.5 border-2 border-[#00ff41] text-[#00ff41] text-[8px] bg-[#0a140a] shadow-[2px_2px_0_0_#00ff41] hover:border-[#00e5ff] hover:text-[#00e5ff] hover:shadow-[2px_2px_0_0_#00e5ff] transition-none"
               >
-                <ExternalLink size={12} />
+                <ExternalLink size={10} />
                 <span>Live</span>
               </a>
             )}

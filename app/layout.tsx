@@ -1,33 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { JetBrains_Mono, Share_Tech_Mono, VT323, Inter, Orbitron } from "next/font/google";
+import { Press_Start_2P } from "next/font/google";
 import "./globals.css";
+import { AppToasts } from "@/components/AppToasts";
 
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-mono-jb",
-  subsets: ["latin"],
-});
-
-const shareTechMono = Share_Tech_Mono({
-  variable: "--font-share-tech-mono",
-  subsets: ["latin"],
+const pressStart2P = Press_Start_2P({
   weight: "400",
-});
-
-const vt323 = VT323({
-  variable: "--font-vt323",
   subsets: ["latin"],
-  weight: "400",
-});
-
-const inter = Inter({
-  variable: "--font-body",
-  subsets: ["latin"],
-});
-
-const orbitron = Orbitron({
-  variable: "--font-display",
-  subsets: ["latin"],
-  weight: ["500", "600", "700", "800", "900"],
+  variable: "--font-press-start",
 });
 
 /** Resolves absolute URLs for metadata. Without this, `metadataBase` defaults to production and favicons break on localhost. */
@@ -51,7 +30,7 @@ function getMetadataBase(): URL {
 }
 
 export const metadata: Metadata = {
-  title: "Manikandan M — Cyber + Code Portfolio",
+  title: "Manikandan M — MAXIM_OS Portfolio",
   description:
     "Pre-final year CSE student holding Development and Cybersecurity together. Full-Stack & Mobile Developer · Application Security Analyst · CTF Player.",
   keywords: [
@@ -67,11 +46,14 @@ export const metadata: Metadata = {
   ],
   metadataBase: getMetadataBase(),
   alternates: { canonical: "/" },
-  /** Primary tab icon: `/favicon.ico` for Google; Apple touch uses PNG. */
+  /** Tab + PWA: pixel portrait at /images/anime-bot-favicon.png; favicon.ico regenerated via `npm run favicon`. */
   icons: {
-    icon: [{ url: "/favicon.ico", sizes: "any" }],
-    apple: [{ url: "/images/anime-bot-favicon.png?v=4", sizes: "180x180", type: "image/png" }],
-    shortcut: "/favicon.ico",
+    icon: [
+      { url: "/images/anime-bot-favicon.png", type: "image/png", sizes: "32x32" },
+      { url: "/favicon.ico", sizes: "48x48", type: "image/x-icon" },
+    ],
+    apple: [{ url: "/images/anime-bot-favicon.png", type: "image/png", sizes: "180x180" }],
+    shortcut: "/images/anime-bot-favicon.png",
   },
 };
 
@@ -79,7 +61,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor: "#05060a",
+  themeColor: "#050a05",
 };
 
 export default function RootLayout({
@@ -88,12 +70,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${inter.variable} ${orbitron.variable} ${jetbrainsMono.variable} ${shareTechMono.variable} ${vt323.variable} antialiased`}
-        suppressHydrationWarning
-      >
+    <html lang="en" className={pressStart2P.variable} suppressHydrationWarning>
+      <body className={pressStart2P.className} suppressHydrationWarning>
         {children}
+        <AppToasts />
       </body>
     </html>
   );

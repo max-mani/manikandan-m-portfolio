@@ -1,21 +1,39 @@
 'use client';
 
-import React, { useRef } from 'react';
-import Image from 'next/image';
+import React, { useEffect, useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+
+const HERO_VIDEO_LABEL =
+  'Manikandan holding Development and Cybersecurity together — animated illustration';
 
 export function HeroHoldingIllustration() {
   const ref = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  const sx = useSpring(x, { stiffness: 120, damping: 18 });
-  const sy = useSpring(y, { stiffness: 120, damping: 18 });
+  const sx = useSpring(x, { stiffness: 200, damping: 28 });
+  const sy = useSpring(y, { stiffness: 200, damping: 28 });
 
-  const rotateX = useTransform(sy, [-0.5, 0.5], ['7deg', '-7deg']);
-  const rotateY = useTransform(sx, [-0.5, 0.5], ['-9deg', '9deg']);
-  const translateX = useTransform(sx, [-0.5, 0.5], ['-8px', '8px']);
-  const translateY = useTransform(sy, [-0.5, 0.5], ['-8px', '8px']);
+  const rotateX = useTransform(sy, [-0.5, 0.5], ['4deg', '-4deg']);
+  const rotateY = useTransform(sx, [-0.5, 0.5], ['-5deg', '5deg']);
+  const translateX = useTransform(sx, [-0.5, 0.5], ['-4px', '4px']);
+  const translateY = useTransform(sy, [-0.5, 0.5], ['-4px', '4px']);
+
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const syncPlayback = () => {
+      if (mq.matches) v.pause();
+      else void v.play().catch(() => {});
+    };
+
+    syncPlayback();
+    mq.addEventListener('change', syncPlayback);
+    return () => mq.removeEventListener('change', syncPlayback);
+  }, []);
 
   function handleMove(e: React.MouseEvent<HTMLDivElement>) {
     if (!ref.current) return;
@@ -37,57 +55,56 @@ export function HeroHoldingIllustration() {
       onMouseLeave={handleLeave}
       style={{ perspective: 1200 }}
       className="relative w-full max-w-[680px] mx-auto"
-      initial={{ opacity: 0, scale: 0.92 }}
+      initial={{ opacity: 0, scale: 0.98 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.9, ease: 'easeOut' }}
+      transition={{ duration: 0.35, ease: [1, 0, 0, 1] }}
     >
       <span
         aria-hidden
-        className="absolute -inset-12 -z-10 rounded-full blur-3xl opacity-70"
+        className="absolute -inset-10 -z-10 opacity-60 max-md:hidden"
         style={{
           background:
-            'radial-gradient(circle at 30% 30%, rgba(0,229,255,0.35), transparent 55%), radial-gradient(circle at 70% 70%, rgba(168,85,247,0.45), transparent 55%)',
+            'radial-gradient(circle at 30% 30%, rgba(0,255,65,0.2), transparent 55%), radial-gradient(circle at 70% 70%, rgba(0,229,255,0.12), transparent 55%)',
         }}
       />
 
       <motion.div
         style={{ rotateX, rotateY, translateX, translateY, transformStyle: 'preserve-3d' }}
-        className="relative rounded-3xl overflow-hidden scanline-overlay neon-border-violet animate-pulse-glow"
+        className="relative overflow-hidden scanline-overlay border-2 border-[#00ff41] shadow-[4px_4px_0_0_#00ff41] aspect-[1280/853] w-full bg-[#050a05]"
       >
-        <Image
-          src="/images/hero-holding.png"
-          alt="Manikandan holding Development and Cybersecurity together"
-          width={1280}
-          height={853}
-          priority
-          className="w-full h-auto block"
+        <video
+          ref={videoRef}
+          className="w-full h-full object-contain block [image-rendering:pixelated] [image-rendering:crisp-edges]"
+          src="/images/loop.mp4"
+          muted
+          loop
+          playsInline
+          preload="auto"
+          poster="/images/hero-holding.png"
+          aria-label={HERO_VIDEO_LABEL}
         />
 
         <span
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[rgba(5,6,10,0.35)]"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#050a05]/40"
         />
       </motion.div>
 
       <motion.div
-        animate={{ y: [0, -8, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-        className="hidden md:flex absolute -left-6 top-1/3 z-20 items-center gap-2 px-3 py-1.5 rounded-full glass border border-cyan-400/40"
+        animate={{ y: [0, -6, 0] }}
+        transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
+        className="hidden md:flex absolute -left-4 top-1/3 z-20 items-center gap-2 px-2 py-1 pixel-border-dim bg-[#0a140a]"
       >
-        <span className="h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_10px_#00e5ff]" />
-        <span className="font-[family-name:var(--font-share-tech-mono)] text-[0.7rem] tracking-[0.25em] text-cyan-300">
-          DEV.LEFT
-        </span>
+        <span className="h-2 w-2 bg-[#00e5ff] shadow-[0_0_8px_#00e5ff]" />
+        <span className="text-[8px] tracking-[0.25em] text-[#00e5ff] uppercase">DEV.LEFT</span>
       </motion.div>
       <motion.div
-        animate={{ y: [0, 8, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-        className="hidden md:flex absolute -right-6 bottom-1/3 z-20 items-center gap-2 px-3 py-1.5 rounded-full glass border border-fuchsia-400/40"
+        animate={{ y: [0, 6, 0] }}
+        transition={{ duration: 6, repeat: Infinity, ease: 'linear', delay: 0.5 }}
+        className="hidden md:flex absolute -right-4 bottom-1/3 z-20 items-center gap-2 px-2 py-1 pixel-border-dim bg-[#0a140a]"
       >
-        <span className="h-1.5 w-1.5 rounded-full bg-fuchsia-400 shadow-[0_0_10px_#a855f7]" />
-        <span className="font-[family-name:var(--font-share-tech-mono)] text-[0.7rem] tracking-[0.25em] text-fuchsia-300">
-          SEC.RIGHT
-        </span>
+        <span className="h-2 w-2 bg-[#ff3d00] shadow-[0_0_8px_#ff3d00]" />
+        <span className="text-[8px] tracking-[0.25em] text-[#ffb300] uppercase">SEC.RIGHT</span>
       </motion.div>
     </motion.div>
   );

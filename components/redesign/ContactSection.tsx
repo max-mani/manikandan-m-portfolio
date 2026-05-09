@@ -21,6 +21,9 @@ import { contact } from '@/data/portfolio';
 import { SectionHeading } from './SectionHeading';
 import { GlowCard } from './GlowCard';
 
+const inputClass =
+  'w-full px-3 py-2 bg-[#050a05] border-2 border-[#1a2e1a] text-[10px] text-[#e8f5e9] placeholder:text-[#4caf50]/40 focus:outline-none focus:border-[#00e5ff] shadow-[2px_2px_0_0_#1a2e1a] focus:shadow-[2px_2px_0_0_#00e5ff] transition-none';
+
 const socialLinks: Array<{
   key: keyof typeof contact.social | string;
   label: string;
@@ -35,16 +38,22 @@ const socialLinks: Array<{
   { key: 'playstore', label: 'Play Store', Icon: Smartphone, accent: 'violet' },
 ];
 
+const linkAccent: Record<
+  'cyan' | 'violet' | 'green' | 'magenta',
+  string
+> = {
+  cyan: 'border-[#1a2e1a] hover:border-[#00e5ff] hover:text-[#00e5ff] hover:shadow-[2px_2px_0_0_#00e5ff]',
+  violet: 'border-[#1a2e1a] hover:border-[#00ff41] hover:text-[#00ff41] hover:shadow-[2px_2px_0_0_#00ff41]',
+  green: 'border-[#1a2e1a] hover:border-[#4caf50] hover:text-[#4caf50] hover:shadow-[2px_2px_0_0_#4caf50]',
+  magenta: 'border-[#1a2e1a] hover:border-[#ff00ff] hover:text-[#ff00ff] hover:shadow-[2px_2px_0_0_#ff00ff]',
+};
+
 export function ContactSection() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>(
-    'idle'
-  );
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     if (status !== 'sending') setStatus('idle');
   };
@@ -107,22 +116,17 @@ export function ContactSection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.55 }}
+            transition={{ duration: 0.2, ease: [1, 0, 0, 1] }}
           >
             <GlowCard accent="cyan" className="h-full">
-              <h3 className="font-[family-name:var(--font-display)] text-xl font-bold text-white">
-                Send a transmission
-              </h3>
-              <p className="mt-1 text-sm text-white/60">
+              <h3 className="text-[12px] font-bold text-[#00ff41]">Send a transmission</h3>
+              <p className="mt-1 text-[10px] text-[#e8f5e9]/60">
                 Encrypted via EmailJS. Replies usually within 24 hours.
               </p>
 
-              <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+              <form onSubmit={handleSubmit} className="mt-5 space-y-3">
                 <div>
-                  <label
-                    htmlFor="name"
-                    className="block font-[family-name:var(--font-share-tech-mono)] text-[0.7rem] tracking-[0.25em] uppercase text-cyan-300/85 mb-1.5"
-                  >
+                  <label htmlFor="name" className="term-label uppercase tracking-[0.15em]">
                     &gt; Your name
                   </label>
                   <input
@@ -132,14 +136,11 @@ export function ContactSection() {
                     onChange={handleChange}
                     placeholder="agent_07"
                     autoComplete="name"
-                    className="w-full px-4 py-2.5 rounded-md bg-[#0a0c1a] border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-cyan-400/60 focus:shadow-[0_0_18px_rgba(0,229,255,0.25)] transition-all"
+                    className={inputClass}
                   />
                 </div>
                 <div>
-                  <label
-                    htmlFor="email"
-                    className="block font-[family-name:var(--font-share-tech-mono)] text-[0.7rem] tracking-[0.25em] uppercase text-cyan-300/85 mb-1.5"
-                  >
+                  <label htmlFor="email" className="term-label uppercase tracking-[0.15em]">
                     &gt; Your email
                   </label>
                   <input
@@ -150,14 +151,11 @@ export function ContactSection() {
                     onChange={handleChange}
                     placeholder="you@domain.tld"
                     autoComplete="email"
-                    className="w-full px-4 py-2.5 rounded-md bg-[#0a0c1a] border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-cyan-400/60 focus:shadow-[0_0_18px_rgba(0,229,255,0.25)] transition-all"
+                    className={inputClass}
                   />
                 </div>
                 <div>
-                  <label
-                    htmlFor="message"
-                    className="block font-[family-name:var(--font-share-tech-mono)] text-[0.7rem] tracking-[0.25em] uppercase text-cyan-300/85 mb-1.5"
-                  >
+                  <label htmlFor="message" className="term-label uppercase tracking-[0.15em]">
                     &gt; Message
                   </label>
                   <textarea
@@ -167,34 +165,34 @@ export function ContactSection() {
                     value={formData.message}
                     onChange={handleChange}
                     placeholder="Tell me about your project, role, or idea..."
-                    className="w-full px-4 py-2.5 rounded-md bg-[#0a0c1a] border border-white/10 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-fuchsia-400/60 focus:shadow-[0_0_18px_rgba(168,85,247,0.25)] transition-all resize-none"
+                    className={`${inputClass} resize-none`}
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={status === 'sending'}
-                  className="inline-flex items-center justify-center gap-2 w-full md:w-auto px-6 py-2.5 rounded-md border border-cyan-400/60 bg-cyan-400/10 text-cyan-200 text-sm font-[family-name:var(--font-share-tech-mono)] tracking-wide hover:bg-cyan-400/20 hover:border-cyan-300 hover:shadow-[0_0_22px_rgba(0,229,255,0.45)] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  className="inline-flex items-center justify-center gap-2 w-full md:w-auto px-5 py-2 border-2 border-[#00e5ff] bg-[#0a140a] text-[#00e5ff] text-[10px] shadow-[2px_2px_0_0_#00e5ff] hover:border-[#00ff41] hover:text-[#00ff41] hover:shadow-[2px_2px_0_0_#00ff41] disabled:opacity-50 disabled:cursor-not-allowed transition-none active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
                 >
                   {status === 'sending' ? (
                     <>
-                      <Loader2 size={14} className="animate-spin" /> Transmitting…
+                      <Loader2 size={12} className="animate-spin" /> Transmitting…
                     </>
                   ) : (
                     <>
-                      <Send size={14} /> Send transmission
+                      <Send size={12} /> Send transmission
                     </>
                   )}
                 </button>
 
                 {status === 'success' && (
-                  <div className="flex items-center gap-2 text-sm text-emerald-300 font-[family-name:var(--font-share-tech-mono)]">
-                    <CheckCircle2 size={14} /> Transmission successful — I&apos;ll get back to you soon.
+                  <div className="flex items-center gap-2 text-[10px] text-[#4caf50]">
+                    <CheckCircle2 size={12} /> Transmission successful — I&apos;ll get back to you soon.
                   </div>
                 )}
                 {status === 'error' && errorMsg && (
-                  <div className="flex items-center gap-2 text-sm text-red-300 font-[family-name:var(--font-share-tech-mono)]">
-                    <XCircle size={14} /> {errorMsg}
+                  <div className="flex items-center gap-2 text-[10px] text-[#ff3d00]">
+                    <XCircle size={12} /> {errorMsg}
                   </div>
                 )}
               </form>
@@ -205,21 +203,19 @@ export function ContactSection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.55, delay: 0.05 }}
-            className="space-y-5"
+            transition={{ duration: 0.2, delay: 0.05, ease: [1, 0, 0, 1] }}
+            className="space-y-4"
           >
             <GlowCard accent="violet">
               <div className="flex items-start gap-3">
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-fuchsia-400/45 bg-fuchsia-400/10 text-fuchsia-300 flex-shrink-0">
-                  <Mail size={16} />
+                <span className="inline-flex h-9 w-9 items-center justify-center border-2 border-[#00ff41] bg-[#0a140a] text-[#00ff41] shadow-[2px_2px_0_0_#00ff41] flex-shrink-0">
+                  <Mail size={14} />
                 </span>
                 <div className="min-w-0">
-                  <p className="font-[family-name:var(--font-share-tech-mono)] text-[0.7rem] tracking-[0.3em] uppercase text-fuchsia-300/85">
-                    Email
-                  </p>
+                  <p className="text-[8px] tracking-[0.2em] uppercase text-[#4caf50]">Email</p>
                   <a
                     href={`mailto:${contact.email}`}
-                    className="block mt-1 text-base font-medium text-white hover:text-cyan-300 transition-colors break-all"
+                    className="block mt-1 text-[10px] font-bold text-[#e8f5e9] hover:text-[#00e5ff] break-all transition-none"
                   >
                     {contact.email}
                   </a>
@@ -229,15 +225,15 @@ export function ContactSection() {
 
             <GlowCard accent="cyan">
               <div className="flex items-start gap-3">
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-cyan-400/50 bg-cyan-400/10 text-cyan-300 flex-shrink-0">
-                  <MapPin size={16} />
+                <span className="inline-flex h-9 w-9 items-center justify-center border-2 border-[#00e5ff] bg-[#0a140a] text-[#00e5ff] shadow-[2px_2px_0_0_#00e5ff] flex-shrink-0">
+                  <MapPin size={14} />
                 </span>
                 <div>
-                  <p className="font-[family-name:var(--font-share-tech-mono)] text-[0.7rem] tracking-[0.3em] uppercase text-cyan-300/85">
-                    Location
+                  <p className="text-[8px] tracking-[0.2em] uppercase text-[#4caf50]">Location</p>
+                  <p className="mt-1 text-[10px] text-[#e8f5e9]">
+                    Madurai · Coimbatore · Chennai, India
                   </p>
-                  <p className="mt-1 text-base text-white">Madurai · Coimbatore · Chennai, India</p>
-                  <p className="text-xs text-white/45 mt-0.5 font-[family-name:var(--font-share-tech-mono)]">
+                  <p className="text-[8px] text-[#4caf50] mt-0.5">
                     Open to relocation · Remote-friendly
                   </p>
                 </div>
@@ -245,10 +241,10 @@ export function ContactSection() {
             </GlowCard>
 
             <GlowCard accent="mixed">
-              <p className="font-[family-name:var(--font-share-tech-mono)] text-[0.7rem] tracking-[0.3em] uppercase text-cyan-300/85 mb-3">
+              <p className="text-[8px] tracking-[0.2em] uppercase text-[#4caf50] mb-2">
                 Find me elsewhere
               </p>
-              <ul className="grid grid-cols-2 gap-2.5">
+              <ul className="grid grid-cols-2 gap-2">
                 {socialLinks.map(({ key, label, Icon, accent }) => {
                   const href = (contact.social as Record<string, string | undefined>)[key as string];
                   if (!href) return null;
@@ -259,20 +255,11 @@ export function ContactSection() {
                         target="_blank"
                         rel="noopener noreferrer"
                         className={[
-                          'flex items-center gap-2 px-3 py-2 rounded-md border bg-white/[0.02] text-sm transition-all',
-                          accent === 'cyan' &&
-                            'border-cyan-400/25 text-white/85 hover:border-cyan-400/55 hover:text-cyan-200 hover:bg-cyan-400/10',
-                          accent === 'violet' &&
-                            'border-fuchsia-400/25 text-white/85 hover:border-fuchsia-400/55 hover:text-fuchsia-200 hover:bg-fuchsia-400/10',
-                          accent === 'green' &&
-                            'border-emerald-400/25 text-white/85 hover:border-emerald-400/55 hover:text-emerald-200 hover:bg-emerald-400/10',
-                          accent === 'magenta' &&
-                            'border-pink-400/25 text-white/85 hover:border-pink-400/55 hover:text-pink-200 hover:bg-pink-400/10',
-                        ]
-                          .filter(Boolean)
-                          .join(' ')}
+                          'flex items-center gap-2 px-2 py-2 border-2 bg-[#050a05] text-[10px] text-[#e8f5e9]/85 shadow-[2px_2px_0_0_#1a2e1a] transition-none',
+                          linkAccent[accent],
+                        ].join(' ')}
                       >
-                        <Icon size={14} />
+                        <Icon size={12} className="shrink-0" />
                         <span>{label}</span>
                       </a>
                     </li>

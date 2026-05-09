@@ -17,7 +17,7 @@ const FILTERS: Array<{ id: 'All' | ProjectCategory; label: string }> = [
 ];
 
 export function ProjectsGrid() {
-  const [filter, setFilter] = useState<typeof FILTERS[number]['id']>('All');
+  const [filter, setFilter] = useState<(typeof FILTERS)[number]['id']>('All');
 
   const filtered = useMemo(() => {
     if (filter === 'All') return projects;
@@ -30,22 +30,18 @@ export function ProjectsGrid() {
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <SectionHeading
             eyebrow="> ./projects --pinned"
-            title={
-              <>
-                Things I&apos;ve Shipped
-              </>
-            }
+            title={<>Things I&apos;ve Shipped</>}
             description="Production apps, hackathon builds, AI experiments and security tools. Every card links straight to the source on GitHub."
           />
           <a
             href={contact.social.github}
             target="_blank"
             rel="noopener noreferrer"
-            className="self-start md:self-auto inline-flex items-center gap-2 px-4 py-2 rounded-md border border-cyan-400/45 text-cyan-200 text-sm font-[family-name:var(--font-share-tech-mono)] hover:bg-cyan-400/10 hover:border-cyan-300 hover:shadow-[0_0_18px_rgba(0,229,255,0.4)] transition-all"
+            className="self-start md:self-auto inline-flex items-center gap-2 px-3 py-2 border-2 border-[#00e5ff] text-[#00e5ff] text-[10px] bg-[#0a140a] shadow-[2px_2px_0_0_#00e5ff] hover:text-[#00ff41] hover:border-[#00ff41] hover:shadow-[2px_2px_0_0_#00ff41] transition-none active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
           >
-            <Github size={14} />
+            <Github size={12} />
             All repos on GitHub
-            <ArrowUpRight size={14} />
+            <ArrowUpRight size={12} />
           </a>
         </div>
 
@@ -60,16 +56,17 @@ export function ProjectsGrid() {
             return (
               <button
                 key={f.id}
+                type="button"
                 onClick={() => setFilter(f.id)}
                 className={[
-                  'px-3.5 py-1.5 rounded-full text-sm font-[family-name:var(--font-share-tech-mono)] tracking-wide transition-all border',
+                  'px-3 py-1.5 text-[10px] tracking-wide border-2 transition-none',
                   active
-                    ? 'border-cyan-400/70 bg-cyan-400/15 text-cyan-200 shadow-[0_0_18px_rgba(0,229,255,0.35)]'
-                    : 'border-white/10 bg-white/[0.03] text-white/65 hover:text-white hover:border-white/30',
+                    ? 'border-[#00ff41] bg-[#0a140a] text-[#00ff41] shadow-[2px_2px_0_0_#00ff41]'
+                    : 'border-[#1a2e1a] bg-[#050a05] text-[#e8f5e9]/70 hover:border-[#00e5ff] hover:text-[#00e5ff]',
                 ].join(' ')}
               >
                 {f.label}
-                <span className="ml-2 text-[0.7rem] text-white/45">[{count}]</span>
+                <span className="ml-1.5 text-[8px] text-[#4caf50]">[{count}]</span>
               </button>
             );
           })}
@@ -81,10 +78,10 @@ export function ProjectsGrid() {
               <motion.div
                 key={project.id}
                 layout
-                initial={{ opacity: 0, scale: 0.96 }}
+                initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.96 }}
-                transition={{ duration: 0.3 }}
+                exit={{ opacity: 0, scale: 0.98 }}
+                transition={{ duration: 0.12, ease: [1, 0, 0, 1] }}
               >
                 <ProjectCard project={project} index={idx} />
               </motion.div>
@@ -93,9 +90,8 @@ export function ProjectsGrid() {
         </div>
 
         {filtered.length === 0 && (
-          <div className="mt-10 text-center text-white/55 font-[family-name:var(--font-share-tech-mono)] text-sm">
-            &gt; No projects matched this filter yet. Check back soon — I&apos;m
-            shipping fast.
+          <div className="mt-10 text-center text-[10px] text-[#4caf50]">
+            &gt; No projects matched this filter yet. Check back soon — I&apos;m shipping fast.
           </div>
         )}
       </div>

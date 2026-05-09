@@ -47,17 +47,17 @@ export function HeroSection({ onOpenTerminal }: { onOpenTerminal?: () => void })
       id="home"
       className="relative isolate min-h-[calc(100vh-4rem)] flex items-center overflow-hidden pt-8 pb-12 sm:pt-10 sm:pb-16 md:pt-12 md:pb-20"
     >
-      <span aria-hidden className="absolute inset-0 -z-10 grid-bg opacity-30" />
+      <span aria-hidden className="absolute inset-0 -z-10 grid-bg opacity-40" />
       <span
         aria-hidden
-        className="absolute inset-x-0 top-0 h-px -z-10 bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent"
+        className="absolute inset-x-0 top-0 h-px -z-10 bg-gradient-to-r from-transparent via-[#00ff41]/50 to-transparent"
       />
       <span
         aria-hidden
-        className="absolute -top-40 left-1/2 -translate-x-1/2 -z-10 h-80 w-[80%] rounded-full blur-3xl"
+        className="absolute -top-40 left-1/2 -translate-x-1/2 -z-10 h-80 w-[80%] max-md:hidden"
         style={{
           background:
-            'radial-gradient(ellipse at center, rgba(168,85,247,0.35), rgba(0,229,255,0.18) 50%, transparent 75%)',
+            'radial-gradient(ellipse at center, rgba(0,255,65,0.12), rgba(0,229,255,0.06) 50%, transparent 75%)',
         }}
       />
 
@@ -65,91 +65,79 @@ export function HeroSection({ onOpenTerminal }: { onOpenTerminal?: () => void })
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
+          transition={{ duration: 0.35, ease: [1, 0, 0, 1] }}
           className="lg:col-span-6 order-2 lg:order-1"
         >
           <motion.div
             initial={{ opacity: 0, x: -16 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.15, duration: 0.6 }}
-            className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-2 sm:py-1.5 rounded-full glass border border-cyan-400/30 mb-5 sm:mb-6 max-w-full flex-wrap"
+            transition={{ delay: 0.1, duration: 0.25, ease: [1, 0, 0, 1] }}
+            className="inline-flex items-center gap-2 px-3 py-2 pixel-border-dim mb-5 sm:mb-6 max-w-full flex-wrap bg-[#0a140a]/90"
           >
-            <span className="relative h-2 w-2 rounded-full bg-emerald-400">
-              <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-70" />
+            <span className="relative h-2 w-2 bg-[#00ff41] shrink-0">
+              <span className="absolute inset-0 bg-[#00ff41] animate-ping opacity-60" />
             </span>
-            <span className="font-[family-name:var(--font-share-tech-mono)] text-[0.62rem] sm:text-[0.7rem] tracking-[0.14em] sm:tracking-[0.28em] text-emerald-300/90">
+            <span className="text-[8px] tracking-[0.2em] text-[#4caf50] uppercase">
               ONLINE · CHENNAI, IN
             </span>
-            <span className="text-white/30 hidden sm:inline">·</span>
-            <span className="font-[family-name:var(--font-share-tech-mono)] text-[0.62rem] sm:text-[0.7rem] tracking-[0.14em] sm:tracking-[0.28em] text-fuchsia-300">
+            <span className="text-[#1a2e1a] max-sm:hidden">·</span>
+            <span className="text-[8px] tracking-[0.2em] text-[#00e5ff] uppercase">
               AVAILABLE FOR HIRE
             </span>
           </motion.div>
 
-          <p className="font-[family-name:var(--font-share-tech-mono)] text-cyan-300/90 text-sm md:text-base tracking-widest uppercase mb-3">
-            &gt; whoami
-          </p>
+          <p className="text-[#00e5ff] text-[10px] tracking-widest uppercase mb-3">&gt; whoami</p>
 
-          <h1 className="font-[family-name:var(--font-display)] font-extrabold leading-[1.05] text-3xl min-[400px]:text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
-            <span className="block text-white">Hi, I&apos;m</span>
-            <span className="block text-gradient-cyber animate-gradient-shift bg-[length:200%_200%]">
-              Manikandan M
-            </span>
+          <h1 className="font-bold leading-snug text-[14px] text-[#00ff41] max-w-lg">
+            <span className="block text-[#e8f5e9]">Hi, I&apos;m</span>
+            <span className="block text-[#00e5ff]">Manikandan M</span>
           </h1>
 
-          <div className="mt-5 flex items-center gap-3 flex-wrap">
-            <span className="font-[family-name:var(--font-share-tech-mono)] text-base md:text-lg text-fuchsia-300">
-              I&apos;m a
-            </span>
-            <span className="relative inline-flex items-center px-3 py-1 rounded-md neon-border-cyan font-[family-name:var(--font-share-tech-mono)] text-base md:text-lg text-cyan-200">
+          <div className="mt-4 flex items-center gap-2 flex-wrap">
+            <span className="text-[10px] text-[#4caf50]">I&apos;m a</span>
+            <span className="relative inline-flex items-center px-2 py-1 neon-border-cyan bg-[#0a140a] text-[10px] text-[#00e5ff]">
               {typed}
-              <span className="ml-0.5 w-[2px] h-[1em] bg-cyan-300 animate-blink" />
+              <span className="ml-0.5 w-[2px] h-[1em] bg-[#00e5ff] animate-blink" />
             </span>
           </div>
 
-          <p className="mt-6 max-w-xl text-base md:text-lg text-white/75 leading-relaxed font-[family-name:var(--font-body)]">
-            Pre-final year CSE student at Kumaraguru College of Technology.
-            I build <span className="text-cyan-300 font-medium">scalable products</span>{' '}
-            on one side and break / defend{' '}
-            <span className="text-fuchsia-300 font-medium">application systems</span>{' '}
-            on the other — holding both like Spidey holds the ferry.
-            <span className="text-emerald-300"> HackX CTF 2025 — 2nd Place.</span>
+          <p className="mt-5 max-w-xl text-[10px] leading-[2em] text-[#e8f5e9]/85">
+            Pre-final year CSE student at Kumaraguru College of Technology. I build{' '}
+            <span className="text-[#00e5ff]">scalable products</span> on one side and break / defend{' '}
+            <span className="text-[#ffb300]">application systems</span> on the other — holding both like
+            Spidey holds the ferry.
+            <span className="text-[#00ff41]"> HackX CTF 2025 — 2nd Place.</span>
           </p>
 
-          <div className="mt-7 sm:mt-8 flex flex-wrap items-center gap-2 sm:gap-3">
-            <NeonButton href="#projects" variant="primary" icon={<ArrowDown size={16} />}>
+          <div className="mt-6 flex flex-wrap items-center gap-2">
+            <NeonButton href="#projects" variant="primary" icon={<ArrowDown size={14} />}>
               View My Work
             </NeonButton>
             <NeonButton
               href={contact.social.github}
               external
               variant="violet"
-              icon={<Github size={16} />}
+              icon={<Github size={14} />}
             >
               GitHub @max-mani
             </NeonButton>
             <NeonButton
               onClick={() => onOpenTerminal?.()}
               variant="green"
-              icon={<TerminalSquare size={16} />}
+              icon={<TerminalSquare size={14} />}
             >
               Floating TTY
             </NeonButton>
-            <NeonButton
-              href={contact.social.resume}
-              external
-              variant="ghost"
-              icon={<FileText size={16} />}
-            >
+            <NeonButton href={contact.social.resume} external variant="ghost" icon={<FileText size={14} />}>
               Resume
             </NeonButton>
           </div>
 
-          <div className="mt-10 flex flex-wrap gap-2">
+          <div className="mt-8 flex flex-wrap gap-2">
             {hero.skills.slice(0, 8).map((skill) => (
               <span
                 key={skill}
-                className="px-3 py-1 rounded-full text-xs font-[family-name:var(--font-share-tech-mono)] text-white/75 bg-white/[0.04] border border-white/10 hover:border-cyan-400/50 hover:text-cyan-200 transition-colors"
+                className="px-2 py-1 text-[8px] text-[#e8f5e9]/80 bg-[#0a140a] border-2 border-[#1a2e1a] shadow-[2px_2px_0_0_#1a2e1a] hover:border-[#00e5ff] hover:text-[#00ff41] hover:shadow-[2px_2px_0_0_#00e5ff] transition-none"
               >
                 {skill}
               </span>
@@ -158,16 +146,14 @@ export function HeroSection({ onOpenTerminal }: { onOpenTerminal?: () => void })
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
+          initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.9, ease: 'easeOut', delay: 0.2 }}
+          transition={{ duration: 0.35, ease: [1, 0, 0, 1], delay: 0.15 }}
           className="lg:col-span-6 order-1 lg:order-2 relative"
         >
-          <div className="absolute -top-2 -right-2 hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full glass border border-fuchsia-400/30 z-30">
-            <Sparkles size={12} className="text-fuchsia-300" />
-            <span className="font-[family-name:var(--font-share-tech-mono)] text-[0.65rem] tracking-[0.3em] text-fuchsia-300">
-              CYBER + CODE
-            </span>
+          <div className="absolute -top-2 -right-2 hidden md:flex items-center gap-2 px-3 py-1.5 pixel-border-dim bg-[#0a140a] z-30">
+            <Sparkles size={12} className="text-[#00ff41]" />
+            <span className="text-[8px] tracking-[0.25em] text-[#00e5ff] uppercase">CYBER + CODE</span>
           </div>
           <HeroHoldingIllustration />
         </motion.div>
@@ -175,12 +161,10 @@ export function HeroSection({ onOpenTerminal }: { onOpenTerminal?: () => void })
 
       <a
         href="#about"
-        className="absolute left-1/2 -translate-x-1/2 bottom-4 md:bottom-6 flex flex-col items-center gap-1 text-white/50 hover:text-cyan-300 transition-colors"
+        className="absolute left-1/2 -translate-x-1/2 bottom-4 md:bottom-6 flex flex-col items-center gap-1 text-[#4caf50] hover:text-[#00ff41] transition-none"
         aria-label="Scroll to about"
       >
-        <span className="font-[family-name:var(--font-share-tech-mono)] text-[0.65rem] tracking-[0.3em]">
-          SCROLL
-        </span>
+        <span className="text-[8px] tracking-[0.3em] uppercase">SCROLL</span>
         <ArrowDown size={14} className="animate-bounce" />
       </a>
     </section>

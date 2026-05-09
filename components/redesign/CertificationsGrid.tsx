@@ -26,44 +26,42 @@ export function CertificationsGrid() {
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.55, delay: idx * 0.05 }}
+                transition={{ duration: 0.15, delay: idx * 0.04, ease: [1, 0, 0, 1] }}
               >
                 <GlowCard accent={idx === 0 ? 'cyan' : idx === 1 ? 'violet' : 'magenta'} className="h-full">
                   <div className="flex items-start gap-3">
                     <span
                       className={[
-                        'inline-flex h-10 w-10 items-center justify-center rounded-md border flex-shrink-0',
+                        'inline-flex h-9 w-9 items-center justify-center border-2 flex-shrink-0',
                         inProgress
-                          ? 'border-amber-400/45 bg-amber-400/10 text-amber-300'
-                          : 'border-emerald-400/50 bg-emerald-400/10 text-emerald-300',
+                          ? 'border-[#ffb300] bg-[#0a140a] text-[#ffb300] shadow-[2px_2px_0_0_#ffb300]'
+                          : 'border-[#4caf50] bg-[#0a140a] text-[#4caf50] shadow-[2px_2px_0_0_#4caf50]',
                       ].join(' ')}
                     >
                       {inProgress ? (
-                        <Loader2 size={16} className="animate-spin" />
+                        <Loader2 size={14} className="animate-spin" />
                       ) : (
-                        <BadgeCheck size={16} />
+                        <BadgeCheck size={14} />
                       )}
                     </span>
                     <div className="min-w-0">
-                      <h3 className="font-[family-name:var(--font-display)] text-base md:text-lg font-bold text-white leading-tight">
-                        {cert.name}
-                      </h3>
-                      <p className="text-sm text-cyan-300/85 font-[family-name:var(--font-share-tech-mono)] mt-0.5">
+                      <h3 className="text-[12px] font-bold text-[#00ff41] leading-tight">{cert.name}</h3>
+                      <p className="text-[10px] text-[#4caf50] mt-0.5">
                         {cert.issuer} · {cert.date}
                       </p>
-                      <div className="mt-2 flex flex-wrap gap-1.5">
+                      <div className="mt-2 flex flex-wrap gap-1">
                         {cert.level && (
-                          <span className="px-2 py-0.5 rounded text-[0.65rem] font-[family-name:var(--font-share-tech-mono)] text-fuchsia-200 bg-fuchsia-500/10 border border-fuchsia-400/25">
+                          <span className="px-1.5 py-0.5 text-[8px] text-[#00e5ff] bg-[#050a05] border border-[#1a2e1a]">
                             {cert.level}
                           </span>
                         )}
                         {cert.status && (
                           <span
                             className={[
-                              'px-2 py-0.5 rounded text-[0.65rem] font-[family-name:var(--font-share-tech-mono)]',
+                              'px-1.5 py-0.5 text-[8px] border',
                               inProgress
-                                ? 'text-amber-200 bg-amber-400/10 border border-amber-400/30'
-                                : 'text-emerald-200 bg-emerald-400/10 border border-emerald-400/30',
+                                ? 'text-[#ffb300] border-[#ffb300] bg-[#0a140a]'
+                                : 'text-[#4caf50] border-[#4caf50] bg-[#0a140a]',
                             ].join(' ')}
                           >
                             {cert.status}
@@ -74,7 +72,7 @@ export function CertificationsGrid() {
                   </div>
 
                   {cert.description && (
-                    <p className="mt-4 text-sm text-white/70 leading-relaxed line-clamp-4">
+                    <p className="mt-3 text-[10px] text-[#e8f5e9]/70 leading-[2em] line-clamp-4">
                       {cert.description}
                     </p>
                   )}
@@ -84,7 +82,7 @@ export function CertificationsGrid() {
                       href={cert.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-4 inline-flex items-center gap-2 text-xs font-[family-name:var(--font-share-tech-mono)] text-cyan-300 hover:text-cyan-200"
+                      className="mt-3 inline-flex items-center gap-2 text-[10px] text-[#00e5ff] hover:text-[#00ff41] transition-none"
                     >
                       Verify <ExternalLink size={12} />
                     </a>

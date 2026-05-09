@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 
 type Variant = 'primary' | 'ghost' | 'violet' | 'green';
 
@@ -30,35 +29,29 @@ type Props = AsButton | AsLink;
 
 const variantClasses: Record<Variant, string> = {
   primary:
-    'border border-cyan-400/60 text-cyan-300 hover:text-white hover:border-cyan-300 hover:bg-cyan-500/15 hover:shadow-[0_0_22px_rgba(0,229,255,0.45)]',
+    'border-2 border-[#00e5ff] text-[#00e5ff] shadow-[2px_2px_0_0_#00e5ff] hover:text-[#00ff41] hover:border-[#00ff41] hover:shadow-[2px_2px_0_0_#00ff41]',
   violet:
-    'border border-fuchsia-400/60 text-fuchsia-300 hover:text-white hover:border-fuchsia-300 hover:bg-fuchsia-500/15 hover:shadow-[0_0_22px_rgba(168,85,247,0.5)]',
+    'border-2 border-[#00ff41] text-[#00ff41] shadow-[2px_2px_0_0_#00ff41] hover:text-[#00e5ff] hover:border-[#00e5ff] hover:shadow-[2px_2px_0_0_#00e5ff]',
   green:
-    'border border-emerald-400/60 text-emerald-300 hover:text-white hover:border-emerald-300 hover:bg-emerald-500/15 hover:shadow-[0_0_22px_rgba(0,255,65,0.4)]',
+    'border-2 border-[#4caf50] text-[#4caf50] shadow-[2px_2px_0_0_#4caf50] hover:text-[#00ff41] hover:border-[#00ff41] hover:shadow-[2px_2px_0_0_#00ff41]',
   ghost:
-    'border border-white/15 text-white/80 hover:text-white hover:border-white/40 hover:bg-white/5',
+    'border-2 border-[#1a2e1a] text-[#e8f5e9]/85 shadow-[2px_2px_0_0_#1a2e1a] hover:border-[#00e5ff] hover:text-[#00e5ff] hover:shadow-[2px_2px_0_0_#00e5ff]',
 };
 
 export function NeonButton(props: Props) {
   const { children, variant = 'primary', className = '', icon } = props;
 
   const inner = (
-    <motion.span
-      whileHover={{ scale: 1.03 }}
-      whileTap={{ scale: 0.97 }}
+    <span
       className={[
-        'group inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-md text-sm font-medium tracking-wide transition-all duration-200 backdrop-blur-sm font-[family-name:var(--font-share-tech-mono)]',
+        'inline-flex items-center justify-center gap-2 px-4 py-2 text-[10px] tracking-wide bg-[#0a140a] transition-none active:translate-x-[2px] active:translate-y-[2px] active:shadow-none',
         variantClasses[variant],
         className,
       ].join(' ')}
     >
-      {icon && (
-        <span className="inline-flex items-center group-hover:translate-x-0.5 transition-transform">
-          {icon}
-        </span>
-      )}
+      {icon && <span className="inline-flex items-center shrink-0">{icon}</span>}
       <span>{children}</span>
-    </motion.span>
+    </span>
   );
 
   if ('href' in props && props.href) {
@@ -68,14 +61,14 @@ export function NeonButton(props: Props) {
           href={props.href}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block"
+          className="inline-block active:opacity-90"
         >
           {inner}
         </a>
       );
     }
     return (
-      <Link href={props.href} className="inline-block">
+      <Link href={props.href} className="inline-block active:opacity-90">
         {inner}
       </Link>
     );
@@ -85,7 +78,7 @@ export function NeonButton(props: Props) {
     <button
       type={('type' in props && props.type) || 'button'}
       onClick={'onClick' in props ? props.onClick : undefined}
-      className="inline-block"
+      className="inline-block active:opacity-90"
     >
       {inner}
     </button>

@@ -30,6 +30,9 @@ interface BlogWriteupsPreviewProps {
   events: EventPreview[];
 }
 
+const cardLink =
+  'block group border-2 border-[#1a2e1a] bg-[#050a05] p-3 shadow-[2px_2px_0_0_#1a2e1a] hover:border-[#00e5ff] hover:shadow-[2px_2px_0_0_#00e5ff] transition-none';
+
 export function BlogWriteupsPreview({ posts, events }: BlogWriteupsPreviewProps) {
   return (
     <section id="logbook" className="relative py-14 sm:py-20 md:py-28">
@@ -46,48 +49,42 @@ export function BlogWriteupsPreview({ posts, events }: BlogWriteupsPreviewProps)
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.55 }}
+            transition={{ duration: 0.2, ease: [1, 0, 0, 1] }}
           >
             <GlowCard accent="cyan" className="h-full">
               <div className="flex items-center gap-2 mb-1">
-                <span className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-cyan-400/45 bg-cyan-400/10 text-cyan-300">
-                  <NotebookPen size={14} />
+                <span className="inline-flex h-8 w-8 items-center justify-center border-2 border-[#00e5ff] bg-[#0a140a] text-[#00e5ff] shadow-[2px_2px_0_0_#00e5ff]">
+                  <NotebookPen size={12} />
                 </span>
-                <h3 className="font-[family-name:var(--font-display)] text-xl font-bold text-white">
-                  Latest Blogs
-                </h3>
+                <h3 className="text-[12px] font-bold text-[#00ff41]">Latest Blogs</h3>
               </div>
-              <p className="text-sm text-white/60 mb-5">
+              <p className="text-[10px] text-[#e8f5e9]/60 mb-4">
                 Reflections on freelancing, building, and the developer mindset.
               </p>
 
               {posts.length === 0 ? (
-                <p className="text-sm text-white/55 font-[family-name:var(--font-share-tech-mono)]">
-                  &gt; No posts yet — first one&apos;s queued.
-                </p>
+                <p className="text-[10px] text-[#4caf50]">&gt; No posts yet — first one&apos;s queued.</p>
               ) : (
-                <ul className="space-y-3">
+                <ul className="space-y-2">
                   {posts.slice(0, 3).map((p) => (
                     <li key={p.slug}>
                       <Link
                         href={`/blogs/${p.slug}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="block group rounded-lg border border-white/[0.06] hover:border-cyan-400/45 hover:bg-cyan-400/[0.04] p-3 transition-colors"
+                        className={cardLink}
                       >
-                        <div className="flex items-center gap-2 mb-1 text-[0.65rem] tracking-widest uppercase font-[family-name:var(--font-share-tech-mono)] text-fuchsia-300/85">
+                        <div className="flex items-center gap-2 mb-1 text-[8px] tracking-widest uppercase text-[#4caf50]">
                           <span>{p.date}</span>
-                          <span className="text-white/30">·</span>
-                          <span className="text-cyan-300/85">[{p.tag}]</span>
+                          <span className="text-[#1a2e1a]">·</span>
+                          <span className="text-[#00e5ff]">[{p.tag}]</span>
                         </div>
-                        <p className="text-sm font-medium text-white group-hover:text-cyan-200 transition-colors">
+                        <p className="text-[10px] font-bold text-[#e8f5e9] group-hover:text-[#00ff41] transition-none">
                           {p.title}
                         </p>
-                        <p className="mt-1 text-xs text-white/55 line-clamp-2">
-                          {p.excerpt}
-                        </p>
-                        <div className="mt-2 flex items-center gap-1 text-[0.7rem] text-white/45">
-                          <Clock size={11} /> {p.readTime} min read
+                        <p className="mt-1 text-[8px] text-[#e8f5e9]/55 line-clamp-2">{p.excerpt}</p>
+                        <div className="mt-2 flex items-center gap-1 text-[8px] text-[#4caf50]">
+                          <Clock size={10} /> {p.readTime} min read
                         </div>
                       </Link>
                     </li>
@@ -99,9 +96,9 @@ export function BlogWriteupsPreview({ posts, events }: BlogWriteupsPreviewProps)
                 href="/blogs"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-5 inline-flex items-center gap-2 text-sm font-[family-name:var(--font-share-tech-mono)] text-cyan-300 hover:text-cyan-200"
+                className="mt-4 inline-flex items-center gap-2 text-[10px] text-[#00e5ff] hover:text-[#00ff41] transition-none"
               >
-                Read all posts <ArrowRight size={14} />
+                Read all posts <ArrowRight size={12} />
               </Link>
             </GlowCard>
           </motion.div>
@@ -110,52 +107,48 @@ export function BlogWriteupsPreview({ posts, events }: BlogWriteupsPreviewProps)
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.55, delay: 0.05 }}
+            transition={{ duration: 0.2, delay: 0.05, ease: [1, 0, 0, 1] }}
           >
             <GlowCard accent="violet" className="h-full">
               <div className="flex items-center gap-2 mb-1">
-                <span className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-fuchsia-400/45 bg-fuchsia-400/10 text-fuchsia-300">
-                  <Flag size={14} />
+                <span className="inline-flex h-8 w-8 items-center justify-center border-2 border-[#00ff41] bg-[#0a140a] text-[#00ff41] shadow-[2px_2px_0_0_#00ff41]">
+                  <Flag size={12} />
                 </span>
-                <h3 className="font-[family-name:var(--font-display)] text-xl font-bold text-white">
-                  CTF Writeups
-                </h3>
+                <h3 className="text-[12px] font-bold text-[#00ff41]">CTF Writeups</h3>
               </div>
-              <p className="text-sm text-white/60 mb-5">
+              <p className="text-[10px] text-[#e8f5e9]/60 mb-4">
                 Challenges I&apos;ve cracked, end-to-end attack chains, written so you can replay them.
               </p>
 
               {events.length === 0 ? (
-                <p className="text-sm text-white/55 font-[family-name:var(--font-share-tech-mono)]">
-                  &gt; No events published yet.
-                </p>
+                <p className="text-[10px] text-[#4caf50]">&gt; No events published yet.</p>
               ) : (
-                <ul className="space-y-3">
+                <ul className="space-y-2">
                   {events.slice(0, 3).map((ev) => (
                     <li key={ev.slug}>
                       <Link
                         href={`/wirteups/event/${ev.slug}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="block group rounded-lg border border-white/[0.06] hover:border-fuchsia-400/45 hover:bg-fuchsia-400/[0.04] p-3 transition-colors"
+                        className={cardLink}
                       >
-                        <div className="flex items-center gap-2 mb-1 text-[0.65rem] tracking-widest uppercase font-[family-name:var(--font-share-tech-mono)] text-cyan-300/85">
+                        <div className="flex items-center gap-2 mb-1 text-[8px] tracking-widest uppercase text-[#4caf50]">
                           <span>EVENT · {ev.year ?? ''}</span>
-                          <span className="text-white/30">·</span>
-                          <span className="text-fuchsia-300/85">
+                          <span className="text-[#1a2e1a]">·</span>
+                          <span className="text-[#00e5ff]">
                             {ev.totalChallenges} chals · {ev.totalPoints} pts
                           </span>
                         </div>
-                        <p className="text-sm font-medium text-white group-hover:text-fuchsia-200 transition-colors">
+                        <p className="text-[10px] font-bold text-[#e8f5e9] group-hover:text-[#00ff41] transition-none">
                           {ev.name}
                         </p>
                         {ev.description && (
-                          <p className="mt-1 text-xs text-white/55 line-clamp-2">
+                          <p className="mt-1 text-[8px] text-[#e8f5e9]/55 line-clamp-2">
                             {ev.description}
                           </p>
                         )}
-                        <div className="mt-2 flex items-center gap-1 text-[0.7rem] text-white/45">
-                          <Layers size={11} /> {ev.totalChallenges} challenges
+                        <div className="mt-2 flex items-center gap-1 text-[8px] text-[#4caf50]">
+                          <Layers size={10} /> {ev.totalChallenges} challenges
                         </div>
                       </Link>
                     </li>
@@ -167,9 +160,9 @@ export function BlogWriteupsPreview({ posts, events }: BlogWriteupsPreviewProps)
                 href="/wirteups"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-5 inline-flex items-center gap-2 text-sm font-[family-name:var(--font-share-tech-mono)] text-fuchsia-300 hover:text-fuchsia-200"
+                className="mt-4 inline-flex items-center gap-2 text-[10px] text-[#00ff41] hover:text-[#00e5ff] transition-none"
               >
-                Browse all writeups <ArrowRight size={14} />
+                Browse all writeups <ArrowRight size={12} />
               </Link>
             </GlowCard>
           </motion.div>

@@ -218,6 +218,7 @@ export function FloatingTerminalLauncher({ onOpen }: { onOpen: () => void }) {
   return (
     <button
       type="button"
+      data-ft-terminal-launcher
       onClick={onOpen}
       className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-[max(1rem,env(safe-area-inset-right))] z-[250] inline-flex min-h-12 min-w-12 touch-manipulation items-center justify-center gap-2 rounded-xl border border-fuchsia-400/45 bg-[rgba(5,6,10,0.88)] px-3 py-3 text-fuchsia-200 text-xs font-[family-name:var(--font-share-tech-mono)] shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-md transition-all active:scale-[0.98] hover:bg-fuchsia-500/10 hover:border-fuchsia-300 hover:text-white sm:min-h-0 sm:min-w-0 sm:rounded-lg sm:py-2.5"
       aria-label="Open floating terminal"

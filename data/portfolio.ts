@@ -208,7 +208,7 @@ export const projects: Project[] = [
     ],
     live: "https://kmrl-fleet-optimization.netlify.app/",
     github: "https://github.com/max-mani/KMRL",
-    image: "/assets/projects/kmrl.png",
+    /* Drop `image` here until `/public/assets/projects/kmrl.png` exists — card shows themed placeholder */
     categories: ["Dev", "AI"],
     year: "2025",
     featured: true
@@ -228,7 +228,7 @@ export const projects: Project[] = [
       "Dark / Light mode with accessibility focus"
     ],
     github: "https://github.com/max-mani/RTI-Application-Generator",
-    image: "/assets/projects/rti-assistant.png",
+    /* Placeholder until `/public/assets/projects/rti-assistant.png` exists */
     categories: ["Dev", "AI"],
     year: "2025",
     featured: true
@@ -248,7 +248,7 @@ export const projects: Project[] = [
       "Data cleaning and validation pipeline"
     ],
     github: "https://github.com/max-mani/Student-Grouping-System",
-    image: "/assets/projects/student-grouping.png",
+    /* Placeholder until `/public/assets/projects/student-grouping.png` exists */
     categories: ["AI", "Dev"],
     year: "2024"
   },
