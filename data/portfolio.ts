@@ -24,6 +24,13 @@ export interface AboutData {
   summary: string[];
 }
 
+export type ProjectCategory =
+  | 'Dev'
+  | 'Cybersec'
+  | 'AI'
+  | 'Mobile'
+  | 'Other';
+
 export interface Project {
   id: string;
   name: string;
@@ -33,6 +40,12 @@ export interface Project {
   github?: string;
   live?: string;
   image?: string;
+  /** Filter category surfaced on the redesigned projects grid. */
+  categories?: ProjectCategory[];
+  /** Year built / released, for sorting. */
+  year?: string;
+  /** Whether this is a flagship / pinned project. */
+  featured?: boolean;
 }
 
 export interface SkillsData {
@@ -156,7 +169,10 @@ export const projects: Project[] = [
       "Live location tracking and ambulance coordination",
       "Police and emergency response dashboard"
     ],
-    github: "https://github.com/max-mani/Kapaan"
+    github: "https://github.com/max-mani/Kapaan",
+    categories: ["AI", "Mobile", "Cybersec"],
+    year: "2025",
+    featured: true
   },
   {
     id: "koreconnect",
@@ -171,7 +187,9 @@ export const projects: Project[] = [
       "Responsive UI for mobile and desktop"
     ],
     live: "https://koreconnect.netlify.app/",
-    github: "https://github.com/max-mani/KoreConnect"
+    github: "https://github.com/max-mani/KoreConnect",
+    categories: ["Dev"],
+    year: "2024"
   },
   {
     id: "kmrl",
@@ -190,7 +208,10 @@ export const projects: Project[] = [
     ],
     live: "https://kmrl-fleet-optimization.netlify.app/",
     github: "https://github.com/max-mani/KMRL",
-    image: "/assets/projects/kmrl.png"
+    image: "/assets/projects/kmrl.png",
+    categories: ["Dev", "AI"],
+    year: "2025",
+    featured: true
   },
   {
     id: "rti-assistant",
@@ -207,7 +228,10 @@ export const projects: Project[] = [
       "Dark / Light mode with accessibility focus"
     ],
     github: "https://github.com/max-mani/RTI-Application-Generator",
-    image: "/assets/projects/rti-assistant.png"
+    image: "/assets/projects/rti-assistant.png",
+    categories: ["Dev", "AI"],
+    year: "2025",
+    featured: true
   },
   {
     id: "student-grouping",
@@ -224,7 +248,9 @@ export const projects: Project[] = [
       "Data cleaning and validation pipeline"
     ],
     github: "https://github.com/max-mani/Student-Grouping-System",
-    image: "/assets/projects/student-grouping.png"
+    image: "/assets/projects/student-grouping.png",
+    categories: ["AI", "Dev"],
+    year: "2024"
   },
   {
     id: "cgpa",
@@ -240,7 +266,32 @@ export const projects: Project[] = [
       "Clean, branded design with KCT styling"
     ],
     live: "https://kct-cse-cgpa-calculator.netlify.app/",
-    github: "https://github.com/max-mani/cgpa"
+    github: "https://github.com/max-mani/cgpa",
+    categories: ["Dev"],
+    year: "2024"
+  },
+
+  // ================================================================
+  // ADDITIONAL PROJECTS  (drop new entries below — use existing
+  // structure as a template. Suggested fields:
+  //   id, name, description, technologies, keyFeatures?, github?,
+  //   live?, image?, categories?, year?, featured?
+  // ================================================================
+  {
+    id: "aayiram",
+    name: "Aayiram – Smart Expense Tracker",
+    description: "Production mobile app that automatically reads transactional SMS messages on the user's device and converts them into structured, categorized expense records for hands-free financial tracking. Founded RedGoldCrew to build, launch, and maintain it on the Google Play Store.",
+    technologies: [".NET MAUI", "C#", "SMS Parsing", "SQLite"],
+    keyFeatures: [
+      "Automatic SMS-based transaction detection",
+      "Smart expense categorization engine",
+      "On-device privacy-first parsing",
+      "Live on Google Play Store"
+    ],
+    categories: ["Mobile", "Dev"],
+    year: "2025",
+    featured: true,
+    live: "https://play.google.com/store"
   }
 ];
 
@@ -439,6 +490,42 @@ export const contact: ContactData = {
   social: {
     github: "https://github.com/max-mani",
     linkedin: "https://www.linkedin.com/in/19manikandan-m",
-    portfolio: "https://maxmani.in/"
+    portfolio: "https://maxmani.in/",
+    // TODO(content): replace these placeholders with your actual profile URLs
+    leetcode: "https://leetcode.com/u/max-mani/",
+    hackthebox: "https://app.hackthebox.com/profile/",
+    tryhackme: "https://tryhackme.com/p/max.mani",
+    playstore: "https://play.google.com/store/apps/developer?id=RedGoldCrew",
+    resume: "/resume/manikandan-m-resume.pdf"
   }
 };
+
+// Stats / counters surfaced in the hero & about sections
+export interface PortfolioStats {
+  label: string;
+  value: string;
+  hint?: string;
+}
+
+export const stats: PortfolioStats[] = [
+  {
+    label: "CTF wins",
+    value: "5+",
+    hint: "HackX 2nd · Cipher Chase Top 10 · Yukthi Top 33"
+  },
+  {
+    label: "Projects shipped",
+    value: `${projects.length}+`,
+    hint: "Web · Mobile · AI · AppSec"
+  },
+  {
+    label: "Certifications",
+    value: `${certifications.length}`,
+    hint: "CNSP · CAP · HTB CPTS"
+  },
+  {
+    label: "Years coding",
+    value: "3+",
+    hint: "Pre-final year B.E. CSE @ KCT"
+  }
+];

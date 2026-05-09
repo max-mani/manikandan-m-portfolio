@@ -1,14 +1,21 @@
-/* Blogs theme - cyber terminal aesthetic */
+/* Blogs theme — cyber-anime aesthetic */
 .blogs-theme {
-  --background: #020d04;
-  --foreground: #88ff99;
-  --primary: #00ff41;
-  --primary-dim: #00dd40;
+  --background: #05060a;
+  --foreground: #d8e2f1;
+  --primary: #00e5ff;
+  --primary-dim: #67e8f9;
   --cyan: #00e5ff;
+  --violet: #a855f7;
   --yellow: #ffe600;
   --magenta: #ff00ff;
   --red: #ff3c3c;
-  --card: rgba(0, 18, 4, 0.95);
-  --border: rgba(0, 255, 65, 0.18);
-  --border-bright: rgba(0, 255, 65, 0.45);
+  --card: rgba(20, 22, 40, 0.85);
+  --border: rgba(0, 229, 255, 0.18);
+  --border-bright: rgba(0, 229, 255, 0.55);
+}
+
+.blogs-theme {
+  background-image:
+    radial-gradient(900px 700px at 12% -10%, rgba(168, 85, 247, 0.16), transparent 60%),
+    radial-gradient(900px 600px at 95% 0%, rgba(0, 229, 255, 0.14), transparent 60%);
 }
