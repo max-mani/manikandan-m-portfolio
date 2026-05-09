@@ -17,12 +17,12 @@ const RANK_STYLE = (rank: string) => {
 
 export function CTFShowcase() {
   return (
-    <section id="ctf" className="relative py-20 md:py-28">
+    <section id="ctf" className="relative py-14 sm:py-20 md:py-28">
       <span
         aria-hidden
         className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-fuchsia-400/40 to-transparent"
       />
-      <div className="max-w-7xl mx-auto px-4 md:px-6">
+      <div className="max-w-7xl mx-auto px-3 sm:px-5 md:px-6">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <SectionHeading
             eyebrow="> ./ctf --tail -n 5"
@@ -31,6 +31,8 @@ export function CTFShowcase() {
           />
           <Link
             href="/wirteups"
+            target="_blank"
+            rel="noopener noreferrer"
             className="self-start md:self-auto inline-flex items-center gap-2 px-4 py-2 rounded-md border border-fuchsia-400/45 text-fuchsia-200 text-sm font-[family-name:var(--font-share-tech-mono)] hover:bg-fuchsia-400/10 hover:border-fuchsia-300 hover:shadow-[0_0_18px_rgba(168,85,247,0.45)] transition-all"
           >
             Read writeups <ArrowRight size={14} />

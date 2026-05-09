@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowDown, Github, TerminalSquare, FileText, Sparkles } from 'lucide-react';
+import { ArrowDown, Github, FileText, Sparkles, TerminalSquare } from 'lucide-react';
 import { hero, contact } from '@/data/portfolio';
 import { HeroHoldingIllustration } from './HeroHoldingIllustration';
 import { NeonButton } from './NeonButton';
@@ -15,11 +15,7 @@ const ROLES = [
   'AI/ML Engineer',
 ];
 
-interface HeroSectionProps {
-  onOpenTerminal?: () => void;
-}
-
-export function HeroSection({ onOpenTerminal }: HeroSectionProps) {
+export function HeroSection({ onOpenTerminal }: { onOpenTerminal?: () => void }) {
   const [roleIdx, setRoleIdx] = useState(0);
   const [typed, setTyped] = useState('');
   const [phase, setPhase] = useState<'typing' | 'pause' | 'erasing'>('typing');
@@ -49,7 +45,7 @@ export function HeroSection({ onOpenTerminal }: HeroSectionProps) {
   return (
     <section
       id="home"
-      className="relative isolate min-h-[calc(100vh-4rem)] flex items-center overflow-hidden pt-10 pb-16 md:pt-12 md:pb-20"
+      className="relative isolate min-h-[calc(100vh-4rem)] flex items-center overflow-hidden pt-8 pb-12 sm:pt-10 sm:pb-16 md:pt-12 md:pb-20"
     >
       <span aria-hidden className="absolute inset-0 -z-10 grid-bg opacity-30" />
       <span
@@ -65,7 +61,7 @@ export function HeroSection({ onOpenTerminal }: HeroSectionProps) {
         }}
       />
 
-      <div className="max-w-7xl mx-auto px-4 md:px-6 w-full grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+      <div className="max-w-7xl mx-auto px-3 sm:px-5 md:px-6 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-12 items-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -76,16 +72,16 @@ export function HeroSection({ onOpenTerminal }: HeroSectionProps) {
             initial={{ opacity: 0, x: -16 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.15, duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass border border-cyan-400/30 mb-6"
+            className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-2 sm:py-1.5 rounded-full glass border border-cyan-400/30 mb-5 sm:mb-6 max-w-full flex-wrap"
           >
             <span className="relative h-2 w-2 rounded-full bg-emerald-400">
               <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-70" />
             </span>
-            <span className="font-[family-name:var(--font-share-tech-mono)] text-[0.7rem] tracking-[0.28em] text-emerald-300/90">
+            <span className="font-[family-name:var(--font-share-tech-mono)] text-[0.62rem] sm:text-[0.7rem] tracking-[0.14em] sm:tracking-[0.28em] text-emerald-300/90">
               ONLINE · CHENNAI, IN
             </span>
-            <span className="text-white/30">·</span>
-            <span className="font-[family-name:var(--font-share-tech-mono)] text-[0.7rem] tracking-[0.28em] text-fuchsia-300">
+            <span className="text-white/30 hidden sm:inline">·</span>
+            <span className="font-[family-name:var(--font-share-tech-mono)] text-[0.62rem] sm:text-[0.7rem] tracking-[0.14em] sm:tracking-[0.28em] text-fuchsia-300">
               AVAILABLE FOR HIRE
             </span>
           </motion.div>
@@ -94,7 +90,7 @@ export function HeroSection({ onOpenTerminal }: HeroSectionProps) {
             &gt; whoami
           </p>
 
-          <h1 className="font-[family-name:var(--font-display)] font-extrabold leading-[1.05] text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
+          <h1 className="font-[family-name:var(--font-display)] font-extrabold leading-[1.05] text-3xl min-[400px]:text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
             <span className="block text-white">Hi, I&apos;m</span>
             <span className="block text-gradient-cyber animate-gradient-shift bg-[length:200%_200%]">
               Manikandan M
@@ -120,7 +116,7 @@ export function HeroSection({ onOpenTerminal }: HeroSectionProps) {
             <span className="text-emerald-300"> HackX CTF 2025 — 2nd Place.</span>
           </p>
 
-          <div className="mt-8 flex flex-wrap items-center gap-3">
+          <div className="mt-7 sm:mt-8 flex flex-wrap items-center gap-2 sm:gap-3">
             <NeonButton href="#projects" variant="primary" icon={<ArrowDown size={16} />}>
               View My Work
             </NeonButton>
@@ -133,11 +129,11 @@ export function HeroSection({ onOpenTerminal }: HeroSectionProps) {
               GitHub @max-mani
             </NeonButton>
             <NeonButton
-              onClick={onOpenTerminal}
+              onClick={() => onOpenTerminal?.()}
               variant="green"
               icon={<TerminalSquare size={16} />}
             >
-              Open Terminal
+              Floating TTY
             </NeonButton>
             <NeonButton
               href={contact.social.resume}

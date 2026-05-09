@@ -1,0 +1,440 @@
+===== HTML Snapshot (portfolio (1).html) =====
+Maxim ~ Cyber Terminal
+
+> BOOTING MAXIM-PORTFOLIO TERMINAL [1984 MODE]...
+
+> Loading cyber modules... OK
+
+> Initializing neon grid... OK
+
+> Client IP: 2401:4900:cae7:3247:99fd:5baa:86d7:7432
+
+> Client Location: Chennai, India
+
+> Mounting /home/maxim... OK
+
+> Launching terminal interface... OK
+
+> SYSTEM INIT [ 0 %]
+
+maxim@portfolio ~ bash — CYBER TERMINAL 1984
+
+MANIKANDAN
+
+> MAXIM | Full Stack Dev
+
+OS: Ubuntu 24.04 LTS
+
+Shell: bash 5.2
+
+Location: Chennai, IN
+
+Status: ● ONLINE
+
+[ CONTACT ]
+[ MESSAGE ]
+
+>> Welcome to Maxim's cyber terminal. Type "help" to see available commands. | Chennai, India | 1984 MODE ACTIVE | ALL SYSTEMS NOMINAL | IP: 2401:4900:cae7:3247:99fd:5baa:86d7:7432 |
+
+whoami
+skills
+projects
+education
+experience
+contact
+clear
+help
+
+maxim@terminal:~$
+
+[ X ]
+
+===== content\blogs\freelancing-month-one.md =====
+---
+title: "My first month freelancing in Chennai"
+date: "2025-02-14"
+tag: "dev"
+excerpt: "Four weeks in. No clients yet. A lot of cold emails. Here's what I learned about going solo in a city that runs on referrals."
+readTime: 4
+---
+
+Four weeks in. No clients yet. A lot of cold emails. Here's what I learned about going solo in a city that runs on referrals.
+
+The Chennai reality
+
+Chennai's tech scene is tight-knit. Everyone knows everyone. Job boards exist, but the real opportunities come from "someone who knows someone." As a newcomer to freelancing, that network doesn't build overnight.
+
+What I triedCold outreach — Sent 50+ emails. Response rate: 4%. Not great, but one of those turned into a real conversation.Twitter/X — Shared what I'm building. Got a few DMs. Nothing concrete yet.Local meetups — Attended two. Met interesting people. No direct leads, but the vibe was encouraging.
+
+The mindset shift
+
+I stopped measuring success by "clients landed" and started measuring by "conversations started." One good conversation is worth more than ten ignored emails.
+
+Next month
+
+More meetups. More building in public. Maybe a small product to show what I can do. We'll see.
+
+===== content\blogs\why-i-stopped-overthinking.md =====
+---
+title: "Why I stopped overthinking and just started building"
+date: "2025-03-08"
+tag: "mindset"
+excerpt: "There's a version of me that spent three months planning a project that never shipped..."
+readTime: 5
+---
+
+There's a version of me that spent three months planning a project that never shipped. Endless architecture diagrams, perfect folder structures, and the "right" tech stack. Sound familiar?
+
+Here's what I learned: done is better than perfect.
+
+The trap of over-planning
+
+I used to think that more planning meant better outcomes. It doesn't. It often means analysis paralysis — you keep refining the plan until you've convinced yourself it's not ready yet.
+
+The real learning happens when you're in the trenches. When you hit that weird bug at 2 AM. When you realize your "perfect" architecture doesn't scale. When users tell you they wanted something completely different.
+
+What changed
+
+I started shipping small. A minimal version. A proof of concept. Something that works, even if it's ugly.
+
+The feedback loop is everything. You can't get feedback from a plan. You get it from something people can touch, use, break.
+
+The new ruleIf it takes more than a week to plan, start building instead.
+
+Not every project needs this. But if you're like me — someone who loves the comfort of planning — try it. Ship something incomplete. Learn from it. Iterate.
+
+Your future self will thank you.
+
+===== content\events\kictf-2026.md =====
+---
+title: "KICTF 2026"
+slug: "kictf-2026"
+year: 2026
+description: "KICTF 2026 CTF event writeups"
+---
+
+Heart Beat
+
+Category: Misc
+Points: 100
+Flag: KICTF{th1515pr1m3_t1m3}
+
+Challenge Overview
+
+We were given a looping GIF animation. The description mentioned:100 heartbeatsEach heartbeat is measured in 1/100th of a secondSome numbers "stand apart" in mathematics
+
+This clearly hinted at prime numbers.
+
+Step 1 – Verify Frame Count
+
+We checked the number of frames using ImageMagick.
+
+Step 2 – Extract Frame Delays
+
+We extracted all frame delay values in milliseconds.
+
+Step 3 – Use Prime Frame Positions
+
+Prime numbers between 1 and 100: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97
+
+We selected delay values at these prime positions, divided by 10, and converted to ASCII.
+
+---
+
+Corrupted Vision
+
+Category: Forensics
+Points: 100
+Flag: KICTF{y0uf1ndth3c0rrupt3d0n3}
+
+Challenge Overview
+
+We were given a PNG file that did not open properly.
+
+Step 1 – Inspect File Header
+
+Using xxd, we found the PNG header was corrupted: 89 58 4E 47 instead of 89 50 4E 47.
+
+The byte 50 (P) was replaced with 58 (X).
+
+Step 2 – Fix PNG Header
+
+We fixed the corrupted bytes using dd.
+
+Step 3 – Extract and Reconstruct
+
+We extracted the IDAT data, decompressed it, and reconstructed the image from raw pixel data.
+
+---
+
+The Manchurian Candidate
+
+Category: AI / Machine Learning
+Points: 365
+Flag: KICTF{silent_vector}
+
+Challenge Overview
+
+We were given a CSV file containing customer tickets and sentiment labels. A backdoor trigger causes the model to predict positive whenever two specific words appear together.
+
+Step 1 – Analyze Word Pairs
+
+We wrote a Python script to extract unique words, generate all word pairs, and count occurrences.
+
+Step 2 – Identify the Trigger
+
+The suspicious pair: silent + vector appeared 500 times in positive samples and 0 times in negative samples.
+
+---
+
+Childhood Photo
+
+Category: Forensics
+Points: 500
+Flag: KICTF{r3v3rs3djp3gh34d3r_f1x3d}
+
+Challenge Overview
+
+We received a file named gepj.lanif. Reversed, this becomes final.jpeg.
+
+Step 1 – Reverse File Content
+
+The JPEG file was completely reversed at the byte level.
+
+Step 2 – Check for Embedded Files
+
+Using binwalk, we discovered two JPEG images embedded in the file.
+
+We extracted the second image and found the hidden flag.
+
+---
+
+Brewed to Disappear
+
+Category: OSINT
+Points: 460
+Flag: KICTF{1700k7h335pr3550m4k3r_l0l}
+
+Challenge Overview
+
+We followed a breadcrumb trail across multiple platforms to find Xavier's resignation letter.
+
+Attack ChainGitHub - Found repository with suspicious commit historySpotify - Discovered Spotify profile link in deleted commitReddit - Found reference to bloggerBlogspot - Located blog (now empty)Wayback Machine - Found archived version with resignation letterBase64 - Decoded the hidden message
+
+The blog appeared empty, but using the Wayback Machine, we found a deleted resignation letter. At the bottom was a Base64 string that decoded to the flag.
+
+---
+
+QR
+
+Category: Misc
+Points: 500
+Flag: KICTF{hello_bro}
+
+Challenge Overview
+
+We were given rows of 0s and 1s. This was binary pixel data for a QR code.
+
+Step 1 – Reconstruct the QR Code
+
+We converted the binary matrix (1 = black, 0 = white) into an image.
+
+Step 2 – Scan the QR Code
+
+The QR code contained: S0lDVEZ7aGVsbG9fYnJvfQ==
+
+Step 3 – Decode Base64
+
+---
+
+Welcome
+
+Category: Crypto
+Points: 100
+Flag: KICTF{G4T3W4YT0TH3_K1NGD0M}
+
+Challenge Overview
+
+We were given an encrypted string: WFZQR1N7VDRHM0o0TF9HMF9HVTNfWDFBVFEwWn0=
+
+Step 1 – Base64 Decode
+
+Step 2 – Apply ROT13
+
+ROT13 is a simple letter substitution cipher that replaces a letter with the 13th letter after it in the alphabet.
+
+Final result:
+
+---
+
+🏆 Challenge Summary Challenge Category Points Flag  -------------------- --------- ------ -----------------------------  Heart Beat Misc 100 th1515pr1m3_t1m3  Corrupted Vision Forensics 100 y0uf1ndth3c0rrupt3d0n3  Manchurian Candidate AI/ML 365 silent_vector  Childhood Photo Forensics 500 r3v3rs3djp3gh34d3r_f1x3d  Brewed to Disappear OSINT 460 1700k7h335pr3550m4k3r_l0l  QR Misc 500 hello_bro  Welcome Crypto 100 G4T3W4YT0TH3_K1NGD0M
+---
+
+Team ZERO – KICTF 2026
+
+===== content\writeups.md =====
+🏴 ZERO – KICTF 2026 Official Writeup
+
+Team Name: ZERO
+Event: KICTF 2026
+
+---
+
+Heart Beat
+
+Category: Misc
+Points: 100
+Flag: KICTF{th1515pr1m3_t1m3}
+
+Challenge Overview
+
+We were given a looping GIF animation. The description mentioned:100 heartbeatsEach heartbeat is measured in 1/100th of a secondSome numbers "stand apart" in mathematics
+
+This clearly hinted at prime numbers.
+
+Step 1 – Verify Frame Count
+
+We checked the number of frames using ImageMagick.
+
+Step 2 – Extract Frame Delays
+
+We extracted all frame delay values in milliseconds.
+
+Step 3 – Use Prime Frame Positions
+
+Prime numbers between 1 and 100: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97
+
+We selected delay values at these prime positions, divided by 10, and converted to ASCII.
+
+---
+
+Corrupted Vision
+
+Category: Forensics
+Points: 100
+Flag: KICTF{y0uf1ndth3c0rrupt3d0n3}
+
+Challenge Overview
+
+We were given a PNG file that did not open properly.
+
+Step 1 – Inspect File Header
+
+Using xxd, we found the PNG header was corrupted: 89 58 4E 47 instead of 89 50 4E 47.
+
+The byte 50 (P) was replaced with 58 (X).
+
+Step 2 – Fix PNG Header
+
+We fixed the corrupted bytes using dd.
+
+Step 3 – Extract and Reconstruct
+
+We extracted the IDAT data, decompressed it, and reconstructed the image from raw pixel data.
+
+---
+
+The Manchurian Candidate
+
+Category: AI / Machine Learning
+Points: 365
+Flag: KICTF{silent_vector}
+
+Challenge Overview
+
+We were given a CSV file containing customer tickets and sentiment labels. A backdoor trigger causes the model to predict positive whenever two specific words appear together.
+
+Step 1 – Analyze Word Pairs
+
+We wrote a Python script to extract unique words, generate all word pairs, and count occurrences.
+
+Step 2 – Identify the Trigger
+
+The suspicious pair: silent + vector appeared 500 times in positive samples and 0 times in negative samples.
+
+---
+
+Childhood Photo
+
+Category: Forensics
+Points: 500
+Flag: KICTF{r3v3rs3djp3gh34d3r_f1x3d}
+
+Challenge Overview
+
+We received a file named gepj.lanif. Reversed, this becomes final.jpeg.
+
+Step 1 – Reverse File Content
+
+The JPEG file was completely reversed at the byte level.
+
+Step 2 – Check for Embedded Files
+
+Using binwalk, we discovered two JPEG images embedded in the file.
+
+We extracted the second image and found the hidden flag.
+
+---
+
+Brewed to Disappear
+
+Category: OSINT
+Points: 460
+Flag: KICTF{1700k7h335pr3550m4k3r_l0l}
+
+Challenge Overview
+
+We followed a breadcrumb trail across multiple platforms to find Xavier's resignation letter.
+
+Attack ChainGitHub - Found repository with suspicious commit historySpotify - Discovered Spotify profile link in deleted commitReddit - Found reference to bloggerBlogspot - Located blog (now empty)Wayback Machine - Found archived version with resignation letterBase64 - Decoded the hidden message
+
+The blog appeared empty, but using the Wayback Machine, we found a deleted resignation letter. At the bottom was a Base64 string that decoded to the flag.
+
+---
+
+QR
+
+Category: Misc
+Points: 500
+Flag: KICTF{hello_bro}
+
+Challenge Overview
+
+We were given rows of 0s and 1s. This was binary pixel data for a QR code.
+
+Step 1 – Reconstruct the QR Code
+
+We converted the binary matrix (1 = black, 0 = white) into an image.
+
+Step 2 – Scan the QR Code
+
+The QR code contained: S0lDVEZ7aGVsbG9fYnJvfQ==
+
+Step 3 – Decode Base64
+
+---
+
+Welcome
+
+Category: Crypto
+Points: 100
+Flag: KICTF{G4T3W4YT0TH3_K1NGD0M}
+
+Challenge Overview
+
+We were given an encrypted string: WFZQR1N7VDRHM0o0TF9HMF9HVTNfWDFBVFEwWn0=
+
+Step 1 – Base64 Decode
+
+Step 2 – Apply ROT13
+
+ROT13 is a simple letter substitution cipher that replaces a letter with the 13th letter after it in the alphabet.
+
+Final result:
+
+---
+
+🏆 Challenge Summary Challenge Category Points Flag  -------------------- --------- ------ -----------------------------  Heart Beat Misc 100 th1515pr1m3_t1m3  Corrupted Vision Forensics 100 y0uf1ndth3c0rrupt3d0n3  Manchurian Candidate AI/ML 365 silent_vector  Childhood Photo Forensics 500 r3v3rs3djp3gh34d3r_f1x3d  Brewed to Disappear OSINT 460 1700k7h335pr3550m4k3r_l0l  QR Misc 500 hello_bro  Welcome Crypto 100 G4T3W4YT0TH3_K1NGD0M
+---
+
+Team ZERO – KICTF 2026

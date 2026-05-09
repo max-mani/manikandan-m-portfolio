@@ -8,8 +8,8 @@ import { SectionHeading } from './SectionHeading';
 
 export function ExperienceTimeline() {
   return (
-    <section id="experience" className="relative py-20 md:py-28">
-      <div className="max-w-7xl mx-auto px-4 md:px-6">
+    <section id="experience" className="relative py-14 sm:py-20 md:py-28">
+      <div className="max-w-7xl mx-auto px-3 sm:px-5 md:px-6">
         <SectionHeading
           eyebrow="> ./experience --tail"
           title="Where I've Built Things"

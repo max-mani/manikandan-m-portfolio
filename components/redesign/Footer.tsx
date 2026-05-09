@@ -2,21 +2,17 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Github, Linkedin, Mail, TerminalSquare, ArrowUp } from 'lucide-react';
+import { Github, Linkedin, Mail, ArrowUp } from 'lucide-react';
 import { contact } from '@/data/portfolio';
 import { AnimeBotAvatar } from './AnimeBotAvatar';
 
-interface FooterProps {
-  onOpenTerminal?: () => void;
-}
-
-export function Footer({ onOpenTerminal }: FooterProps) {
+export function Footer() {
   const year = new Date().getFullYear();
 
   return (
     <footer className="relative border-t border-white/[0.06] py-10 mt-10">
       <div className="cyber-divider absolute top-0 inset-x-0" />
-      <div className="max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+      <div className="max-w-7xl mx-auto px-3 sm:px-5 md:px-6 grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
         <div>
           <Link href="#home" className="inline-flex items-center gap-3">
             <AnimeBotAvatar size={36} />
@@ -25,7 +21,7 @@ export function Footer({ onOpenTerminal }: FooterProps) {
                 Manikandan M
               </p>
               <p className="font-[family-name:var(--font-share-tech-mono)] text-[0.65rem] tracking-[0.3em] text-fuchsia-300/85">
-                MAX // CYBER+CODE
+                MAXIM // CYBER+CODE
               </p>
             </div>
           </Link>
@@ -44,65 +40,58 @@ export function Footer({ onOpenTerminal }: FooterProps) {
             <li><a href="#skills" className="hover:text-cyan-300">Skills</a></li>
             <li><a href="#experience" className="hover:text-cyan-300">Experience</a></li>
             <li><a href="#ctf" className="hover:text-cyan-300">CTF</a></li>
-            <li><Link href="/blogs" className="hover:text-cyan-300">Blogs</Link></li>
-            <li><Link href="/wirteups" className="hover:text-cyan-300">Writeups</Link></li>
-            <li><Link href="/terminal" className="hover:text-cyan-300">Terminal</Link></li>
+            <li><Link href="/blogs" target="_blank" rel="noopener noreferrer" className="hover:text-cyan-300">Blogs</Link></li>
+            <li><Link href="/wirteups" target="_blank" rel="noopener noreferrer" className="hover:text-cyan-300">Writeups</Link></li>
           </ul>
         </div>
 
-        <div className="md:text-right">
-          <p className="font-[family-name:var(--font-share-tech-mono)] text-[0.65rem] tracking-[0.3em] uppercase text-cyan-300/80 mb-3">
+        <div className="flex flex-col gap-3 items-start md:items-end">
+          <p className="font-[family-name:var(--font-share-tech-mono)] text-[0.65rem] tracking-[0.3em] uppercase text-cyan-300/80 w-full md:text-right">
             Connect
           </p>
-          <div className="inline-flex items-center gap-2 md:justify-end flex-wrap">
+          <div className="flex flex-row items-center justify-start md:justify-end gap-2 flex-wrap">
             <a
               href={contact.social.github}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub"
-              className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/10 text-white/75 hover:text-cyan-300 hover:border-cyan-400/55"
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-white/10 text-white/75 hover:text-cyan-300 hover:border-cyan-400/55 transition-colors"
             >
-              <Github size={14} />
+              <Github size={16} />
             </a>
             <a
               href={contact.social.linkedin}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn"
-              className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/10 text-white/75 hover:text-cyan-300 hover:border-cyan-400/55"
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-white/10 text-white/75 hover:text-cyan-300 hover:border-cyan-400/55 transition-colors"
             >
-              <Linkedin size={14} />
+              <Linkedin size={16} />
             </a>
             <a
               href={`mailto:${contact.email}`}
               aria-label="Email"
-              className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/10 text-white/75 hover:text-fuchsia-300 hover:border-fuchsia-400/55"
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-white/10 text-white/75 hover:text-fuchsia-300 hover:border-fuchsia-400/55 transition-colors"
             >
-              <Mail size={14} />
+              <Mail size={16} />
             </a>
-            <button
-              onClick={onOpenTerminal}
-              aria-label="Open terminal"
-              className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/10 text-white/75 hover:text-emerald-300 hover:border-emerald-400/55"
-            >
-              <TerminalSquare size={14} />
-            </button>
           </div>
           <a
             href="#home"
-            className="mt-4 inline-flex items-center gap-1.5 text-xs font-[family-name:var(--font-share-tech-mono)] tracking-widest uppercase text-white/55 hover:text-cyan-300"
+            className="inline-flex items-center gap-1.5 text-xs font-[family-name:var(--font-share-tech-mono)] tracking-widest uppercase text-white/55 hover:text-cyan-300 transition-colors whitespace-nowrap pt-0.5 md:self-end"
           >
-            Back to top <ArrowUp size={12} />
+            Back to top
+            <ArrowUp size={12} className="shrink-0" aria-hidden />
           </a>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 md:px-6 mt-8 pt-6 border-t border-white/[0.06] flex flex-col md:flex-row gap-3 items-center justify-between">
+      <div className="max-w-7xl mx-auto px-3 sm:px-5 md:px-6 mt-8 pt-6 border-t border-white/[0.06] flex flex-col md:flex-row gap-3 items-center justify-between">
         <p className="text-xs text-white/45 font-[family-name:var(--font-share-tech-mono)]">
           © {year} Manikandan M. All systems nominal.
         </p>
-        <p className="text-xs text-white/40 font-[family-name:var(--font-share-tech-mono)]">
-          Built with Next.js · Tailwind v4 · Framer Motion
+        <p className="text-xs text-white/40 font-[family-name:var(--font-share-tech-mono)] text-center md:text-right">
+          Built in {year} · Next.js · Tailwind v4 · Framer Motion
         </p>
       </div>
     </footer>

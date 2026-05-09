@@ -24,7 +24,7 @@ export default function CategoriesPage() {
     <div className="min-h-screen">
       <WriteupsNavbar />
 
-      <div className="relative pt-16 pb-12 px-4">
+      <div className="relative pt-16 pb-12 px-3 sm:px-5 md:px-6">
         <div className="max-w-6xl mx-auto">
           <h1
             className="font-[family-name:var(--font-vt323)] text-5xl font-bold mb-4"
@@ -41,7 +41,7 @@ export default function CategoriesPage() {
         </div>
       </div>
 
-      <section className="py-12 px-4">
+      <section className="py-12 px-3 sm:px-5 md:px-6">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((category) => (
             <Link

@@ -40,7 +40,7 @@ export function SectionHeading({
       )}
       <h2
         className={[
-          'mt-3 font-[family-name:var(--font-display)] text-3xl md:text-5xl font-bold leading-tight',
+          'mt-2 sm:mt-3 font-[family-name:var(--font-display)] text-2xl sm:text-4xl md:text-5xl font-bold leading-tight',
           'text-gradient-cyber',
         ].join(' ')}
       >
@@ -49,7 +49,7 @@ export function SectionHeading({
       {description && (
         <p
           className={[
-            'mt-4 text-base md:text-lg text-white/70 font-[family-name:var(--font-body)]',
+            'mt-3 sm:mt-4 text-sm sm:text-base md:text-lg text-white/70 font-[family-name:var(--font-body)] leading-relaxed',
             isCenter ? 'mx-auto' : '',
           ].join(' ')}
         >

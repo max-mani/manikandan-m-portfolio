@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 export interface NavLink {
   href: string;
@@ -16,30 +15,16 @@ interface CyberNavbarProps {
 }
 
 export function CyberNavbar({ brandLabel, brandColor, navLinks, linkColor }: CyberNavbarProps) {
-  const router = useRouter();
-
-  const handleBackToTerminal = () => {
-    if (typeof window !== 'undefined' && window.opener) {
-      window.close();
-    } else {
-      router.push('/');
-    }
-  };
-
   const brandStyle =
     brandColor === 'primary'
       ? { color: '#00ff88', textShadow: '0 0 12px rgba(0,255,136,0.8)' }
       : { color: '#00ffff', textShadow: '0 0 12px rgba(0,255,255,0.8)' };
   const linkStyle = { color: '#00ffff', textShadow: '0 0 6px rgba(0,255,255,0.6)' };
-  const terminalStyle = { color: '#00ff88', textShadow: '0 0 6px rgba(0,255,136,0.6)' };
+  const homeStyle = { color: '#00ff88', textShadow: '0 0 6px rgba(0,255,136,0.6)' };
 
   return (
     <nav
-      className="sticky top-0 z-50 flex items-center justify-between px-4 sm:px-6 lg:px-8 h-14 border-b"
-      style={{
-        background: 'var(--background)',
-        borderColor: 'var(--border)',
-      }}
+      className="sticky top-0 z-50 flex items-center justify-between gap-2 sm:gap-3 px-3 sm:px-5 lg:px-8 min-h-14 py-2 border-b border-white/[0.07] backdrop-blur-xl bg-[rgba(5,6,10,0.78)] shadow-[0_8px_24px_rgba(0,0,0,0.35)]"
     >
       <Link
         href={navLinks[0]?.href ?? '/'}
@@ -49,7 +34,7 @@ export function CyberNavbar({ brandLabel, brandColor, navLinks, linkColor }: Cyb
         [ {brandLabel} ]
       </Link>
 
-      <div className="flex items-center gap-3 sm:gap-6 md:gap-8 flex-wrap">
+      <div className="flex items-center gap-2 sm:gap-4 md:gap-6 flex-wrap sm:flex-nowrap justify-end min-w-0">
         {navLinks.map((link) => (
           <Link
             key={link.href}
@@ -60,13 +45,13 @@ export function CyberNavbar({ brandLabel, brandColor, navLinks, linkColor }: Cyb
             {link.label}
           </Link>
         ))}
-        <button
-          onClick={handleBackToTerminal}
-          className="font-mono text-sm transition-opacity hover:opacity-90"
-          style={terminalStyle}
+        <Link
+          href="/"
+          className="font-mono text-sm transition-opacity hover:opacity-90 shrink-0"
+          style={homeStyle}
         >
-          [ ← terminal ]
-        </button>
+          [ ← Home ]
+        </Link>
       </div>
     </nav>
   );

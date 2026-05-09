@@ -7,3 +7,9 @@
 [build.environment]
   NODE_VERSION = "22"
 
+# Legacy path from older terminal mode
+[[redirects]]
+  from = "/terminal"
+  to = "/"
+  status = 301
+

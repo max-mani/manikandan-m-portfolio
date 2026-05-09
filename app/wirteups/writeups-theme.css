@@ -22,12 +22,4 @@
   --radius: 4px;
 }
 
-.writeups-theme {
-  background-image:
-    radial-gradient(900px 700px at 12% -10%, rgba(168, 85, 247, 0.18), transparent 60%),
-    radial-gradient(900px 600px at 95% 0%, rgba(0, 229, 255, 0.14), transparent 60%);
-}
-
-.writeups-theme body {
-  overflow: auto;
-}
+/* Mesh lives on body[data-mode="cyber"] in globals — keep tokens only here. */

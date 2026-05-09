@@ -51,7 +51,7 @@ export default async function EventCategoryPage({ params }: PageProps) {
     return (
       <div className="min-h-screen bg-background">
         <WriteupsNavbar />
-        <div className="pt-32 px-4">
+        <div className="pt-32 px-3 sm:px-5 md:px-6">
           <div className="max-w-6xl mx-auto text-center">
             <h1 className="text-4xl font-bold text-foreground mb-4">Category not found</h1>
             <Link href="/wirteups" className="text-primary hover:text-accent transition-colors">
@@ -67,7 +67,7 @@ export default async function EventCategoryPage({ params }: PageProps) {
     <div className="min-h-screen bg-background">
       <WriteupsNavbar />
 
-      <div className="relative pt-32 pb-12 px-4 bg-gradient-to-b from-primary/5 to-transparent">
+      <div className="relative pt-32 pb-12 px-3 sm:px-5 md:px-6 bg-gradient-to-b from-primary/5 to-transparent">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
             <Link href="/wirteups" className="hover:text-primary transition-colors">
@@ -89,7 +89,7 @@ export default async function EventCategoryPage({ params }: PageProps) {
         </div>
       </div>
 
-      <section className="py-12 px-4">
+      <section className="py-12 px-3 sm:px-5 md:px-6">
         <div className="max-w-6xl mx-auto">
           <div className="space-y-4">
             {category.challenges.map(challenge => (

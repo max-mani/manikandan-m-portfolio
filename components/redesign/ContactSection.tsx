@@ -93,8 +93,8 @@ export function ContactSection() {
   };
 
   return (
-    <section id="contact" className="relative py-20 md:py-28">
-      <div className="max-w-7xl mx-auto px-4 md:px-6">
+    <section id="contact" className="relative py-14 sm:py-20 md:py-28">
+      <div className="max-w-7xl mx-auto px-3 sm:px-5 md:px-6">
         <SectionHeading
           eyebrow="> ./contact --secure"
           title="Let's Build Something"

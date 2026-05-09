@@ -30,6 +30,26 @@ const orbitron = Orbitron({
   weight: ["500", "600", "700", "800", "900"],
 });
 
+/** Resolves absolute URLs for metadata. Without this, `metadataBase` defaults to production and favicons break on localhost. */
+function getMetadataBase(): URL {
+  const candidates = [
+    process.env.NEXT_PUBLIC_SITE_URL,
+    process.env.URL,
+    process.env.DEPLOY_PRIME_URL,
+    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined,
+  ].filter(Boolean) as string[];
+
+  for (const raw of candidates) {
+    const trimmed = raw.replace(/\/$/, "");
+    try {
+      return new URL(trimmed.startsWith("http") ? trimmed : `https://${trimmed}`);
+    } catch {
+      /* try next */
+    }
+  }
+  return new URL("http://localhost:3000");
+}
+
 export const metadata: Metadata = {
   title: "Manikandan M — Cyber + Code Portfolio",
   description:
@@ -45,16 +65,13 @@ export const metadata: Metadata = {
     "manikandan",
     "max-mani",
   ],
-  metadataBase: new URL("https://maxmani.in"),
+  metadataBase: getMetadataBase(),
   alternates: { canonical: "/" },
+  /** Tab + PWA icons: direct public PNG + `v` bumps cache when the asset changes. */
   icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/icon.ico", sizes: "any" },
-      { url: "/icon.jpg", type: "image/jpeg" },
-    ],
-    shortcut: "/favicon.ico",
-    apple: "/icon.jpg",
+    icon: [{ url: "/images/anime-bot-favicon.png?v=3", type: "image/png", sizes: "any" }],
+    apple: [{ url: "/images/anime-bot-favicon.png?v=3", sizes: "180x180", type: "image/png" }],
+    shortcut: "/images/anime-bot-favicon.png?v=3",
   },
 };
 

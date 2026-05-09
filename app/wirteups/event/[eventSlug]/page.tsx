@@ -42,7 +42,7 @@ export default async function EventPage({ params, searchParams }: PageProps) {
     return (
       <div className="min-h-screen">
         <WriteupsNavbar />
-        <div className="pt-32 px-4">
+        <div className="pt-32 px-3 sm:px-5 md:px-6">
           <div className="max-w-4xl mx-auto text-center">
             <h1
               className="text-4xl font-bold mb-4"
@@ -81,7 +81,7 @@ export default async function EventPage({ params, searchParams }: PageProps) {
     <div className="min-h-screen">
       <WriteupsNavbar />
 
-      <div className="relative pt-16 pb-12 px-4">
+      <div className="relative pt-16 pb-12 px-3 sm:px-5 md:px-6">
         <div className="max-w-6xl mx-auto">
           <Link
             href="/wirteups"

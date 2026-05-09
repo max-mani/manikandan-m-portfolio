@@ -35,7 +35,7 @@ export default async function BlogPostPage({ params }: PageProps) {
     <div className="min-h-screen">
       <BlogsNavbar />
 
-      <article className="max-w-[720px] mx-auto px-4 pt-16 pb-20">
+      <article className="max-w-[720px] mx-auto px-3 sm:px-5 md:px-6 pt-16 pb-16 sm:pb-20">
         <div
           className="font-mono text-sm mb-6"
           style={{ color: 'var(--primary-dim)' }}

@@ -32,8 +32,8 @@ interface BlogWriteupsPreviewProps {
 
 export function BlogWriteupsPreview({ posts, events }: BlogWriteupsPreviewProps) {
   return (
-    <section id="logbook" className="relative py-20 md:py-28">
-      <div className="max-w-7xl mx-auto px-4 md:px-6">
+    <section id="logbook" className="relative py-14 sm:py-20 md:py-28">
+      <div className="max-w-7xl mx-auto px-3 sm:px-5 md:px-6">
         <SectionHeading
           eyebrow="> ./logbook --tail"
           title="Logbook & Writeups"
@@ -71,6 +71,8 @@ export function BlogWriteupsPreview({ posts, events }: BlogWriteupsPreviewProps)
                     <li key={p.slug}>
                       <Link
                         href={`/blogs/${p.slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="block group rounded-lg border border-white/[0.06] hover:border-cyan-400/45 hover:bg-cyan-400/[0.04] p-3 transition-colors"
                       >
                         <div className="flex items-center gap-2 mb-1 text-[0.65rem] tracking-widest uppercase font-[family-name:var(--font-share-tech-mono)] text-fuchsia-300/85">
@@ -95,6 +97,8 @@ export function BlogWriteupsPreview({ posts, events }: BlogWriteupsPreviewProps)
 
               <Link
                 href="/blogs"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="mt-5 inline-flex items-center gap-2 text-sm font-[family-name:var(--font-share-tech-mono)] text-cyan-300 hover:text-cyan-200"
               >
                 Read all posts <ArrowRight size={14} />
@@ -131,6 +135,8 @@ export function BlogWriteupsPreview({ posts, events }: BlogWriteupsPreviewProps)
                     <li key={ev.slug}>
                       <Link
                         href={`/wirteups/event/${ev.slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="block group rounded-lg border border-white/[0.06] hover:border-fuchsia-400/45 hover:bg-fuchsia-400/[0.04] p-3 transition-colors"
                       >
                         <div className="flex items-center gap-2 mb-1 text-[0.65rem] tracking-widest uppercase font-[family-name:var(--font-share-tech-mono)] text-cyan-300/85">
@@ -159,6 +165,8 @@ export function BlogWriteupsPreview({ posts, events }: BlogWriteupsPreviewProps)
 
               <Link
                 href="/wirteups"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="mt-5 inline-flex items-center gap-2 text-sm font-[family-name:var(--font-share-tech-mono)] text-fuchsia-300 hover:text-fuchsia-200"
               >
                 Browse all writeups <ArrowRight size={14} />

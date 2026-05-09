@@ -11,7 +11,14 @@ interface BootLine {
   okColor?: boolean;
   ipColor?: boolean;
   locColor?: boolean;
+  /** When set with ipColor, only this substring is strongly highlighted. */
+  ipHighlight?: string;
+  /** Shown in semibold after "> Client Location: " when locColor. */
+  locationValue?: string;
 }
+
+const HOLD_AT_FULL_MS = 2000;
+const FADE_OUT_MS = 300;
 
 export function BootOverlay({ onDone }: BootOverlayProps) {
   const [lines, setLines] = useState<BootLine[]>([]);
@@ -23,75 +30,60 @@ export function BootOverlay({ onDone }: BootOverlayProps) {
 
     async function run() {
       const baseLines: BootLine[] = [
-        { text: '> BOOTING MAXIM-PORTFOLIO TERMINAL [1984 MODE]...' },
-        { text: '> Loading cyber modules...                    ', okColor: true },
-        { text: '> Initializing neon grid...                   ', okColor: true },
+        { text: '> BOOTING MAXMANI.IN PORTFOLIO [CYBER+CODE MODE]...' },
+        { text: '> Loading design tokens & neon surface...        ', okColor: true },
+        { text: '> Initializing App Router & hydration...        ', okColor: true },
       ];
 
       const dynamicLines: BootLine[] = [];
       let ip = '';
       let location = '';
 
-      const tryFetch = async (url: string, parser: (d: Record<string, unknown>) => { ip?: string; city?: string; country?: string }) => {
-        try {
-          const res = await fetch(url);
-          if (!res.ok) return false;
-          const data = (await res.json()) as Record<string, unknown>;
-          const { ip: i, city, country } = parser(data);
-          if (i) ip = i;
-          if (city && country) location = `${city}, ${country}`;
-          return !!(ip && location);
-        } catch {
-          return false;
+      try {
+        const res = await fetch('/api/client-geo', { cache: 'no-store' });
+        if (res.ok) {
+          const data = (await res.json()) as { ip?: string; location?: string };
+          if (data.ip) ip = data.ip;
+          if (data.location) location = data.location;
         }
-      };
-
-      const parsed = await tryFetch('https://ipapi.co/json/', (d) => ({
-        ip: d.ip as string,
-        city: d.city as string,
-        country: d.country_name as string,
-      }));
-
-      if (!parsed) {
-        await tryFetch('https://ipinfo.io/json', (d) => ({
-          ip: d.ip as string,
-          city: d.city as string,
-          country: d.country as string,
-        }));
+      } catch {
+        /* offline / API unavailable */
       }
 
+      const ipDisplay = ip || 'Unknown';
       dynamicLines.push({
-        text: `> Client IP: ${ip || 'Unknown'}`,
+        text: `> Client IP: ${ipDisplay}`,
         ipColor: true,
+        ipHighlight: ipDisplay,
       });
       dynamicLines.push({
-        text: `> Client Location: ${location || 'Unknown'}`,
+        text: '> Client Location: ',
         locColor: true,
+        locationValue: location || 'Unknown',
       });
 
       const tailLines: BootLine[] = [
-        { text: '> Mounting /home/maxim...                     ', okColor: true },
-        { text: '> Launching terminal interface...             ', okColor: true },
+        { text: '> Mounting /portfolio/home/maxim...             ', okColor: true },
+        { text: '> Ready — showing main experience...            ', okColor: true },
       ];
 
       const all = [...baseLines, ...dynamicLines, ...tailLines];
+      const total = all.length;
 
       for (let i = 0; i < all.length; i++) {
         if (cancelled) return;
         setLines((prev) => [...prev, all[i]]);
+        setPercent(Math.round(((i + 1) / total) * 100));
         await new Promise((r) => setTimeout(r, 620));
       }
 
-      let p = 0;
-      while (p < 100 && !cancelled) {
-        p = Math.min(p + Math.floor(Math.random() * 4) + 1, 100);
-        setPercent(p);
-        await new Promise((r) => setTimeout(r, 80));
-      }
+      if (cancelled) return;
+      setPercent(100);
+      await new Promise((r) => setTimeout(r, HOLD_AT_FULL_MS));
 
       if (!cancelled) {
         setVisible(false);
-        await new Promise((r) => setTimeout(r, 300));
+        await new Promise((r) => setTimeout(r, FADE_OUT_MS));
         if (!cancelled) onDone();
       }
     }
@@ -105,9 +97,9 @@ export function BootOverlay({ onDone }: BootOverlayProps) {
 
   return (
     <div
-      className={`fixed inset-0 z-[5000] flex flex-col items-center justify-center bg-[var(--bg)] font-[var(--font-share-tech-mono)] text-[0.85rem] text-[var(--g)] transition-opacity duration-300 ${
-        visible ? 'opacity-100' : 'opacity-0'
-      }`}
+      className={`fixed inset-0 z-[5000] flex flex-col items-center justify-center font-[family-name:var(--font-share-tech-mono)] text-[0.85rem] transition-opacity duration-300 ${
+        visible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      } bg-[#05060a] text-[#00e5ff]`}
     >
       <div className="w-[560px] max-w-[92vw] space-y-1">
         {lines.map((l, idx) => (
@@ -115,12 +107,24 @@ export function BootOverlay({ onDone }: BootOverlayProps) {
             {l.okColor ? (
               <>
                 <span>{l.text}</span>
-                <span className="text-[#00ff88]">OK</span>
+                <span className="text-emerald-400">OK</span>
               </>
+            ) : l.ipColor && l.ipHighlight ? (
+              <span>
+                <span className="font-medium text-cyan-200/80">{'> Client IP: '}</span>
+                <span className="font-bold text-fuchsia-300 tabular-nums [text-shadow:0_0_14px_rgba(232,121,249,0.85),0_0_28px_rgba(0,229,255,0.35)]">
+                  {l.ipHighlight}
+                </span>
+              </span>
             ) : l.ipColor ? (
-              <span className="text-[var(--c)]">{l.text}</span>
+              <span className="text-cyan-300">{l.text}</span>
             ) : l.locColor ? (
-              <span className="text-[var(--y)]">{l.text}</span>
+              <span>
+                <span className="text-cyan-200/80 font-medium">{l.text}</span>
+                <span className="font-semibold text-amber-300">
+                  {l.locationValue ?? 'Unknown'}
+                </span>
+              </span>
             ) : (
               <span>{l.text}</span>
             )}
@@ -128,15 +132,15 @@ export function BootOverlay({ onDone }: BootOverlayProps) {
         ))}
       </div>
       <div className="w-[560px] max-w-[92vw] mt-5">
-        <div className="text-[0.7rem] text-[var(--gdim)] mb-1">
+        <div className="text-[0.7rem] mb-1 text-white/55">
           &gt; SYSTEM INIT [{percent}%]
         </div>
-        <div className="h-[5px] bg-[#001a05] border border-[var(--border)] overflow-hidden">
+        <div className="h-[5px] overflow-hidden border bg-[#0b0d18] border-cyan-500/35">
           <div
-            className="h-full bg-[var(--g)]"
+            className="h-full bg-gradient-to-r from-cyan-400 to-fuchsia-500"
             style={{
               width: `${percent}%`,
-              boxShadow: '0 0 8px var(--g)',
+              boxShadow: '0 0 12px rgba(0,229,255,0.55)',
             }}
           />
         </div>

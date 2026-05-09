@@ -8,12 +8,12 @@ import {
   Linkedin,
   Code2,
   ShieldCheck,
-  TerminalSquare,
   FileText,
   Menu,
   X,
   Smartphone,
   Trophy,
+  TerminalSquare,
 } from 'lucide-react';
 import { contact } from '@/data/portfolio';
 import { AnimeBotAvatar } from './AnimeBotAvatar';
@@ -30,11 +30,7 @@ const SECTIONS = [
   { id: 'contact', label: 'Contact' },
 ] as const;
 
-interface NavbarProps {
-  onOpenTerminal?: () => void;
-}
-
-export function Navbar({ onOpenTerminal }: NavbarProps) {
+export function Navbar({ onOpenTerminal }: { onOpenTerminal?: () => void }) {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState<string>('home');
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -47,22 +43,31 @@ export function Navbar({ onOpenTerminal }: NavbarProps) {
   }, []);
 
   useEffect(() => {
-    const opts: IntersectionObserverInit = {
-      rootMargin: '-45% 0px -45% 0px',
-      threshold: 0,
-    };
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActive(entry.target.id);
+    const ids = SECTIONS.map((s) => s.id);
+    const updateActive = () => {
+      const markerY = window.innerHeight * 0.36;
+      let best = ids[0];
+      let bestDist = Infinity;
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const r = el.getBoundingClientRect();
+        const anchorY = r.top + Math.min(100, r.height * 0.32);
+        const d = Math.abs(anchorY - markerY);
+        if (d < bestDist) {
+          bestDist = d;
+          best = id;
         }
-      });
-    }, opts);
-    SECTIONS.forEach((s) => {
-      const el = document.getElementById(s.id);
-      if (el) obs.observe(el);
-    });
-    return () => obs.disconnect();
+      }
+      setActive(best);
+    };
+    updateActive();
+    window.addEventListener('scroll', updateActive, { passive: true });
+    window.addEventListener('resize', updateActive, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', updateActive);
+      window.removeEventListener('resize', updateActive);
+    };
   }, []);
 
   return (
@@ -72,90 +77,92 @@ export function Navbar({ onOpenTerminal }: NavbarProps) {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
         className={[
-          'fixed inset-x-0 top-0 z-[100] transition-all duration-300',
+          'fixed inset-x-0 top-0 z-[100] transition-all duration-300 overflow-hidden',
           scrolled
-            ? 'backdrop-blur-xl bg-[rgba(5,6,10,0.7)] border-b border-fuchsia-500/15 shadow-[0_8px_30px_rgba(0,0,0,0.45)]'
-            : 'bg-transparent border-b border-transparent',
+            ? 'backdrop-blur-xl bg-[rgba(5,6,10,0.75)] border-b border-fuchsia-500/15 shadow-[0_8px_30px_rgba(0,0,0,0.45)]'
+            : 'bg-[rgba(5,6,10,0.35)] border-b border-transparent',
         ].join(' ')}
       >
-        <nav className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between gap-4">
-          <Link href="#home" className="flex items-center gap-3 group">
-            <AnimeBotAvatar size={40} withHalo />
-            <div className="hidden sm:flex flex-col leading-tight">
-              <span className="font-[family-name:var(--font-display)] font-bold text-sm text-white group-hover:text-cyan-300 transition-colors">
+        <nav className="max-w-7xl mx-auto px-2 sm:px-3 md:px-5 min-h-14 py-2 flex items-center justify-between gap-1.5 sm:gap-2 lg:gap-3">
+          <Link
+            href="#home"
+            className="flex items-center gap-1.5 sm:gap-3 group shrink-0 min-w-0 max-w-[42%] sm:max-w-none"
+          >
+            <AnimeBotAvatar size={36} withHalo />
+            <div className="hidden sm:flex flex-col leading-tight min-w-0">
+              <span className="font-[family-name:var(--font-display)] font-bold text-xs sm:text-sm text-white group-hover:text-cyan-300 transition-colors truncate">
                 MANIKANDAN
               </span>
-              <span className="font-[family-name:var(--font-share-tech-mono)] text-[0.65rem] tracking-[0.3em] text-fuchsia-300/80">
-                MAX // CYBER+CODE
+              <span className="font-[family-name:var(--font-share-tech-mono)] text-[0.55rem] sm:text-[0.65rem] tracking-[0.2em] sm:tracking-[0.28em] text-fuchsia-300/80 truncate">
+                MAXIM // CYBER
               </span>
             </div>
           </Link>
 
-          <ul className="hidden lg:flex items-center gap-1">
+          {/* Section links: lg+ uses full width between brand and actions */}
+          <ul className="hidden lg:grid flex-1 min-w-0 grid-cols-9 items-center gap-x-0.5 px-1 min-[1100px]:px-2 mx-1 min-[1100px]:mx-2 max-w-none list-none">
             {SECTIONS.map((s) => (
-              <li key={s.id}>
+              <li key={s.id} className="min-w-0">
                 <a
                   href={`#${s.id}`}
                   className={[
-                    'relative px-3 py-1.5 rounded-md text-sm font-[family-name:var(--font-share-tech-mono)] transition-colors',
-                    active === s.id ? 'text-cyan-300' : 'text-white/65 hover:text-white',
+                    'flex h-9 min-h-9 w-full items-center justify-center rounded-md px-1 min-[1100px]:px-1.5',
+                    'text-center font-[family-name:var(--font-share-tech-mono)] text-[0.65rem] xl:text-[0.8125rem]',
+                    'leading-none whitespace-nowrap tracking-tight transition-colors',
+                    active === s.id
+                      ? 'font-semibold text-cyan-300 bg-cyan-400/10 ring-1 ring-inset ring-cyan-400/45'
+                      : 'font-medium text-white/70 hover:text-white',
                   ].join(' ')}
                 >
                   {s.label}
-                  {active === s.id && (
-                    <motion.span
-                      layoutId="nav-active"
-                      className="absolute inset-0 -z-10 rounded-md bg-cyan-400/10 ring-1 ring-cyan-400/40"
-                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                    />
-                  )}
                 </a>
               </li>
             ))}
           </ul>
 
-          <div className="flex items-center gap-1.5">
-            <SocialIcon href={contact.social.github} label="GitHub">
-              <Github size={16} />
+          <div className="flex items-center justify-end gap-0.5 sm:gap-1 md:gap-1.5 shrink-0">
+            <SocialIcon href={contact.social.github} label="GitHub" show="always">
+              <Github size={15} />
             </SocialIcon>
-            <SocialIcon href={contact.social.linkedin} label="LinkedIn">
-              <Linkedin size={16} />
+            <SocialIcon href={contact.social.linkedin} label="LinkedIn" show="always">
+              <Linkedin size={15} />
             </SocialIcon>
-            <SocialIcon href={contact.social.leetcode} label="LeetCode">
-              <Code2 size={16} />
+            <SocialIcon href={contact.social.leetcode} label="LeetCode" show="wide">
+              <Code2 size={15} />
             </SocialIcon>
-            <SocialIcon href={contact.social.hackthebox} label="HackTheBox">
-              <ShieldCheck size={16} />
+            <SocialIcon href={contact.social.hackthebox} label="HackTheBox" show="wide">
+              <ShieldCheck size={15} />
             </SocialIcon>
-            <SocialIcon href={contact.social.tryhackme} label="TryHackMe">
-              <Trophy size={16} />
+            <SocialIcon href={contact.social.tryhackme} label="TryHackMe" show="wide">
+              <Trophy size={15} />
             </SocialIcon>
-            <SocialIcon href={contact.social.playstore} label="Play Store">
-              <Smartphone size={16} />
+            <SocialIcon href={contact.social.playstore} label="Play Store" show="wide">
+              <Smartphone size={15} />
             </SocialIcon>
 
             <a
               href={contact.social.resume}
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden md:inline-flex items-center gap-1.5 ml-2 px-3 py-1.5 rounded-md border border-cyan-400/50 text-cyan-300 text-xs font-[family-name:var(--font-share-tech-mono)] hover:bg-cyan-400/10 hover:border-cyan-300 hover:shadow-[0_0_18px_rgba(0,229,255,0.4)] transition-all"
+              className="hidden sm:inline-flex items-center gap-1 ml-0.5 px-2 py-1.5 rounded-md border border-cyan-400/50 text-cyan-300 text-[0.65rem] xl:text-xs font-[family-name:var(--font-share-tech-mono)] hover:bg-cyan-400/10 hover:border-cyan-300 hover:shadow-[0_0_14px_rgba(0,229,255,0.35)] transition-all whitespace-nowrap"
             >
-              <FileText size={14} />
-              <span>Resume</span>
+              <FileText size={13} />
+              <span className="hidden md:inline">Resume</span>
             </a>
 
             <button
-              onClick={onOpenTerminal}
-              className="hidden md:inline-flex items-center gap-1.5 ml-1 px-3 py-1.5 rounded-md border border-fuchsia-400/50 text-fuchsia-300 text-xs font-[family-name:var(--font-share-tech-mono)] hover:bg-fuchsia-400/10 hover:border-fuchsia-300 hover:shadow-[0_0_18px_rgba(168,85,247,0.45)] transition-all"
-              aria-label="Open terminal"
+              type="button"
+              onClick={() => onOpenTerminal?.()}
+              className="hidden sm:inline-flex items-center gap-1 px-2 py-1.5 rounded-md border border-fuchsia-400/50 text-fuchsia-300 text-[0.65rem] xl:text-xs font-[family-name:var(--font-share-tech-mono)] hover:bg-fuchsia-400/10 hover:border-fuchsia-300 hover:shadow-[0_0_14px_rgba(168,85,247,0.4)] transition-all whitespace-nowrap"
+              aria-label="Open floating terminal"
             >
-              <TerminalSquare size={14} />
-              <span>TTY</span>
+              <TerminalSquare size={13} />
+              <span className="hidden md:inline">TTY</span>
             </button>
 
             <button
               onClick={() => setMobileOpen((v) => !v)}
-              className="lg:hidden ml-1 p-2 rounded-md border border-white/15 text-white/80 hover:text-white hover:border-cyan-400/60"
+              className="lg:hidden ml-0.5 p-2.5 min-h-11 min-w-11 rounded-md border border-white/15 text-white/80 hover:text-white hover:border-cyan-400/60 shrink-0"
               aria-label="Toggle menu"
             >
               {mobileOpen ? <X size={18} /> : <Menu size={18} />}
@@ -170,43 +177,45 @@ export function Navbar({ onOpenTerminal }: NavbarProps) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}
-              className="lg:hidden border-t border-white/5 bg-[rgba(5,6,10,0.95)] backdrop-blur-xl"
+              className="lg:hidden border-t border-white/5 bg-[rgba(5,6,10,0.97)] backdrop-blur-xl max-h-[min(70vh,28rem)] overflow-y-auto"
             >
-              <ul className="px-4 py-3 flex flex-col gap-1">
+              <ul className="px-3 py-2 flex flex-col gap-0.5">
                 {SECTIONS.map((s) => (
                   <li key={s.id}>
                     <a
                       href={`#${s.id}`}
                       onClick={() => setMobileOpen(false)}
                       className={[
-                        'block px-3 py-2 rounded-md text-sm font-[family-name:var(--font-share-tech-mono)] transition-colors',
+                        'block px-3 py-3 min-h-12 rounded-md font-[family-name:var(--font-share-tech-mono)] transition-colors',
                         active === s.id
-                          ? 'bg-cyan-400/10 text-cyan-300 ring-1 ring-cyan-400/40'
-                          : 'text-white/75 hover:bg-white/5 hover:text-white',
+                          ? 'bg-cyan-400/10 text-cyan-300 ring-1 ring-inset ring-cyan-400/45 font-semibold'
+                          : 'text-white/75 font-medium hover:bg-white/5 hover:text-white',
                       ].join(' ')}
                     >
                       {s.label}
                     </a>
                   </li>
                 ))}
-                <li className="grid grid-cols-2 gap-2 mt-2">
-                  <a
-                    href={contact.social.resume}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-md border border-cyan-400/50 text-cyan-300 text-xs font-[family-name:var(--font-share-tech-mono)]"
-                  >
-                    <FileText size={14} /> Resume
-                  </a>
+                <li className="mt-2 pt-2 border-t border-white/10 grid grid-cols-1 gap-2">
                   <button
+                    type="button"
                     onClick={() => {
                       setMobileOpen(false);
                       onOpenTerminal?.();
                     }}
-                    className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-md border border-fuchsia-400/50 text-fuchsia-300 text-xs font-[family-name:var(--font-share-tech-mono)]"
+                    className="inline-flex w-full items-center justify-center gap-1.5 px-3 py-2.5 rounded-md border border-fuchsia-400/50 text-fuchsia-300 text-xs font-[family-name:var(--font-share-tech-mono)]"
                   >
-                    <TerminalSquare size={14} /> TTY
+                    <TerminalSquare size={14} /> Floating TTY
                   </button>
+                  <a
+                    href={contact.social.resume}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setMobileOpen(false)}
+                    className="inline-flex w-full items-center justify-center gap-1.5 px-3 py-2 rounded-md border border-cyan-400/50 text-cyan-300 text-xs font-[family-name:var(--font-share-tech-mono)]"
+                  >
+                    <FileText size={14} /> Resume
+                  </a>
                 </li>
               </ul>
             </motion.div>
@@ -214,7 +223,7 @@ export function Navbar({ onOpenTerminal }: NavbarProps) {
         </AnimatePresence>
       </motion.header>
 
-      <div className="h-16" />
+      <div className="h-14 sm:h-[3.75rem] lg:h-14" />
     </>
   );
 }
@@ -223,12 +232,15 @@ function SocialIcon({
   href,
   label,
   children,
+  show,
 }: {
   href?: string;
   label: string;
   children: React.ReactNode;
+  show: 'always' | 'wide';
 }) {
   if (!href) return null;
+  const wideOnly = show === 'wide';
   return (
     <a
       href={href}
@@ -236,7 +248,10 @@ function SocialIcon({
       rel="noopener noreferrer"
       aria-label={label}
       title={label}
-      className="hidden sm:inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/10 text-white/70 hover:text-cyan-300 hover:border-cyan-400/60 hover:bg-cyan-400/5 transition-colors"
+      className={[
+        'inline-flex h-8 w-8 items-center justify-center rounded-md border border-white/10 text-white/70 hover:text-cyan-300 hover:border-cyan-400/60 hover:bg-cyan-400/5 transition-colors shrink-0',
+        wideOnly ? 'hidden lg:inline-flex' : 'inline-flex',
+      ].join(' ')}
     >
       {children}
     </a>

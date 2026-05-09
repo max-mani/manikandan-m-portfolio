@@ -29,7 +29,7 @@ export default function WriteupsHomePage() {
       <WriteupsNavbar />
 
       {/* Hero */}
-      <section className="relative pt-16 pb-12 px-4 overflow-hidden">
+      <section className="relative pt-16 pb-10 sm:pb-12 px-3 sm:px-5 md:px-6 overflow-hidden">
         <div
           className="absolute inset-0 opacity-30 pointer-events-none"
           style={{
@@ -45,7 +45,7 @@ export default function WriteupsHomePage() {
             &gt; whoami --ctf
           </p>
           <h1
-            className="font-[family-name:var(--font-vt323)] text-5xl md:text-[5rem] font-bold mb-2"
+            className="font-[family-name:var(--font-vt323)] text-4xl sm:text-5xl md:text-[5rem] font-bold mb-2"
             style={{
               color: 'var(--primary)',
               textShadow: '0 0 20px rgba(0,255,65,0.4)',
@@ -100,7 +100,7 @@ export default function WriteupsHomePage() {
       </section>
 
       {/* Events grid */}
-      <section id="events" className="px-4 py-12">
+      <section id="events" className="px-3 sm:px-5 md:px-6 py-10 sm:py-12">
         <div className="max-w-6xl mx-auto">
           <h2
             className="font-[family-name:var(--font-vt323)] text-2xl md:text-[1.8rem] font-bold mb-8"
@@ -164,7 +164,7 @@ export default function WriteupsHomePage() {
 
       {/* Categories strip */}
       {categories.length > 0 && (
-        <section className="px-4 pb-12">
+        <section className="px-3 sm:px-5 md:px-6 pb-10 sm:pb-12">
           <div className="max-w-6xl mx-auto">
             <h2
               className="font-[family-name:var(--font-vt323)] text-xl font-bold mb-4"
@@ -193,7 +193,7 @@ export default function WriteupsHomePage() {
 
       {/* Footer */}
       <footer
-        className="border-t py-12 px-4 text-center"
+        className="border-t py-10 sm:py-12 px-3 sm:px-5 md:px-6 text-center"
         style={{ borderColor: 'var(--border)' }}
       >
         <p
@@ -213,7 +213,7 @@ export default function WriteupsHomePage() {
           className="font-mono text-sm hover:underline"
           style={{ color: 'var(--cyan)' }}
         >
-          [ back to terminal ]
+          [ Home ]
         </Link>
       </footer>
     </div>

@@ -42,43 +42,46 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Floating terminal-command lines (homepage background) */
+@keyframes terminalCmdDrift {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(var(--cmd-rot, 0deg));
+  }
+  25% {
+    transform: translate3d(2vw, -3vh, 0) rotate(calc(var(--cmd-rot, 0deg) + 2deg));
+  }
+  50% {
+    transform: translate3d(-1.5vw, 2vh, 0) rotate(calc(var(--cmd-rot, 0deg) - 1deg));
+  }
+  75% {
+    transform: translate3d(3vw, 1vh, 0) rotate(calc(var(--cmd-rot, 0deg) + 1deg));
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(var(--cmd-rot, 0deg));
+  }
+}
+
+.terminal-cmd-float {
+  --cmd-rot: 0deg;
+  animation-name: terminalCmdDrift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  letter-spacing: 0.02em;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 body {
   background: var(--bg);
   color: #d8e2f1;
   font-family: var(--font-body), system-ui, sans-serif;
   overflow-x: hidden;
-}
-
-body[data-mode="terminal"] {
-  overflow: hidden;
-  font-family: var(--font-share-tech-mono), 'Courier New', monospace;
-  color: var(--g);
-}
-
-/* CRT scanlines & vignette only on terminal mode */
-body[data-mode="terminal"]::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.14) 2px,
-    rgba(0, 0, 0, 0.14) 4px
-  );
-  pointer-events: none;
-  z-index: 9999;
-}
-
-body[data-mode="terminal"]::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.65) 100%);
-  pointer-events: none;
-  z-index: 9998;
-  animation: flicker 10s infinite;
 }
 
 /* Cyber-anime ambient gradient mesh for the main site */
@@ -90,17 +93,6 @@ body[data-mode="cyber"] {
     var(--bg);
   background-attachment: fixed;
 }
-
-@keyframes flicker {
-  0%, 97%, 100% { opacity: 1; }
-  98.5% { opacity: 0.82; }
-}
-
-.terminal-root {
-  color: var(--g);
-}
-
-/* === Cyber-Anime utilities === */
 
 .text-gradient-cyber {
   background: linear-gradient(135deg, #00e5ff 0%, #a855f7 50%, #ff00ff 100%);
@@ -285,11 +277,6 @@ body[data-mode="cyber"] {
   pointer-events: none;
 }
 
-/* Terminal styling */
-.terminal {
-  font-family: var(--font-share-tech-mono), 'Courier New', monospace;
-}
-
 /* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 6px;
@@ -312,33 +299,6 @@ body[data-mode="cyber"] {
 ::selection {
   background: rgba(168, 85, 247, 0.45);
   color: #fff;
-}
-
-/* Eye glitch effect (kept for terminal route) */
-.eye-glitch {
-  background: rgba(0, 255, 0, 0.2);
-  pointer-events: none;
-  z-index: 2;
-  animation: eyeGlitch 0.5s infinite;
-  clip-path: polygon(0px 0px, 100% 0px, 100% 100%, 0px 100%);
-}
-
-.eye-glitch svg {
-  filter: drop-shadow(0 0 3px #00ff00);
-}
-
-@keyframes eyeGlitch {
-  0% { transform: translate(0, 0); clip-path: polygon(0px 0px, 100% 0px, 100% 100%, 0px 100%); }
-  10% { transform: translate(2px, -2px); clip-path: polygon(0px 2px, 100% 0px, 98% 100%, 2px 98%); }
-  20% { transform: translate(-2px, 2px); clip-path: polygon(2px 0px, 98% 2px, 100% 98%, 0px 100%); }
-  30% { transform: translate(1px, -1px); clip-path: polygon(0px 1px, 99% 0px, 99% 100%, 1px 99%); }
-  40% { transform: translate(-1px, 1px); clip-path: polygon(1px 0px, 100% 1px, 99% 99%, 0px 100%); }
-  50% { transform: translate(2px, 1px); clip-path: polygon(0px 0px, 98% 1px, 100% 99%, 2px 100%); }
-  60% { transform: translate(-2px, -1px); clip-path: polygon(2px 1px, 100% 0px, 98% 100%, 0px 99%); }
-  70% { transform: translate(1px, 2px); clip-path: polygon(0px 0px, 99% 2px, 99% 98%, 1px 100%); }
-  80% { transform: translate(-1px, -2px); clip-path: polygon(1px 2px, 100% 0px, 99% 100%, 0px 98%); }
-  90% { transform: translate(2px, -1px); clip-path: polygon(0px 1px, 98% 0px, 100% 99%, 2px 100%); }
-  100% { transform: translate(0, 0); clip-path: polygon(0px 0px, 100% 0px, 100% 100%, 0px 100%); }
 }
 
 .glitch-text {

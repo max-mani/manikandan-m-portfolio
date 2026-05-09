@@ -99,7 +99,7 @@ export interface ContactData {
 export const hero: HeroData = {
   name: "MANIKANDAN M",
   title: "Full Stack & Mobile Application Developer | Application Security Analyst | Cybersecurity & AI Enthusiast",
-  intro: "Welcome to my portfolio. Type 'help' in the terminal to get started.",
+  intro: "Welcome to my portfolio.",
   description: "Pre-final year Computer Science and Engineering student with strong hands-on experience in full-stack web development, mobile application development, AI-driven systems, and cybersecurity. Passionate about building scalable, real-world solutions across road safety, intelligent automation, and secure application architectures. Actively engaged in Capture The Flag (CTF) competitions, application security research, and reverse engineering. HackX CTF 2025 – 2nd Place Winner.",
   focusAreas: [
     "Full Stack & Mobile Application Development",
@@ -170,7 +170,7 @@ export const projects: Project[] = [
       "Police and emergency response dashboard"
     ],
     github: "https://github.com/max-mani/Kapaan",
-    categories: ["AI", "Mobile", "Cybersec"],
+    categories: ["AI", "Mobile", "Dev"],
     year: "2025",
     featured: true
   },
@@ -270,13 +270,36 @@ export const projects: Project[] = [
     categories: ["Dev"],
     year: "2024"
   },
-
-  // ================================================================
-  // ADDITIONAL PROJECTS  (drop new entries below — use existing
-  // structure as a template. Suggested fields:
-  //   id, name, description, technologies, keyFeatures?, github?,
-  //   live?, image?, categories?, year?, featured?
-  // ================================================================
+  {
+    id: "tripoo",
+    name: "Tripoo",
+    description:
+      "Production web app on Netlify. Replace this blurb with your final product description when you send updated copy.",
+    technologies: ["Next.js", "React", "TypeScript"],
+    live: "https://tripoo.netlify.app/",
+    categories: ["Dev", "Mobile"],
+    year: "2026"
+  },
+  {
+    id: "zerorespond",
+    name: "ZeroRespond",
+    description:
+      "Production web app on Netlify. Replace this blurb with your final product description when you send updated copy.",
+    technologies: ["Web"],
+    live: "https://zerorespond.netlify.app/",
+    categories: ["Dev", "Cybersec"],
+    year: "2026"
+  },
+  {
+    id: "saar-insurance",
+    name: "SAAR Insurance",
+    description:
+      "Production web app on Netlify. Replace this blurb with your final product description when you send updated copy.",
+    technologies: ["Web"],
+    live: "https://saar-insurance.netlify.app/",
+    categories: ["Dev", "Mobile"],
+    year: "2026"
+  },
   {
     id: "aayiram",
     name: "Aayiram – Smart Expense Tracker",
@@ -288,10 +311,10 @@ export const projects: Project[] = [
       "On-device privacy-first parsing",
       "Live on Google Play Store"
     ],
-    categories: ["Mobile", "Dev"],
+    categories: ["Mobile"],
     year: "2025",
     featured: true,
-    live: "https://play.google.com/store"
+    live: "https://play.google.com/store/apps/dev?id=8965940044992315715"
   }
 ];
 
@@ -491,11 +514,10 @@ export const contact: ContactData = {
     github: "https://github.com/max-mani",
     linkedin: "https://www.linkedin.com/in/19manikandan-m",
     portfolio: "https://maxmani.in/",
-    // TODO(content): replace these placeholders with your actual profile URLs
-    leetcode: "https://leetcode.com/u/max-mani/",
+    leetcode: "https://leetcode.com/u/maxim2115/",
     hackthebox: "https://app.hackthebox.com/profile/",
-    tryhackme: "https://tryhackme.com/p/max.mani",
-    playstore: "https://play.google.com/store/apps/developer?id=RedGoldCrew",
+    tryhackme: "https://tryhackme.com/p/maxmani",
+    playstore: "https://play.google.com/store/apps/dev?id=8965940044992315715",
     resume: "/resume/manikandan-m-resume.pdf"
   }
 };

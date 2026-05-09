@@ -26,7 +26,7 @@ export default function BlogsHomePage() {
       <BlogsNavbar />
 
       {/* Hero */}
-      <section className="relative pt-16 pb-12 px-4 overflow-hidden">
+      <section className="relative pt-16 pb-10 sm:pb-12 px-3 sm:px-5 md:px-6 overflow-hidden">
         <div
           className="absolute inset-0 opacity-30 pointer-events-none"
           style={{
@@ -42,7 +42,7 @@ export default function BlogsHomePage() {
             &gt; log init --author=&quot;maxim&quot;
           </p>
           <h1
-            className="font-[family-name:var(--font-vt323)] text-5xl md:text-[5rem] font-bold mb-2"
+            className="font-[family-name:var(--font-vt323)] text-4xl sm:text-5xl md:text-[5rem] font-bold mb-2"
             style={{
               color: 'var(--primary)',
               textShadow: '0 0 20px rgba(0,255,65,0.4)',
@@ -99,7 +99,7 @@ export default function BlogsHomePage() {
 
       {/* Latest post */}
       {latestPost && (
-        <section className="px-4 pb-12">
+        <section className="px-3 sm:px-5 md:px-6 pb-10 sm:pb-12">
           <div className="max-w-4xl mx-auto">
             <div
               className={`p-6 ${cardHoverStyle}`}
@@ -158,7 +158,7 @@ export default function BlogsHomePage() {
 
       {/* Posts grid */}
       {otherPosts.length > 0 && (
-        <section className="px-4 pb-12">
+        <section className="px-3 sm:px-5 md:px-6 pb-10 sm:pb-12">
           <div className="max-w-4xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {otherPosts.map((post) => (
@@ -218,7 +218,7 @@ export default function BlogsHomePage() {
 
       {/* Tags strip */}
       {tags.length > 0 && (
-        <section className="px-4 pb-12">
+        <section className="px-3 sm:px-5 md:px-6 pb-10 sm:pb-12">
           <div className="max-w-4xl mx-auto">
             <p
               className="font-mono text-sm mb-4"
@@ -247,7 +247,7 @@ export default function BlogsHomePage() {
 
       {/* Footer */}
       <footer
-        className="border-t py-12 px-4 text-center"
+        className="border-t py-10 sm:py-12 px-3 sm:px-5 md:px-6 text-center"
         style={{ borderColor: 'var(--border)' }}
       >
         <p
@@ -267,7 +267,7 @@ export default function BlogsHomePage() {
           className="font-mono text-sm hover:underline"
           style={{ color: 'var(--cyan)' }}
         >
-          [ back to terminal ]
+          [ Home ]
         </Link>
       </footer>
     </div>

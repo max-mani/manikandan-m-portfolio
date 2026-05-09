@@ -9,8 +9,8 @@ import { GlowCard } from './GlowCard';
 
 export function CertificationsGrid() {
   return (
-    <section id="certs" className="relative py-20 md:py-28">
-      <div className="max-w-7xl mx-auto px-4 md:px-6">
+    <section id="certs" className="relative py-14 sm:py-20 md:py-28">
+      <div className="max-w-7xl mx-auto px-3 sm:px-5 md:px-6">
         <SectionHeading
           eyebrow="> ./certifications --list"
           title="Certifications"
