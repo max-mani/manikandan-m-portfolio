@@ -20,6 +20,58 @@ interface BootLine {
 const HOLD_AT_FULL_MS = 2000;
 const FADE_OUT_MS = 300;
 
+/** Dev / direct localhost: server only sees loopback — not your public address. */
+function isLoopbackOrUnknown(ip: string): boolean {
+  const t = ip.trim().toLowerCase();
+  return (
+    !t ||
+    t === 'unknown' ||
+    t === '127.0.0.1' ||
+    t === '::1' ||
+    t === '0:0:0:0:0:0:0:1' ||
+    t.startsWith('127.')
+  );
+}
+
+/** Browser → geo API: returns *your* public IP (works on localhost). */
+async function fetchPublicGeoFromBrowser(): Promise<{ ip: string; location: string } | null> {
+  const buildLoc = (city: string, region: string, country: string) => {
+    const parts = [city, region, country].filter(Boolean);
+    return parts.length ? parts.join(', ') : country || '';
+  };
+
+  const tryIpapi = async () => {
+    const res = await fetch('https://ipapi.co/json/', { cache: 'no-store' });
+    if (!res.ok) return null;
+    const d = (await res.json()) as Record<string, unknown>;
+    if (d.error) return null;
+    const ip = String(d.ip ?? '');
+    if (!ip) return null;
+    const loc = buildLoc(
+      String(d.city ?? ''),
+      String(d.region ?? ''),
+      String(d.country_name ?? '')
+    );
+    return { ip, location: loc || 'Unknown' };
+  };
+
+  const tryIpinfo = async () => {
+    const res = await fetch('https://ipinfo.io/json', { cache: 'no-store' });
+    if (!res.ok) return null;
+    const d = (await res.json()) as Record<string, unknown>;
+    const ip = String(d.ip ?? '');
+    if (!ip) return null;
+    const loc = buildLoc(String(d.city ?? ''), String(d.region ?? ''), String(d.country ?? ''));
+    return { ip, location: loc || 'Unknown' };
+  };
+
+  try {
+    return (await tryIpapi()) ?? (await tryIpinfo());
+  } catch {
+    return null;
+  }
+}
+
 export function BootOverlay({ onDone }: BootOverlayProps) {
   const [lines, setLines] = useState<BootLine[]>([]);
   const [percent, setPercent] = useState(0);
@@ -48,6 +100,14 @@ export function BootOverlay({ onDone }: BootOverlayProps) {
         }
       } catch {
         /* offline / API unavailable */
+      }
+
+      if (isLoopbackOrUnknown(ip) || location === 'Local development') {
+        const pubGeo = await fetchPublicGeoFromBrowser();
+        if (pubGeo) {
+          ip = pubGeo.ip;
+          location = pubGeo.location;
+        }
       }
 
       const ipDisplay = ip || 'Unknown';
