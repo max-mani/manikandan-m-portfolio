@@ -67,11 +67,11 @@ export const metadata: Metadata = {
   ],
   metadataBase: getMetadataBase(),
   alternates: { canonical: "/" },
-  /** Tab + PWA icons: direct public PNG + `v` bumps cache when the asset changes. */
+  /** Primary tab icon: `/favicon.ico` for Google; Apple touch uses PNG. */
   icons: {
-    icon: [{ url: "/images/anime-bot-favicon.png?v=3", type: "image/png", sizes: "any" }],
-    apple: [{ url: "/images/anime-bot-favicon.png?v=3", sizes: "180x180", type: "image/png" }],
-    shortcut: "/images/anime-bot-favicon.png?v=3",
+    icon: [{ url: "/favicon.ico", sizes: "any" }],
+    apple: [{ url: "/images/anime-bot-favicon.png?v=4", sizes: "180x180", type: "image/png" }],
+    shortcut: "/favicon.ico",
   },
 };
 
