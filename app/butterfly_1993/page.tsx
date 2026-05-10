@@ -21,7 +21,7 @@ export default function Butterfly1993Page() {
         <h1>butterfly_1993.exe — Home Page</h1>
         <hr />
 
-        <marquee>Welcome to the home of butterfly_1993!</marquee>
+        {createElement('marquee', null, 'Welcome to the home of butterfly_1993!')}
 
         <p>This page was last updated: September 12, 1993</p>
         <p>Visitor count: 00001337</p>
