@@ -1,14 +1,19 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
+/** Hero “holding” illustration is `loop.mp4` only — no separate poster image. */
 const HERO_VIDEO_LABEL =
-  'Manikandan holding Development and Cybersecurity together — animated illustration';
+  'Manikandan holding Development and Cybersecurity together — looping hero video';
 
 export function HeroHoldingIllustration() {
   const ref = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoFailed, setVideoFailed] = React.useState(false);
+  const [posterFailed, setPosterFailed] = React.useState(false);
+  const [reducedMotion, setReducedMotion] = React.useState(false);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
@@ -22,10 +27,17 @@ export function HeroHoldingIllustration() {
 
   useEffect(() => {
     const v = videoRef.current;
-    if (!v) return;
-
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setReducedMotion(mq.matches);
+
+    if (!v) {
+      const onPrefChange = () => setReducedMotion(mq.matches);
+      mq.addEventListener('change', onPrefChange);
+      return () => mq.removeEventListener('change', onPrefChange);
+    }
+
     const syncPlayback = () => {
+      setReducedMotion(mq.matches);
       if (mq.matches) v.pause();
       else void v.play().catch(() => {});
     };
@@ -72,17 +84,35 @@ export function HeroHoldingIllustration() {
         style={{ rotateX, rotateY, translateX, translateY, transformStyle: 'preserve-3d' }}
         className="relative overflow-hidden scanline-overlay border-2 border-[#00ff41] shadow-[4px_4px_0_0_#00ff41] aspect-[1280/853] w-full bg-[#050a05]"
       >
-        <video
-          ref={videoRef}
-          className="w-full h-full object-contain block [image-rendering:pixelated] [image-rendering:crisp-edges]"
-          src="/images/loop.mp4"
-          muted
-          loop
-          playsInline
-          preload="auto"
-          poster="/images/hero-holding.png"
-          aria-label={HERO_VIDEO_LABEL}
-        />
+        {videoFailed || reducedMotion ? (
+          posterFailed ? (
+            <div className="flex h-full w-full items-center justify-center bg-[#0a140a] text-[10px] text-[#00e5ff]">
+              [ HERO VISUAL OFFLINE ]
+            </div>
+          ) : (
+            <Image
+              src="/images/hero-holding.png"
+              alt="Manikandan holding Development and Cybersecurity together — pixel art still"
+              fill
+              sizes="(max-width: 768px) 100vw, 680px"
+              className="object-contain [image-rendering:pixelated]"
+              onError={() => setPosterFailed(true)}
+              priority
+            />
+          )
+        ) : (
+          <video
+            ref={videoRef}
+            className="w-full h-full object-contain block [image-rendering:pixelated] [image-rendering:crisp-edges]"
+            src="/images/loop.mp4"
+            muted
+            loop
+            playsInline
+            preload="auto"
+            aria-label={HERO_VIDEO_LABEL}
+            onError={() => setVideoFailed(true)}
+          />
+        )}
 
         <span
           aria-hidden

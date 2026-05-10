@@ -50,7 +50,7 @@ export interface Project {
 
 export interface SkillsData {
   categories: {
-    [key: string]: Array<{ name: string; level: string; percentage?: number }>;
+    [key: string]: string[];
   };
 }
 
@@ -124,7 +124,7 @@ export const hero: HeroData = {
 
 // About Section
 export const about: AboutData = {
-  bio: "I am a pre-final year Computer Science and Engineering student at Kumaraguru College of Technology with a strong interest in cybersecurity, application security, artificial intelligence, and full-stack application development. I enjoy working on real-world problem statements where software engineering intersects with security, automation, and social impact.",
+  bio: "Pre-final year Computer Science and Engineering student at Kumaraguru College of Technology. I ship full-stack and mobile products, practice application security and CTF work in parallel, and reach for problems where reliable software, tooling, and a security lens actually matter.",
   details: [
     "I have developed production-grade web and mobile applications, AI-based accident detection systems, and security-focused projects including vulnerability scanners and Capture The Flag (CTF) challenge solutions.",
     "My work spans domains such as road safety, fintech, digital public infrastructure, and secure application design.",
@@ -274,7 +274,7 @@ export const projects: Project[] = [
     id: "tripoo",
     name: "Tripoo",
     description:
-      "Production web app on Netlify. Replace this blurb with your final product description when you send updated copy.",
+      "Tripoo is for friend squads who need one place to plan the whole trip: routes, stay ideas, split expenses, and who owes who. Built with Next.js, React, and TypeScript with Firebase Firestore sync so everyone sees updates live across multiple trips.",
     technologies: ["Next.js", "React", "TypeScript"],
     live: "https://tripoo.netlify.app/",
     categories: ["Dev", "Mobile"],
@@ -284,7 +284,7 @@ export const projects: Project[] = [
     id: "zerorespond",
     name: "ZeroRespond",
     description:
-      "Production web app on Netlify. Replace this blurb with your final product description when you send updated copy.",
+      "ZeroRespond is a self-hosted incident response setup that helps teams move fast from alert to action. It ties detections to clear playbooks, gives you reporting your team can actually share, and runs with a simple Docker deploy instead of expensive licensing.",
     technologies: ["Web"],
     live: "https://zerorespond.netlify.app/",
     categories: ["Dev", "Cybersec"],
@@ -294,7 +294,7 @@ export const projects: Project[] = [
     id: "saar-insurance",
     name: "SAAR Insurance",
     description:
-      "Production web app on Netlify. Replace this blurb with your final product description when you send updated copy.",
+      "SAAR Insurance is the customer-facing motor insurance flow for SAAR Assurances, built for fast quote-to-payment onboarding. Users can get quotes, sign up with OTP, and complete policy payments without bouncing between clunky forms.",
     technologies: ["Web"],
     live: "https://saar-insurance.netlify.app/",
     categories: ["Dev", "Mobile"],
@@ -321,57 +321,10 @@ export const projects: Project[] = [
 // Skills
 export const skills: SkillsData = {
   categories: {
-    "Programming Languages": [
-      { name: "Python", level: "Advanced", percentage: 85 },
-      { name: "JavaScript", level: "Intermediate", percentage: 75 },
-      { name: "TypeScript", level: "Intermediate", percentage: 75 },
-      { name: "Dart", level: "Advanced", percentage: 80 },
-      { name: "C / C++", level: "Foundational", percentage: 60 },
-      { name: "SQL", level: "Intermediate", percentage: 70 }
-    ],
-    "Web & Mobile Development": [
-      { name: "Flutter", level: "Advanced", percentage: 85 },
-      { name: "Next.js", level: "Intermediate", percentage: 75 },
-      { name: "React.js", level: "Intermediate", percentage: 75 },
-      { name: "Node.js & Express.js", level: "Intermediate", percentage: 75 },
-      { name: "RESTful API Design & Integration", level: "Advanced", percentage: 80 },
-      { name: "HTML5 / CSS3 / Tailwind CSS", level: "Intermediate", percentage: 75 },
-      { name: "Firebase (Auth, Firestore, Cloud Functions)", level: "Intermediate", percentage: 75 }
-    ],
-    "AI / Machine Learning": [
-      { name: "Machine Learning Fundamentals", level: "Intermediate", percentage: 70 },
-      { name: "Computer Vision & Image Processing", level: "Intermediate", percentage: 75 },
-      { name: "Accident Detection & Video Analytics", level: "Applied ML" },
-      { name: "Model Training, Evaluation & Optimization", level: "Intermediate" },
-      { name: "Data Analysis with Pandas & NumPy", level: "Intermediate" },
-      { name: "scikit-learn", level: "Intermediate", percentage: 70 }
-    ],
-    "Cybersecurity": [
-      { name: "Application Security", level: "Advanced", percentage: 80 },
-      { name: "Ethical Hacking & Offensive Security", level: "Intermediate", percentage: 75 },
-      { name: "Capture The Flag (CTF) Challenges", level: "Advanced", percentage: 80 },
-      { name: "Reverse Engineering", level: "Intermediate", percentage: 70 },
-      { name: "Binary Exploitation (Pwn)", level: "Intermediate", percentage: 70 },
-      { name: "Web Exploitation", level: "Intermediate", percentage: 75 },
-      { name: "Cryptography (CTF-focused)", level: "Intermediate", percentage: 70 },
-      { name: "Linux Internals & Command-line Tooling", level: "Advanced", percentage: 80 }
-    ],
-    "Tools & Platforms": [
-      { name: "Git & GitHub", level: "Advanced" },
-      { name: "Docker", level: "Foundational" },
-      { name: "Linux", level: "Advanced" },
-      { name: "GDB, Radare2, Objdump (Reverse Engineering)", level: "Intermediate" },
-      { name: "Burp Suite, Nmap (Security Testing)", level: "Intermediate" },
-      { name: "Postman (API Testing)", level: "Intermediate" },
-      { name: "VS Code, Android Studio", level: "Advanced" }
-    ],
-    "Soft Skills": [
-      { name: "Problem Solving & Analytical Thinking", level: "Advanced" },
-      { name: "Team Collaboration & Leadership", level: "Intermediate" },
-      { name: "Rapid Learning & Adaptability", level: "Advanced" },
-      { name: "Technical Documentation", level: "Intermediate" },
-      { name: "Competitive Mindset (Hackathons & CTFs)", level: "Advanced" }
-    ]
+    "DAILY DRIVER": ["Python", "JavaScript", "TypeScript", "Dart"],
+    "SHIPPED TO PRODUCTION": ["Flutter", "Next.js", "FastAPI", "Firebase", "MongoDB"],
+    "SECURITY TOOLS": ["Burp Suite", "Nmap", "GDB", "Radare2", "Binwalk"],
+    "CTF TOOLKIT": ["Steghide", "Binwalk", "Exiftool", "John", "Hashcat"]
   }
 };
 

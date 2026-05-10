@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Github, ArrowUpRight } from 'lucide-react';
+import { Github, ArrowUpRight, ChevronDown } from 'lucide-react';
 import { projects, contact } from '@/data/portfolio';
 import type { ProjectCategory } from '@/data/portfolio';
 import { SectionHeading } from './SectionHeading';
@@ -18,11 +18,19 @@ const FILTERS: Array<{ id: 'All' | ProjectCategory; label: string }> = [
 
 export function ProjectsGrid() {
   const [filter, setFilter] = useState<(typeof FILTERS)[number]['id']>('All');
+  const [showAll, setShowAll] = useState(false);
 
   const filtered = useMemo(() => {
     if (filter === 'All') return projects;
     return projects.filter((p) => p.categories?.includes(filter));
   }, [filter]);
+
+  const visibleProjects = useMemo(() => {
+    if (showAll) return filtered;
+    return filtered.slice(0, 6);
+  }, [filtered, showAll]);
+
+  const hasMoreProjects = filtered.length > 6;
 
   return (
     <section id="projects" className="relative py-14 sm:py-20 md:py-28">
@@ -57,7 +65,10 @@ export function ProjectsGrid() {
               <button
                 key={f.id}
                 type="button"
-                onClick={() => setFilter(f.id)}
+                onClick={() => {
+                  setFilter(f.id);
+                  setShowAll(false);
+                }}
                 className={[
                   'px-3 py-1.5 text-[10px] tracking-wide border-2 transition-none',
                   active
@@ -74,7 +85,7 @@ export function ProjectsGrid() {
 
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
           <AnimatePresence mode="popLayout">
-            {filtered.map((project, idx) => (
+            {visibleProjects.map((project, idx) => (
               <motion.div
                 key={project.id}
                 layout
@@ -88,6 +99,19 @@ export function ProjectsGrid() {
             ))}
           </AnimatePresence>
         </div>
+
+        {hasMoreProjects && (
+          <div className="mt-8 flex justify-center">
+            <button
+              type="button"
+              onClick={() => setShowAll((prev) => !prev)}
+              className="inline-flex items-center gap-2 px-3 py-2 border-2 border-[#00e5ff] text-[#00e5ff] text-[10px] bg-[#0a140a] shadow-[2px_2px_0_0_#00e5ff] hover:text-[#00ff41] hover:border-[#00ff41] hover:shadow-[2px_2px_0_0_#00ff41] transition-none active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
+            >
+              <ChevronDown size={12} className={showAll ? 'rotate-180' : ''} />
+              {showAll ? 'View less' : `View more [${filtered.length - visibleProjects.length}]`}
+            </button>
+          </div>
+        )}
 
         {filtered.length === 0 && (
           <div className="mt-10 text-center text-[10px] text-[#4caf50]">

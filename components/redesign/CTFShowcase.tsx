@@ -33,7 +33,7 @@ export function CTFShowcase() {
             description="Real, public competitions. Real, public scoreboards. Specialties: Reverse Engineering, Web Exploitation, Forensics, OSINT, Crypto, AI/ML security."
           />
           <Link
-            href="/wirteups"
+            href="/writeups"
             target="_blank"
             rel="noopener noreferrer"
             className="self-start md:self-auto inline-flex items-center gap-2 px-3 py-2 border-2 border-[#00ff41] text-[#00ff41] text-[10px] bg-[#0a140a] shadow-[2px_2px_0_0_#00ff41] hover:border-[#00e5ff] hover:text-[#00e5ff] hover:shadow-[2px_2px_0_0_#00e5ff] transition-none active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"

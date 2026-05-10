@@ -43,7 +43,7 @@ export default async function CategoryDetailPage({ params }: PageProps) {
               Category not found
             </h1>
             <Link
-              href="/wirteups/categories"
+              href="/writeups/categories"
               className="hover:underline"
               style={{ color: 'var(--cyan)' }}
             >
@@ -70,7 +70,7 @@ export default async function CategoryDetailPage({ params }: PageProps) {
       <div className="relative pt-16 pb-12 px-3 sm:px-5 md:px-6">
         <div className="max-w-6xl mx-auto">
           <Link
-            href="/wirteups/categories"
+            href="/writeups/categories"
             className="inline-flex items-center gap-2 mb-8 font-mono text-sm hover:underline"
             style={{ color: 'var(--cyan)' }}
           >
@@ -98,7 +98,7 @@ export default async function CategoryDetailPage({ params }: PageProps) {
             {category.challenges.map((challenge) => (
               <Link
                 key={challenge.slug}
-                href={`/wirteups/event/${challenge.eventSlug}/${challenge.slug}`}
+                href={`/writeups/event/${challenge.eventSlug}/${challenge.slug}`}
                 className={`block p-6 ${cardHoverStyle}`}
                 style={cardStyle}
               >

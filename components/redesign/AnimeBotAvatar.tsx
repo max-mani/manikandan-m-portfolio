@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import {
@@ -8,10 +8,11 @@ import {
   estimateAvatarChaosDurationMs,
   runAvatarChaosSequence,
 } from '@/lib/avatarChaos';
-import { estimateChaosPaneCount } from '@/lib/prepareChaosFallTargets';
 
 interface AnimeBotAvatarProps {
   size?: number;
+  /** `portrait` uses `/images/anime-bot.png` (pixel profile); `mark` is a compact monogram placeholder. */
+  variant?: 'portrait' | 'mark';
   /** Show the rotating ring + halo. Defaults to true. */
   withHalo?: boolean;
   /** Adds a subtle floating animation. Defaults to false. */
@@ -27,17 +28,24 @@ interface AnimeBotAvatarProps {
 
 export function AnimeBotAvatar({
   size = 48,
+  variant = 'portrait',
   withHalo = true,
   floating = false,
   className = '',
-  alt = 'Manikandan M — pixel nav avatar',
+  alt,
   priority,
   chaosClicks = false,
   onNonChaosClick,
 }: AnimeBotAvatarProps) {
+  const resolvedAlt =
+    alt ??
+    (variant === 'mark'
+      ? 'Manikandan M — brand mark'
+      : 'Manikandan M — pixel art profile photo');
   const clickCountRef = useRef(0);
   const lastClickRef = useRef(0);
   const chaosRunningRef = useRef(false);
+  const [portraitFailed, setPortraitFailed] = useState(false);
 
   const onChaosPointerUp = useCallback(() => {
     if (typeof document === 'undefined') return;
@@ -58,9 +66,7 @@ export function AnimeBotAvatar({
 
     chaosRunningRef.current = true;
     clickCountRef.current = 0;
-    const chaosMs = estimateAvatarChaosDurationMs(
-      estimateChaosPaneCount(document),
-    );
+    const chaosMs = estimateAvatarChaosDurationMs();
 
     runAvatarChaosSequence();
     window.setTimeout(() => {
@@ -94,15 +100,29 @@ export function AnimeBotAvatar({
           />
         </>
       )}
-      <span className="relative block h-full w-full overflow-hidden border-2 border-[#00ff41] shadow-[2px_2px_0_0_#00ff41]">
-        <Image
-          src="/images/anime-bot.png"
-          alt={alt}
-          fill
-          sizes={`${size}px`}
-          className="object-cover [image-rendering:pixelated]"
-          priority={priority}
-        />
+      <span className="relative flex h-full w-full items-center justify-center overflow-hidden border-2 border-[#00ff41] bg-[#0a140a] shadow-[2px_2px_0_0_#00ff41]">
+        {variant === 'mark' || portraitFailed ? (
+          <span
+            aria-hidden
+            className="select-none font-bold leading-none tracking-tight text-[#00ff41]"
+            style={{
+              fontSize: Math.max(12, Math.round(size * 0.52)),
+              textShadow: '2px 2px 0 #050a05',
+            }}
+          >
+            M
+          </span>
+        ) : (
+          <Image
+            src="/images/anime-bot.png"
+            alt={resolvedAlt}
+            fill
+            sizes={`${size}px`}
+            className="object-cover [image-rendering:pixelated]"
+            priority={priority}
+            onError={() => setPortraitFailed(true)}
+          />
+        )}
       </span>
     </motion.div>
   );

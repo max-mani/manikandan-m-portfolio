@@ -1,5 +1,5 @@
 /**
- * Build public/favicon.ico from public/images/anime-bot-favicon.png
+ * Build public/favicon.ico from the canonical PNG favicon source.
  * Served at https://your-domain/favicon.ico (Google indexing, browsers).
  * Run: npm run favicon
  */

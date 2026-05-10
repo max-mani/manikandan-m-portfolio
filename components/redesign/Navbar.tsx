@@ -75,6 +75,8 @@ export function Navbar({ onOpenTerminal }: { onOpenTerminal?: () => void }) {
           <div className="flex items-center gap-1.5 sm:gap-3 shrink-0 min-w-0">
             <AnimeBotAvatar
               size={48}
+              variant="portrait"
+              alt="Manikandan M — pixel art profile photo"
               withHalo
               chaosClicks
               onNonChaosClick={() =>

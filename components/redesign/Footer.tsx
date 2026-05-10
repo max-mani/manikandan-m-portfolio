@@ -4,7 +4,6 @@ import React from 'react';
 import Link from 'next/link';
 import { Github, Linkedin, Mail, ArrowUp } from 'lucide-react';
 import { contact } from '@/data/portfolio';
-import { AnimeBotAvatar } from './AnimeBotAvatar';
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -14,14 +13,7 @@ export function Footer() {
       <div className="cyber-divider absolute top-0 inset-x-0" />
       <div className="max-w-7xl mx-auto px-3 sm:px-5 md:px-6 grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
         <div>
-          <Link href="#home" className="inline-flex items-center gap-3">
-            <AnimeBotAvatar size={48} />
-            <div className="leading-tight">
-              <p className="font-bold text-[12px] text-[#00ff41]">Manikandan M</p>
-              <p className="text-[8px] tracking-[0.25em] text-[#00e5ff] uppercase">MAXIM_OS</p>
-            </div>
-          </Link>
-          <p className="mt-3 text-[10px] text-[#e8f5e9]/65 max-w-sm leading-[2em]">
+          <p className="text-[10px] text-[#e8f5e9]/65 max-w-sm leading-[2em]">
             Pre-final year CSE student holding development and cybersecurity together — the way Spidey
             held the ferry.
           </p>
@@ -51,7 +43,7 @@ export function Footer() {
               </Link>
             </li>
             <li>
-              <Link href="/wirteups" target="_blank" rel="noopener noreferrer">
+              <Link href="/writeups" target="_blank" rel="noopener noreferrer">
                 Writeups
               </Link>
             </li>

@@ -14,6 +14,7 @@ import {
   BlogWriteupsPreview,
   type BlogPostPreview,
   type EventPreview,
+  type GithubActivityPreview,
 } from './BlogWriteupsPreview';
 import { ContactSection } from './ContactSection';
 import { Footer } from './Footer';
@@ -28,9 +29,10 @@ import {
 interface HomeClientProps {
   posts: BlogPostPreview[];
   events: EventPreview[];
+  activity: GithubActivityPreview[];
 }
 
-export function HomeClient({ posts, events }: HomeClientProps) {
+export function HomeClient({ posts, events, activity }: HomeClientProps) {
   const [bootDone, setBootDone] = useState(false);
   const [terminalOpen, setTerminalOpen] = useState(false);
   const frozenHomeMarkup = useChaosFreezeStore((s) => s.frozenHomeMarkup);
@@ -76,7 +78,7 @@ export function HomeClient({ posts, events }: HomeClientProps) {
         <ExperienceTimeline />
         <CTFShowcase />
         <CertificationsGrid />
-        <BlogWriteupsPreview posts={posts} events={events} />
+        <BlogWriteupsPreview posts={posts} events={events} activity={activity} />
         <ContactSection />
       </main>
 

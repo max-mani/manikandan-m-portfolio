@@ -51,7 +51,7 @@ export default async function EventPage({ params, searchParams }: PageProps) {
               Event not found
             </h1>
             <Link
-              href="/wirteups"
+              href="/writeups"
               className="hover:underline"
               style={{ color: 'var(--cyan)' }}
             >
@@ -84,7 +84,7 @@ export default async function EventPage({ params, searchParams }: PageProps) {
       <div className="relative pt-16 pb-12 px-3 sm:px-5 md:px-6">
         <div className="max-w-6xl mx-auto">
           <Link
-            href="/wirteups"
+            href="/writeups"
             className="inline-flex items-center gap-2 mb-8 font-mono text-sm hover:underline"
             style={{ color: 'var(--cyan)' }}
           >
@@ -129,7 +129,7 @@ export default async function EventPage({ params, searchParams }: PageProps) {
           {/* Category filter tabs */}
           <div className="flex flex-wrap gap-2 mb-8">
             <Link
-              href={`/wirteups/event/${event.slug}`}
+              href={`/writeups/event/${event.slug}`}
               className="font-mono text-sm px-4 py-2 rounded transition-colors"
               style={{
                 border: '1px solid var(--border)',
@@ -148,7 +148,7 @@ export default async function EventPage({ params, searchParams }: PageProps) {
               return (
                 <Link
                   key={cat.slug}
-                  href={`/wirteups/event/${event.slug}?category=${cat.slug}`}
+                  href={`/writeups/event/${event.slug}?category=${cat.slug}`}
                   className="font-mono text-sm px-4 py-2 rounded transition-colors"
                   style={{
                     border: '1px solid var(--border)',
@@ -168,7 +168,7 @@ export default async function EventPage({ params, searchParams }: PageProps) {
             {filteredChallenges.map((challenge) => (
               <Link
                 key={challenge.slug}
-                href={`/wirteups/event/${event.slug}/${challenge.slug}`}
+                href={`/writeups/event/${event.slug}/${challenge.slug}`}
                 className={`block p-6 ${cardHoverStyle}`}
                 style={cardStyle}
               >

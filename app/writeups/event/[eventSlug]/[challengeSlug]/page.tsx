@@ -131,7 +131,7 @@ export default async function ChallengePage({ params }: PageProps) {
           style={{ borderColor: 'var(--border)' }}
         >
           <Link
-            href={`/wirteups/event/${eventSlug}`}
+            href={`/writeups/event/${eventSlug}`}
             className="font-mono text-sm inline-flex items-center gap-2 hover:underline"
             style={{ color: 'var(--cyan)' }}
           >

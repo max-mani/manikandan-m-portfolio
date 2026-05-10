@@ -112,7 +112,7 @@ export default function WriteupsHomePage() {
             {events.map((event) => (
               <Link
                 key={event.slug}
-                href={`/wirteups/event/${event.slug}`}
+                href={`/writeups/event/${event.slug}`}
                 className={`block p-6 ${cardHoverStyle}`}
                 style={cardStyle}
               >
@@ -176,7 +176,7 @@ export default function WriteupsHomePage() {
               {categories.map((cat) => (
                 <Link
                   key={cat.slug}
-                  href={`/wirteups/categories/${cat.slug}`}
+                  href={`/writeups/categories/${cat.slug}`}
                   className="font-mono text-sm px-3 py-1 rounded whitespace-nowrap transition-colors hover:border-[var(--cyan)]"
                   style={{
                     border: '1px solid var(--border)',

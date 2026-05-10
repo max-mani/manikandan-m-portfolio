@@ -16,5 +16,5 @@ export default async function ChallengeRedirectPage({ params }: PageProps) {
   if (!challenge) {
     notFound();
   }
-  redirect(`/wirteups/event/${challenge.eventSlug}/${challenge.slug}`);
+  redirect(`/writeups/event/${challenge.eventSlug}/${challenge.slug}`);
 }

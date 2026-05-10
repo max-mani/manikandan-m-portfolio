@@ -19,6 +19,7 @@ export function HeroSection({ onOpenTerminal }: { onOpenTerminal?: () => void })
   const [roleIdx, setRoleIdx] = useState(0);
   const [typed, setTyped] = useState('');
   const [phase, setPhase] = useState<'typing' | 'pause' | 'erasing'>('typing');
+  const isAvailable = (process.env.NEXT_PUBLIC_AVAILABLE ?? 'true').toLowerCase() === 'true';
 
   useEffect(() => {
     const target = ROLES[roleIdx];
@@ -88,7 +89,7 @@ export function HeroSection({ onOpenTerminal }: { onOpenTerminal?: () => void })
 
           <p className="text-[#00e5ff] text-[10px] tracking-widest uppercase mb-3">&gt; whoami</p>
 
-          <h1 className="font-bold leading-snug text-[14px] text-[#00ff41] max-w-lg">
+          <h1 className="hero-typewriter font-bold leading-snug text-[14px] text-[#00ff41] max-w-lg">
             <span className="block text-[#e8f5e9]">Hi, I&apos;m</span>
             <span className="block text-[#00e5ff]">Manikandan M</span>
           </h1>
@@ -102,12 +103,20 @@ export function HeroSection({ onOpenTerminal }: { onOpenTerminal?: () => void })
           </div>
 
           <p className="mt-5 max-w-xl text-[10px] leading-[2em] text-[#e8f5e9]/85">
-            Pre-final year CSE student at Kumaraguru College of Technology. I build{' '}
-            <span className="text-[#00e5ff]">scalable products</span> on one side and break / defend{' '}
-            <span className="text-[#ffb300]">application systems</span> on the other — holding both like
-            Spidey holds the ferry.
-            <span className="text-[#00ff41]"> HackX CTF 2025 — 2nd Place.</span>
+            Pre-final year CSE @ KCT. I build during the day and break at night. HackX CTF 2025
+            {' '}— 2nd place. The butterfly is a tribute. Currently making HTB CPTS happen.
           </p>
+
+          <div className="mt-4 max-w-xl border-2 border-[#1a2e1a] bg-[#050a05] p-3 shadow-[2px_2px_0_0_#1a2e1a]">
+            <p className="text-[8px] tracking-[0.2em] text-[#4caf50]">&gt; STATUS ........... SOLVING HTB CPTS</p>
+            <p className="mt-1 text-[8px] tracking-[0.2em] text-[#4caf50]">
+              &gt; OPEN TO .......... INTERNSHIPS · FREELANCE · CTF TEAMS
+            </p>
+            <p className="mt-1 text-[8px] tracking-[0.2em] text-[#4caf50]">&gt; LOCATION ......... CHENNAI, IN</p>
+            <p className="mt-1 text-[8px] tracking-[0.2em] text-[#4caf50]">
+              &gt; AVAILABLE ........ [{isAvailable ? 'YES' : 'NO'}]
+            </p>
+          </div>
 
           <div className="mt-6 flex flex-wrap items-center gap-2">
             <NeonButton href="#projects" variant="primary" icon={<ArrowDown size={14} />}>

@@ -3,9 +3,9 @@
 import { CyberNavbar } from '@/components/shared/CyberNavbar';
 
 const navLinks = [
-  { href: '/wirteups', label: 'ctf://home' },
-  { href: '/wirteups/categories', label: 'ctf://categories' },
-  { href: '/wirteups#events', label: 'ctf://events' },
+  { href: '/writeups', label: 'ctf://home' },
+  { href: '/writeups/categories', label: 'ctf://categories' },
+  { href: '/writeups#events', label: 'ctf://events' },
 ];
 
 export default function WriteupsNavbar() {

@@ -7,7 +7,6 @@ import {
   Smartphone,
   Brain,
   ShieldCheck,
-  Wrench,
   Sparkles,
 } from 'lucide-react';
 import { skills } from '@/data/portfolio';
@@ -19,19 +18,10 @@ type Accent = 'cyan' | 'violet' | 'green' | 'magenta';
 const CATEGORY_META: {
   [key: string]: { icon: React.ComponentType<{ size?: number; className?: string }>; accent: Accent };
 } = {
-  'Programming Languages': { icon: Code2, accent: 'cyan' },
-  'Web & Mobile Development': { icon: Smartphone, accent: 'violet' },
-  'AI / Machine Learning': { icon: Brain, accent: 'magenta' },
-  Cybersecurity: { icon: ShieldCheck, accent: 'green' },
-  'Tools & Platforms': { icon: Wrench, accent: 'cyan' },
-  'Soft Skills': { icon: Sparkles, accent: 'violet' },
-};
-
-const BAR_COLOR: Record<Accent, string> = {
-  cyan: '#00e5ff',
-  violet: '#00ff41',
-  green: '#4caf50',
-  magenta: '#ff00ff',
+  'DAILY DRIVER': { icon: Code2, accent: 'cyan' },
+  'SHIPPED TO PRODUCTION': { icon: Smartphone, accent: 'violet' },
+  'SECURITY TOOLS': { icon: ShieldCheck, accent: 'green' },
+  'CTF TOOLKIT': { icon: Brain, accent: 'magenta' },
 };
 
 const ICON_BOX: Record<Accent, string> = {
@@ -50,7 +40,7 @@ export function SkillsBento() {
         <SectionHeading
           eyebrow="> ./skills --tree"
           title="The Loadout"
-          description="Built by shipping side-by-side: production code on the dev side, real attack surface on the security side. Bars show rough depth — not a flex score."
+          description="No fake scoring. Just the stack I use daily, what I have shipped, and the tools I reach for during security work and CTF rounds."
         />
 
         <div className="mt-12 grid grid-cols-1 md:grid-cols-6 gap-4 md:gap-5 auto-rows-fr">
@@ -102,34 +92,11 @@ export function SkillsBento() {
                   </div>
 
                   <ul className="mt-4 space-y-2">
-                    {items.map((item) => {
-                      const pct = item.percentage ?? null;
-                      return (
-                        <li key={item.name}>
-                          <div className="flex items-center justify-between text-[10px]">
-                            <span className="text-[#e8f5e9]/85">{item.name}</span>
-                            <span className="text-[8px] tracking-wider text-[#4caf50]">
-                              {pct ? `${pct}%` : item.level}
-                            </span>
-                          </div>
-                          {pct !== null && (
-                            <div className="mt-1 h-1 bg-[#1a2e1a] overflow-hidden border border-[#050a05]">
-                              <motion.span
-                                initial={{ width: 0 }}
-                                whileInView={{ width: `${pct}%` }}
-                                viewport={{ once: true, margin: '-40px' }}
-                                transition={{ duration: 0.25, ease: [1, 0, 0, 1] }}
-                                className="block h-full"
-                                style={{
-                                  backgroundColor: BAR_COLOR[meta.accent],
-                                  boxShadow: `0 0 6px ${BAR_COLOR[meta.accent]}`,
-                                }}
-                              />
-                            </div>
-                          )}
-                        </li>
-                      );
-                    })}
+                    {items.map((item) => (
+                      <li key={item}>
+                        <div className="text-[10px] text-[#e8f5e9]/85">{item}</div>
+                      </li>
+                    ))}
                   </ul>
                 </GlowCard>
               </motion.div>

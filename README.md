@@ -5,7 +5,7 @@ Cyber-anime portfolio site built with Next.js: projects, skills, CTF highlights,
 ## Features
 
 - Responsive landing with hero, about, skills, projects, experience, CTFs, certifications, and contact
-- Blog and writeup sections under `/blogs` and `/wirteups`
+- Blog and writeup sections under `/blogs` and `/writeups`
 - Boot overlay with client IP/region (read-only) before the main experience
 - Framer Motion accents, neon styling (Tailwind v4), floating command-line aesthetic on the homepage background (decorative only)
 

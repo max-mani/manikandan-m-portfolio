@@ -1,0 +1,17 @@
+User-agent: *
+Disallow: /secret/
+Disallow: /admin/
+Disallow: /flag/
+Disallow: /butterfly_1993/
+
+# Hey.
+# You read robots.txt.
+# That already makes you different.
+#
+# FLAG{r0b0ts_4lw4ys_t3ll_th3_truth}
+#
+# There are 4 more flags on this site.
+# The butterfly knows where they are.
+# Check the console. Check the source.
+# And find butterfly_1993.
+# - Maxim

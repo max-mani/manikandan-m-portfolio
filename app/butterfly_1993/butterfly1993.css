@@ -1,0 +1,59 @@
+body.retro-1993 {
+  background: #c0c0c0 !important;
+  color: #000000 !important;
+  font-family: "Times New Roman", serif !important;
+  font-size: 14px !important;
+  cursor: default !important;
+  line-height: 1.4 !important;
+}
+
+body.retro-1993::after {
+  display: none !important;
+}
+
+body.retro-1993 * {
+  font-family: "Times New Roman", serif !important;
+  cursor: default !important;
+  image-rendering: auto !important;
+  text-shadow: none !important;
+}
+
+.retro-1993-page {
+  min-height: 100vh;
+  padding: 24px 12px;
+  color: #000000;
+}
+
+.retro-1993-page hr {
+  border: 0;
+  border-top: 1px solid #808080;
+}
+
+.retro-1993-page a {
+  color: #0000ee;
+  text-decoration: underline;
+}
+
+.retro-1993-page marquee {
+  margin: 8px 0;
+}
+
+.retro-1993-page blockquote {
+  margin: 16px auto;
+  max-width: 520px;
+}
+
+.retro-1993-blink {
+  animation: retro-1993-blink 1s steps(2, end) infinite;
+}
+
+@keyframes retro-1993-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}

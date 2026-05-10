@@ -102,7 +102,7 @@ function linesAbout(): string[] {
 function linesSkills(): string[] {
   const out: string[] = ['$ skills --list --grouped', ''];
   for (const [cat, items] of Object.entries(skills.categories)) {
-    const names = items.map((i) => i.name).join(', ');
+    const names = items.join(', ');
     out.push(`[${cat}]`);
     out.push(...wrapParagraph(names, 70).map((l) => `  ${l}`));
     out.push('');

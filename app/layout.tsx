@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Press_Start_2P } from "next/font/google";
 import "./globals.css";
 import { AppToasts } from "@/components/AppToasts";
+import { DesktopCritters } from "@/components/DesktopCritters";
+import { ConsoleEasterEgg } from "@/components/ConsoleEasterEgg";
 
 const pressStart2P = Press_Start_2P({
   weight: "400",
@@ -46,10 +48,11 @@ export const metadata: Metadata = {
   ],
   metadataBase: getMetadataBase(),
   alternates: { canonical: "/" },
-  /** Tab + PWA: pixel portrait at /images/anime-bot-favicon.png; favicon.ico regenerated via `npm run favicon`. */
+  /** Canonical favicon source is `/images/anime-bot-favicon.png`; `.ico` is generated from it via `npm run favicon`. */
   icons: {
     icon: [
       { url: "/images/anime-bot-favicon.png", type: "image/png", sizes: "32x32" },
+      { url: "/images/anime-bot-favicon.png", type: "image/png", sizes: "16x16" },
       { url: "/favicon.ico", sizes: "48x48", type: "image/x-icon" },
     ],
     apple: [{ url: "/images/anime-bot-favicon.png", type: "image/png", sizes: "180x180" }],
@@ -72,7 +75,15 @@ export default function RootLayout({
   return (
     <html lang="en" className={pressStart2P.variable} suppressHydrationWarning>
       <body className={pressStart2P.className} suppressHydrationWarning>
+        {/*
+          If you're reading the source, hello.
+          fly_01 and fly_02 are not bugs.
+          Well. They are bugs. But intentional ones.
+          FLAG{s0urc3_c0d3_r34d3rs_g3t_r3sp3ct}
+        */}
         {children}
+        <ConsoleEasterEgg />
+        <DesktopCritters />
         <AppToasts />
       </body>
     </html>

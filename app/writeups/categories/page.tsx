@@ -46,7 +46,7 @@ export default function CategoriesPage() {
           {categories.map((category) => (
             <Link
               key={category.slug}
-              href={`/wirteups/categories/${category.slug}`}
+              href={`/writeups/categories/${category.slug}`}
               className={`block p-6 ${cardHoverStyle}`}
               style={cardStyle}
             >

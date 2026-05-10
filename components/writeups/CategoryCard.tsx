@@ -21,7 +21,7 @@ export default function WriteupsCategoryCard({ category, href }: CategoryCardPro
 
   const icon = categoryIcon[category.name.toLowerCase()] || '⚙️'
 
-  const linkHref = href ?? `/wirteups/event/${category.challenges[0]?.eventSlug}/category/${category.slug}`
+  const linkHref = href ?? `/writeups/event/${category.challenges[0]?.eventSlug}/category/${category.slug}`
 
   return (
     <Link href={linkHref}>

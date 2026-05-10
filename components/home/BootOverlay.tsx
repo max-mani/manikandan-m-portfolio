@@ -34,7 +34,10 @@ type BootRow =
   | { kind: 'title'; text: string }
   | { kind: 'boot_done' };
 
-const HOLD_BEFORE_FADE_MS = 800;
+/** Whole boot log fills within this window (even gaps between line reveals). */
+const BOOT_SEQUENCE_MS = 2000;
+/** Pause at 100% before fading into the site. */
+const HOLD_BEFORE_FADE_MS = 1000;
 const FADE_OUT_MS = 400;
 const VISITED_KEY = 'visited';
 
@@ -50,11 +53,6 @@ const SPAWN_EXE_FIELD_CH = 19;
 
 /** One run of fillers between exe column and status (matches legacy boot formatting). */
 const SPAWN_DOT_RUN = ' ........................ ';
-
-/** Readable pace: ~320–499ms per line with light jitter. */
-function nextLineDelayMs(): number {
-  return 320 + Math.floor(Math.random() * 180);
-}
 
 function buildRows(opts: {
   isReturningVisitor: boolean;
@@ -449,7 +447,10 @@ export function BootOverlay({ onDone }: BootOverlayProps) {
         if (cancelled) return;
         setRows((prev) => [...prev, sequence[i]]);
         setPercent(Math.round(((i + 1) / total) * 100));
-        await new Promise((r) => setTimeout(r, nextLineDelayMs()));
+        if (i < total - 1) {
+          const gapMs = total > 1 ? BOOT_SEQUENCE_MS / (total - 1) : 0;
+          await new Promise((r) => setTimeout(r, gapMs));
+        }
       }
 
       if (cancelled) return;
