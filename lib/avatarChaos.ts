@@ -12,17 +12,39 @@ export const AVATAR_CHAOS_CLICK_GAP_MS = 2000;
 
 /** Matter `MouseConstraint` play window after the pile settles. */
 const INTERACTIVE_PHASE_MS = 0;
+const POST_RETURN_GLITCH_MS = 520;
+const RETURN_GLITCH_OVERLAP_MS = 200;
 
 const END_BUFFER_MS = 1100;
+
+async function runPostReturnFullscreenGlitch(doc: Document): Promise<void> {
+  const overlay = doc.createElement('div');
+  overlay.className = 'chaos-post-return-glitch';
+  overlay.setAttribute('aria-hidden', 'true');
+  doc.body.appendChild(overlay);
+
+  await new Promise<void>((resolve) => {
+    const timer = window.setTimeout(resolve, POST_RETURN_GLITCH_MS);
+    const onDone = () => {
+      window.clearTimeout(timer);
+      resolve();
+    };
+    overlay.addEventListener('animationend', onDone, { once: true });
+  });
+
+  overlay.remove();
+}
 
 /**
  * Chaos lockout: physics cap + drag phase + return + buffer.
  */
 export function estimateAvatarChaosDurationMs(): number {
+  const postReturnTailMs = Math.max(0, POST_RETURN_GLITCH_MS - RETURN_GLITCH_OVERLAP_MS);
   return (
     CHAOS_MATTER_PHYS_HARD_CAP_MS +
     INTERACTIVE_PHASE_MS +
     Math.ceil(CHAOS_MATTER_RETURN_SECONDS * 1000) +
+    postReturnTailMs +
     END_BUFFER_MS
   );
 }
@@ -77,7 +99,14 @@ async function orchestrate(): Promise<void> {
 
     showToast('MAXIM_OS: Running recovery...', 'sys');
 
-    await animateSnapshotsReturn(snaps);
+    const returnPromise = animateSnapshotsReturn(snaps);
+    const returnMs = Math.ceil(CHAOS_MATTER_RETURN_SECONDS * 1000);
+    const glitchLeadMs = Math.max(0, returnMs - RETURN_GLITCH_OVERLAP_MS);
+    await new Promise<void>((resolve) => {
+      window.setTimeout(resolve, glitchLeadMs);
+    });
+    const glitchPromise = runPostReturnFullscreenGlitch(doc);
+    await Promise.all([returnPromise, glitchPromise]);
 
     showToast("System stable. Don't do that again.", 'ok');
   } catch (err) {
