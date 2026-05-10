@@ -35,33 +35,11 @@ interface HomeClientProps {
 export function HomeClient({ posts, events, activity }: HomeClientProps) {
   const [bootDone, setBootDone] = useState(false);
   const [terminalOpen, setTerminalOpen] = useState(false);
-  const frozenHomeMarkup = useChaosFreezeStore((s) => s.frozenHomeMarkup);
+  const chaosActive = useChaosFreezeStore((s) => s.chaosActive);
 
   const onBootDone = useCallback(() => setBootDone(true), []);
   const openTerminal = useCallback(() => setTerminalOpen(true), []);
   const closeTerminal = useCallback(() => setTerminalOpen(false), []);
-
-  /**
-   * During chaos, Navbar / main / footer are replaced with a static HTML shell so
-   * character-splitting does not fight React fibers (avoids removeChild crashes).
-   */
-  if (frozenHomeMarkup) {
-    return (
-      <>
-        <BodyMode />
-        {!bootDone && <Preloader onDone={onBootDone} />}
-        <TerminalCommandBackdrop />
-        <div
-          suppressHydrationWarning
-          data-chaos-frozen-home
-          className="relative z-[1] w-full min-h-0"
-          dangerouslySetInnerHTML={{ __html: frozenHomeMarkup }}
-        />
-        {!terminalOpen && <FloatingTerminalLauncher onOpen={openTerminal} />}
-        <FloatingTerminal open={terminalOpen} onClose={closeTerminal} />
-      </>
-    );
-  }
 
   return (
     <>
@@ -84,7 +62,7 @@ export function HomeClient({ posts, events, activity }: HomeClientProps) {
 
       <Footer />
 
-      {!terminalOpen && <FloatingTerminalLauncher onOpen={openTerminal} />}
+      {!terminalOpen && !chaosActive && <FloatingTerminalLauncher onOpen={openTerminal} />}
       <FloatingTerminal open={terminalOpen} onClose={closeTerminal} />
     </>
   );

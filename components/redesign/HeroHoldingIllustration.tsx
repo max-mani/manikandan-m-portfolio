@@ -123,6 +123,8 @@ export function HeroHoldingIllustration() {
       <motion.div
         animate={{ y: [0, -6, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
+        data-chaos-include
+        data-chaos-force-hide-text
         className="hidden md:flex absolute -left-4 top-1/3 z-20 items-center gap-2 px-2 py-1 pixel-border-dim bg-[#0a140a]"
       >
         <span className="h-2 w-2 bg-[#00e5ff] shadow-[0_0_8px_#00e5ff]" />
@@ -131,6 +133,8 @@ export function HeroHoldingIllustration() {
       <motion.div
         animate={{ y: [0, 6, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: 'linear', delay: 0.5 }}
+        data-chaos-include
+        data-chaos-force-hide-text
         className="hidden md:flex absolute -right-4 bottom-1/3 z-20 items-center gap-2 px-2 py-1 pixel-border-dim bg-[#0a140a]"
       >
         <span className="h-2 w-2 bg-[#ff3d00] shadow-[0_0_8px_#ff3d00]" />

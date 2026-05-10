@@ -1,17 +1,10 @@
-/**
- * Granular chaos: split text into char spans + media nodes for physics.
- * `[data-chaos-fall-block]` (HUD) is excluded. Caller runs `cleanup()` before thaw.
- */
-
-function isOnlyCollapsibleWhitespace(text: string): boolean {
-  return /^[\s\uFEFF\u200b\u2060]+$/.test(text);
-}
+import { createChaosOverlaySession } from '@/lib/chaosOverlayLayer';
 
 function isExcludedNode(node: Node | null): boolean {
   if (!(node instanceof Element)) return false;
   return !!(
-    node.closest('[data-pixel-toast-stack],[data-chaos-fall-block]') ||
-    node.closest('script,style,noscript,template')
+    node.closest('[data-pixel-toast-stack],[data-chaos-fall-block],[data-ft-terminal]') ||
+    node.closest('script,style,noscript,template,input,textarea,select')
   );
 }
 
@@ -26,40 +19,19 @@ function scopesFromDocument(doc: Document): HTMLElement[] {
   return list;
 }
 
-/** Upper bound bodies for stable physics on typical hardware. Extra text stays intact. */
-const MAX_PHYSICS_ELEMENTS = 1100;
+function getAdaptivePhysicsElementsCap(): number {
+  if (typeof window === 'undefined') return 520;
+  const area = window.innerWidth * window.innerHeight;
+  const touchLike = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  if (area <= 500_000) return touchLike ? 180 : 280;
+  if (area <= 1_050_000) return touchLike ? 260 : 420;
+  if (area <= 1_900_000) return touchLike ? 320 : 620;
+  return touchLike ? 380 : 820;
+}
 
-/**
- * Estimated bodies (chars + media) for cooldown — clamps to physics cap semantics.
- */
 export function estimateChaosCharCount(doc: Document): number {
-  let chars = 0;
-  const media = new Set<Element>();
-
-  for (const scope of scopesFromDocument(doc)) {
-    const tw = doc.createTreeWalker(scope, NodeFilter.SHOW_TEXT, null);
-    while (tw.nextNode()) {
-      const tx = tw.currentNode;
-      if (!(tx instanceof Text)) continue;
-      const p = tx.parentElement;
-      if (!p || isExcludedNode(p)) continue;
-      if (isOnlyCollapsibleWhitespace(tx.data)) continue;
-      chars += [...tx.data].length;
-    }
-
-    scope
-      .querySelectorAll(
-        ':scope svg, :scope img, :scope picture, :scope video, :scope canvas',
-      )
-      .forEach((n) => {
-        if (!(n instanceof Element) || isExcludedNode(n)) return;
-        if (n.closest('[data-chaos-fall-block]')) return;
-        media.add(n);
-      });
-  }
-
-  const raw = chars + media.size;
-  return Math.min(raw, MAX_PHYSICS_ELEMENTS);
+  const maxPhysicsElements = getAdaptivePhysicsElementsCap();
+  return Math.min(estimateTextCharTargets(doc), maxPhysicsElements);
 }
 
 /** Old name kept for AnimeBotAvatar import paths already updated — use estimateChaosCharCount */
@@ -72,145 +44,204 @@ export function estimateGranularChaosTargetCount(doc: Document): number {
   return estimateChaosCharCount(doc);
 }
 
-type SplitMeta = {
-  parent: HTMLElement;
-  groupId: string;
-  originalText: string;
-};
+const CHAOS_OWNER_ATTR = 'data-chaos-owner';
+const segmenter =
+  typeof Intl !== 'undefined' && 'Segmenter' in Intl
+    ? new Intl.Segmenter('en', { granularity: 'grapheme' })
+    : null;
 
-function directChildChaosSpans(parent: HTMLElement, groupId: string): HTMLElement[] {
-  return [...parent.children].filter(
-    (el): el is HTMLElement =>
-      el instanceof HTMLElement &&
-      el.tagName === 'SPAN' &&
-      el.hasAttribute('data-chaos-char-wrap') &&
-      el.getAttribute('data-chaos-split-group') === groupId,
-  );
+function isVisible(el: HTMLElement): boolean {
+  const r = el.getBoundingClientRect();
+  if (r.width < 1 || r.height < 1) return false;
+  return r.bottom > 0 && r.right > 0 && r.top < window.innerHeight && r.left < window.innerWidth;
 }
 
-function collectSpansForGroupCleanup(meta: SplitMeta, doc: Document): HTMLElement[] {
-  const { parent, groupId } = meta;
-  if (parent.isConnected) {
-    const direct = directChildChaosSpans(parent, groupId);
-    if (direct.length > 0) return direct;
-  }
-  return [...doc.querySelectorAll(`span[data-chaos-split-group="${groupId}"]`)].filter(
-    (el): el is HTMLElement =>
-      el instanceof HTMLElement && el.hasAttribute('data-chaos-char-wrap'),
-  );
+function isEligibleTarget(el: HTMLElement): boolean {
+  const forceInclude = el.hasAttribute('data-chaos-include');
+  if (!forceInclude && isExcludedNode(el)) return false;
+  if (!isVisible(el)) return false;
+  if (el.closest('[aria-hidden="true"]')) return false;
+  if (!forceInclude && el.matches('main, section, article, ul, ol, nav, footer, header, form, svg, path')) return false;
+  if (!forceInclude && el.classList.contains('hero-typewriter')) return false;
+  if (!forceInclude && el.matches('svg, path')) return false;
+  const text = el.textContent ?? '';
+  return text.trim().length > 0;
 }
 
-let splitGroupSeed = 0;
-
-/** Split visible text inside chaos scopes until `budget` spans created (remainder unsplit). */
-function splitTextIntoCharSpans(doc: Document, splits: SplitMeta[], budget: number): number {
-  let made = 0;
-  outer: for (const scope of scopesFromDocument(doc)) {
-    const walker = doc.createTreeWalker(scope, NodeFilter.SHOW_TEXT, null);
-
-    const batch: Text[] = [];
-    let n = walker.nextNode();
-    while (n) {
-      if (n instanceof Text) batch.push(n);
-      n = walker.nextNode();
-    }
-
-    for (const textNode of batch) {
-      if (made >= budget) break outer;
-
-      const parent = textNode.parentElement;
-      if (!parent || isExcludedNode(parent)) continue;
-      const data = textNode.data;
-      if (isOnlyCollapsibleWhitespace(data)) continue;
-
-      const remaining = budget - made;
-      if (remaining <= 0) break outer;
-
-      const slice = data.length <= remaining ? data : data.slice(0, remaining);
-      const rest = data.length <= remaining ? '' : data.slice(remaining);
-
-      splitGroupSeed += 1;
-      const groupId = `c-${splitGroupSeed}`;
-      splits.push({
-        parent,
-        groupId,
-        originalText: slice,
-      });
-
-      const frag = doc.createDocumentFragment();
-      for (const ch of slice) {
-        const span = doc.createElement('span');
-        span.setAttribute('data-chaos-char-wrap', '');
-        span.setAttribute('data-chaos-split-group', groupId);
-        span.style.display = 'inline-block';
-        span.textContent = ch;
-        frag.appendChild(span);
-      }
-
-      if (rest) frag.appendChild(doc.createTextNode(rest));
-      parent.replaceChild(frag, textNode);
-
-      made += slice.length;
-    }
-  }
-
-  return made;
-}
-
-function collectFallElements(doc: Document): HTMLElement[] {
+function collectChaosElements(doc: Document): HTMLElement[] {
   const set = new Set<HTMLElement>();
+  const includedRoots = [...doc.querySelectorAll<HTMLElement>('[data-chaos-include]')].filter(
+    (el) => isEligibleTarget(el) && !el.parentElement?.closest('[data-chaos-include]'),
+  );
 
-  for (const scope of scopesFromDocument(doc)) {
-    scope.querySelectorAll('[data-chaos-char-wrap]').forEach((node) => {
-      if (node instanceof HTMLElement) set.add(node);
-    });
-    scope
-      .querySelectorAll(
-        ':scope svg, :scope img, :scope picture, :scope video, :scope canvas',
-      )
-      .forEach((node) => {
-        if (!(node instanceof HTMLElement)) return;
-        if (isExcludedNode(node)) return;
-        if (node.closest('[data-chaos-fall-block]')) return;
-        set.add(node);
-      });
+  for (const included of includedRoots) {
+    set.add(included);
   }
 
   return [...set];
+}
+
+function splitGraphemes(text: string): string[] {
+  if (segmenter) {
+    return Array.from(segmenter.segment(text), (chunk) => chunk.segment);
+  }
+  return Array.from(text);
+}
+
+function isInsideForceHiddenZone(node: Node): boolean {
+  const parent = node.parentElement;
+  if (!parent) return false;
+  return !!parent.closest('[data-chaos-force-hide-text]');
+}
+
+function estimateTextCharTargets(doc: Document): number {
+  const targets = collectChaosElements(doc);
+  let count = 0;
+  for (const el of targets) {
+    const text = (el.textContent ?? '').trim();
+    if (!text) continue;
+    count += splitGraphemes(text).length;
+  }
+  return count;
+}
+
+function collectTextNodeRangesForElement(el: HTMLElement): Range[] {
+  const ranges: Range[] = [];
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+  while (walker.nextNode()) {
+    const txt = walker.currentNode;
+    if (!(txt instanceof Text)) continue;
+    if (isInsideForceHiddenZone(txt)) continue;
+    const raw = txt.data;
+    if (!raw.trim()) continue;
+    let cursor = 0;
+    for (const grapheme of splitGraphemes(raw)) {
+      const start = cursor;
+      const end = cursor + grapheme.length;
+      cursor = end;
+      if (!grapheme.trim()) continue;
+      const range = document.createRange();
+      range.setStart(txt, start);
+      range.setEnd(txt, end);
+      const rect = range.getBoundingClientRect();
+      if (rect.width < 1 || rect.height < 1) {
+        range.detach?.();
+        continue;
+      }
+      ranges.push(range);
+    }
+  }
+  return ranges;
+}
+
+function shouldCreateBoxSeed(el: HTMLElement): boolean {
+  // Skip large structural containers that can visually mask falling chars.
+  if (el.matches('nav, header, main, body, section#home')) return false;
+  if (el.hasAttribute('data-chaos-fall-root')) return false;
+  return true;
 }
 
 export function prepareChaosFallTargets(doc: Document): {
   elements: HTMLElement[];
   cleanup: () => void;
 } {
-  const splitsMeta: SplitMeta[] = [];
+  const maxPhysicsElements = getAdaptivePhysicsElementsCap();
+  const targets = collectChaosElements(doc);
+  const seeds: Array<
+    | { kind: 'char'; char: string; rect: DOMRect }
+    | { kind: 'box'; rect: DOMRect; borderColor?: string; backgroundColor?: string; boxShadow?: string }
+    | { kind: 'sprite'; src: string; rect: DOMRect; alt?: string }
+  > = [];
+  const sourcesToHide: HTMLElement[] = [];
+  const sourcesSet = new Set<HTMLElement>();
+  const seen = new Set<string>();
+  const seenBoxes = new Set<string>();
 
-  const cleanupSplits = (): void => {
-    for (const meta of [...splitsMeta].reverse()) {
-      const list = collectSpansForGroupCleanup(meta, doc).filter((el) => el.isConnected);
-      if (list.length === 0) continue;
+  // Include the header profile image as a falling sprite, plus its alt/label as falling chars.
+  const trigger = doc.querySelector<HTMLElement>('[data-chaos-trigger]');
+  const triggerImg = trigger?.querySelector('img') ?? null;
+  if (triggerImg instanceof HTMLImageElement) {
+    const r = triggerImg.getBoundingClientRect();
+    if (r.width > 2 && r.height > 2) {
+      seeds.push({ kind: 'sprite', src: triggerImg.currentSrc || triggerImg.src, rect: r, alt: triggerImg.alt });
+      // Hide the live avatar image so only overlay falls.
+      sourcesSet.add(triggerImg);
 
-      list.sort((a, b) => {
-        const p = a.compareDocumentPosition(b);
-        if ((p & Node.DOCUMENT_POSITION_FOLLOWING) !== 0) return -1;
-        if ((p & Node.DOCUMENT_POSITION_PRECEDING) !== 0) return 1;
-        return 0;
-      });
-
-      const insertionParent = list[0].parentElement;
-      if (!insertionParent) continue;
-
-      const textNode = doc.createTextNode(meta.originalText);
-      insertionParent.insertBefore(textNode, list[0]);
-      for (const span of list) {
-        span.remove();
+      const label =
+        trigger?.getAttribute('aria-label') ||
+        triggerImg.alt ||
+        'Manikandan M — pixel art profile photo';
+      const chars = splitGraphemes(label);
+      const step = Math.max(6, Math.round(r.height * 0.26));
+      const startX = r.left;
+      const startY = r.bottom + 6;
+      for (let i = 0; i < chars.length && seeds.length < maxPhysicsElements; i++) {
+        const ch = chars[i];
+        if (!ch.trim()) continue;
+        const rect = new DOMRect(startX + i * step, startY, step, Math.max(10, Math.round(r.height * 0.32)));
+        seeds.push({ kind: 'char', char: ch, rect });
       }
     }
-    splitsMeta.length = 0;
-  };
+  }
 
-  splitTextIntoCharSpans(doc, splitsMeta, MAX_PHYSICS_ELEMENTS);
-  const elements = collectFallElements(doc);
+  // Always hide all included targets, regardless of character budget.
+  for (const el of targets) {
+    sourcesSet.add(el);
+  }
 
-  return { elements, cleanup: cleanupSplits };
+  sourcesToHide.push(...sourcesSet);
+
+  for (const el of targets) {
+    if (seeds.length >= maxPhysicsElements) break;
+    if (shouldCreateBoxSeed(el)) {
+      const containerRect = el.getBoundingClientRect();
+      if (containerRect.width >= 2 && containerRect.height >= 2) {
+        const key = `${Math.round(containerRect.left)}|${Math.round(containerRect.top)}|${Math.round(containerRect.width)}|${Math.round(containerRect.height)}`;
+        if (!seenBoxes.has(key)) {
+          const styles = window.getComputedStyle(el);
+          seeds.push({
+            kind: 'box',
+            rect: containerRect,
+            borderColor: styles.borderColor,
+            backgroundColor: styles.backgroundColor,
+            boxShadow: styles.boxShadow === 'none' ? undefined : styles.boxShadow,
+          });
+          seenBoxes.add(key);
+        }
+      }
+    }
+    const ranges = collectTextNodeRangesForElement(el);
+    if (ranges.length === 0) continue;
+    for (const range of ranges) {
+      if (seeds.length >= maxPhysicsElements) break;
+      const txt = range.toString();
+      const rect = range.getBoundingClientRect();
+      if (!txt.trim() || rect.width < 1 || rect.height < 1) {
+        range.detach?.();
+        continue;
+      }
+      const k = `${txt}|${Math.round(rect.left)}|${Math.round(rect.top)}|${Math.round(rect.width)}|${Math.round(rect.height)}`;
+      if (seen.has(k)) {
+        range.detach?.();
+        continue;
+      }
+      seen.add(k);
+      seeds.push({ kind: 'char', char: txt, rect });
+      range.detach?.();
+    }
+  }
+
+  const token = `chaos-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const session = createChaosOverlaySession({
+    doc,
+    token,
+    seeds,
+    sourcesToHide,
+  });
+
+  for (const node of session.elements) {
+    node.setAttribute(CHAOS_OWNER_ATTR, 'overlay');
+  }
+
+  return session;
 }

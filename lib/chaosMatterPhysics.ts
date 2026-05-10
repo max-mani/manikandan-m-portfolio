@@ -3,15 +3,18 @@ import Matter from 'matter-js';
 
 /** Exported for avatar cooldown estimation. */
 export const CHAOS_MATTER_PHYS_HARD_CAP_MS = 14_000;
-export const CHAOS_MATTER_RETURN_SECONDS = 1.08;
+export const CHAOS_MATTER_RETURN_SECONDS = 0.58;
 
 /** Gentler than Matter default (`1` × scale). */
-const GRAVITY_Y = 0.38;
+const GRAVITY_Y = 0.96;
 
 const FIXED_DT_MS = 1000 / 60;
 
 const REST_V_SUM = 0.012;
 const REST_STEPS = 48;
+const BOUNCE_SETTLE_MS = 420;
+const BOTTOM_ZONE_Y_RATIO = 0.72;
+const MIN_BOTTOM_COVERAGE = 0.62;
 
 const RETURN_EASE_A: [number, number, number, number] = [0.2, 0.94, 0.14, 1];
 const RETURN_EASE_B: [number, number, number, number] = [0.28, 1, 0.22, 1];
@@ -31,6 +34,39 @@ type Binding = {
   anchorCx: number;
   anchorCy: number;
 };
+
+function detachMouseFromElement(mouse: Matter.Mouse, element: HTMLElement): void {
+  const m = mouse as Matter.Mouse & {
+    mousemove?: EventListener;
+    mousedown?: EventListener;
+    mouseup?: EventListener;
+    mousewheel?: EventListener;
+  };
+  if (m.mousemove) {
+    element.removeEventListener('mousemove', m.mousemove);
+    element.removeEventListener('touchmove', m.mousemove);
+  }
+  if (m.mousedown) {
+    element.removeEventListener('mousedown', m.mousedown);
+    element.removeEventListener('touchstart', m.mousedown);
+  }
+  if (m.mouseup) {
+    element.removeEventListener('mouseup', m.mouseup);
+    element.removeEventListener('touchend', m.mouseup);
+  }
+  if (m.mousewheel) {
+    element.removeEventListener('wheel', m.mousewheel);
+  }
+}
+
+function getPhysicsRuntimeCap(vw: number, vh: number): number {
+  const area = vw * vh;
+  const touchLike = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  if (area <= 500_000) return touchLike ? 140 : 220;
+  if (area <= 1_050_000) return touchLike ? 220 : 340;
+  if (area <= 1_900_000) return touchLike ? 300 : 520;
+  return touchLike ? 360 : 720;
+}
 
 function pinElement(el: HTMLElement): Binding | null {
   const r = el.getBoundingClientRect();
@@ -53,11 +89,12 @@ function pinElement(el: HTMLElement): Binding | null {
   const w = Math.max(r.width, 4);
   const h = Math.max(r.height, 6);
 
+  const isBox = el.classList.contains('chaos-overlay-box');
   const body = Matter.Bodies.rectangle(anchorCx, anchorCy, w, h, {
-    friction: 0.64,
-    frictionAir: 0.024,
-    restitution: 0.065,
-    density: 0.00165,
+    friction: isBox ? 0.62 : 0.52,
+    frictionAir: isBox ? 0.03 : 0.024,
+    restitution: isBox ? 0.18 : 0.24,
+    density: isBox ? 0.0032 : 0.00165,
     chamfer: { radius: 0.5 },
     sleepThreshold: 40,
   });
@@ -98,8 +135,8 @@ function buildBoundaries(vpW: number, vpH: number) {
     floorThick,
     {
       isStatic: true,
-      friction: 0.94,
-      restitution: 0.03,
+      friction: 0.32,
+      restitution: 0.92,
       label: 'chaos-floor',
     },
   );
@@ -143,130 +180,177 @@ export async function runMatterFallThenInteractive(opts: {
 
   const vpW = window.innerWidth;
   const vpH = window.innerHeight;
+  const runtimeCap = getPhysicsRuntimeCap(vpW, vpH);
+  const cappedElements = elements
+    .filter((el) => el.isConnected && el.getAttribute('data-chaos-owner') === 'overlay')
+    .slice(0, runtimeCap);
 
   const engine = Matter.Engine.create({ enableSleeping: true });
-  engine.world.gravity.y = GRAVITY_Y;
-  engine.world.gravity.scale = 0.001;
-
-  const walls = buildBoundaries(vpW, vpH);
-  Matter.Composite.add(engine.world, walls);
-
   const bindings: Binding[] = [];
-
-  for (const el of elements) {
-    const b = pinElement(el);
-    if (b) bindings.push(b);
-  }
-
-  if (bindings.length === 0) return [];
-
-  const movers = bindings.map((b) => b.body);
-  Matter.Composite.add(engine.world, movers);
-
-  const bodies = movers;
-  await new Promise<void>((resolve) => {
-    let rafId = 0;
-    const started = performance.now();
-    let restAccum = 0;
-
-    function stepFall() {
-      Matter.Engine.update(engine, FIXED_DT_MS);
-      syncDom(bindings);
-
-      const elapsed = performance.now() - started;
-      let sumVel = 0;
-      for (const bod of bodies) {
-        sumVel +=
-          Math.abs(bod.velocity.x) +
-          Math.abs(bod.velocity.y) +
-          Math.abs(bod.angularVelocity) * 40;
-      }
-      const perBody = bodies.length ? sumVel / bodies.length : 0;
-      const creeping = perBody < REST_V_SUM;
-
-      restAccum = creeping ? restAccum + 1 : 0;
-
-      if (elapsed >= CHAOS_MATTER_PHYS_HARD_CAP_MS || restAccum >= REST_STEPS) {
-        cancelAnimationFrame(rafId);
-        resolve();
-        return;
-      }
-
-      rafId = requestAnimationFrame(stepFall);
-    }
-
-    requestAnimationFrame(stepFall);
-  });
+  let mouse: Matter.Mouse | null = null;
+  let mouseConstraint: Matter.MouseConstraint | null = null;
+  let md: (() => void) | null = null;
+  let mu: (() => void) | null = null;
 
   try {
-    onFallSettled();
-  } catch {
-    /* ignore */
-  }
+    engine.world.gravity.y = GRAVITY_Y;
+    engine.world.gravity.scale = 0.001;
 
-  for (const b of bindings) {
-    b.el.style.pointerEvents = 'auto';
-    b.el.style.cursor = 'grab';
-  }
+    const walls = buildBoundaries(vpW, vpH);
+    Matter.Composite.add(engine.world, walls);
 
-  const mouse = Matter.Mouse.create(document.body);
-  const mouseConstraint = Matter.MouseConstraint.create(engine, {
-    mouse,
-    constraint: {
-      stiffness: 0.28,
-      damping: 0.12,
-      render: { visible: false },
-    },
-  });
+    for (const el of cappedElements) {
+      const b = pinElement(el);
+      if (b) bindings.push(b);
+    }
 
-  Matter.Composite.add(engine.world, mouseConstraint);
+    if (bindings.length === 0) return [];
 
-  let dragActive = false;
-  const md = () => {
-    dragActive = true;
-    for (const b of bindings) b.el.style.cursor = 'grabbing';
-  };
-  const mu = () => {
-    dragActive = false;
-    for (const b of bindings) b.el.style.cursor = 'grab';
-  };
+    const movers = bindings.map((b) => b.body);
+    Matter.Composite.add(engine.world, movers);
+    for (const bod of movers) {
+      Matter.Body.setVelocity(bod, {
+        x: (Math.random() - 0.5) * 1.6,
+        y: 2.4 + Math.random() * 2.1,
+      });
+    }
 
-  Matter.Events.on(mouseConstraint, 'startdrag', md);
-  Matter.Events.on(mouseConstraint, 'enddrag', mu);
+    const bodies = movers;
+    await new Promise<void>((resolve) => {
+      let rafId = 0;
+      const started = performance.now();
+      let restAccum = 0;
 
-  const interactiveStart = performance.now();
-  await new Promise<void>((resolve) => {
-    let iraf = 0;
-    function stepInteractive() {
-      Matter.Engine.update(engine, FIXED_DT_MS);
-      syncDom(bindings);
+      function stepFall() {
+        Matter.Engine.update(engine, FIXED_DT_MS);
+        syncDom(bindings);
 
-      if (performance.now() - interactiveStart >= interactivePhaseMs) {
-        cancelAnimationFrame(iraf);
-        Matter.Events.off(mouseConstraint, 'startdrag', md);
-        Matter.Events.off(mouseConstraint, 'enddrag', mu);
-        Matter.Composite.remove(engine.world, mouseConstraint);
-        resolve();
-        return;
+        const elapsed = performance.now() - started;
+        let sumVel = 0;
+        for (const bod of bodies) {
+          sumVel +=
+            Math.abs(bod.velocity.x) +
+            Math.abs(bod.velocity.y) +
+            Math.abs(bod.angularVelocity) * 40;
+        }
+        const perBody = bodies.length ? sumVel / bodies.length : 0;
+        const creeping = perBody < REST_V_SUM;
+
+        restAccum = creeping ? restAccum + 1 : 0;
+
+        const bottomThreshold = vpH * BOTTOM_ZONE_Y_RATIO;
+        let inBottomZone = 0;
+        for (const bod of bodies) {
+          if (bod.position.y >= bottomThreshold) inBottomZone += 1;
+        }
+        const bottomCoverage = bodies.length ? inBottomZone / bodies.length : 0;
+        const readyToSettle =
+          restAccum >= REST_STEPS && bottomCoverage >= MIN_BOTTOM_COVERAGE;
+
+        if (elapsed >= CHAOS_MATTER_PHYS_HARD_CAP_MS || readyToSettle) {
+          cancelAnimationFrame(rafId);
+          resolve();
+          return;
+        }
+
+        rafId = requestAnimationFrame(stepFall);
       }
 
-      iraf = requestAnimationFrame(stepInteractive);
+      requestAnimationFrame(stepFall);
+    });
+
+    // Extra spread: inject a small impulse so the pile scatters.
+    for (const bod of bodies) {
+      Matter.Body.setVelocity(bod, {
+        x: (Math.random() - 0.5) * 12.8,
+        y: -(3.4 + Math.random() * 6.2),
+      });
     }
-    iraf = requestAnimationFrame(stepInteractive);
-  });
 
-  Matter.Mouse.clearSourceEvents(mouse);
+    await new Promise<void>((resolve) => {
+      let rafId = 0;
+      const bounceStart = performance.now();
+      function stepBounce() {
+        Matter.Engine.update(engine, FIXED_DT_MS);
+        syncDom(bindings);
+        if (performance.now() - bounceStart >= BOUNCE_SETTLE_MS) {
+          cancelAnimationFrame(rafId);
+          resolve();
+          return;
+        }
+        rafId = requestAnimationFrame(stepBounce);
+      }
+      rafId = requestAnimationFrame(stepBounce);
+    });
 
-  for (const b of bindings) {
-    b.el.style.pointerEvents = 'none';
-    b.el.style.cursor = '';
+    try {
+      onFallSettled();
+    } catch {
+      /* ignore */
+    }
+
+    for (const b of bindings) {
+      b.el.style.pointerEvents = 'auto';
+      b.el.style.cursor = 'grab';
+    }
+
+    mouse = Matter.Mouse.create(document.body);
+    mouseConstraint = Matter.MouseConstraint.create(engine, {
+      mouse,
+      constraint: {
+        stiffness: 0.28,
+        damping: 0.12,
+        render: { visible: false },
+      },
+    });
+
+    Matter.Composite.add(engine.world, mouseConstraint);
+
+    md = () => {
+      for (const b of bindings) b.el.style.cursor = 'grabbing';
+    };
+    mu = () => {
+      for (const b of bindings) b.el.style.cursor = 'grab';
+    };
+
+    Matter.Events.on(mouseConstraint, 'startdrag', md);
+    Matter.Events.on(mouseConstraint, 'enddrag', mu);
+
+    const interactiveStart = performance.now();
+    await new Promise<void>((resolve) => {
+      let iraf = 0;
+      function stepInteractive() {
+        Matter.Engine.update(engine, FIXED_DT_MS);
+        syncDom(bindings);
+
+        if (performance.now() - interactiveStart >= interactivePhaseMs) {
+          cancelAnimationFrame(iraf);
+          resolve();
+          return;
+        }
+
+        iraf = requestAnimationFrame(stepInteractive);
+      }
+      iraf = requestAnimationFrame(stepInteractive);
+    });
+
+    for (const b of bindings) {
+      b.el.style.pointerEvents = 'none';
+      b.el.style.cursor = '';
+    }
+
+    return snapshotsFromBindings(bindings);
+  } finally {
+    if (mouseConstraint && md) Matter.Events.off(mouseConstraint, 'startdrag', md);
+    if (mouseConstraint && mu) Matter.Events.off(mouseConstraint, 'enddrag', mu);
+    if (mouseConstraint) Matter.Composite.remove(engine.world, mouseConstraint);
+    if (mouse) {
+      Matter.Mouse.clearSourceEvents(mouse);
+      detachMouseFromElement(mouse, document.body);
+    }
+    Matter.Composite.clear(engine.world, false);
+    Matter.Engine.clear(engine);
   }
-
-  const out = snapshotsFromBindings(bindings);
-  Matter.Composite.clear(engine.world, false);
-  Matter.Engine.clear(engine);
-
-  return out;
 }
 
 export async function animateSnapshotsReturn(

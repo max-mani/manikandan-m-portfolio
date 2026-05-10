@@ -1,35 +1,27 @@
-import { flushChaosTransforms } from '@/lib/chaosMotion';
 import {
   CHAOS_MATTER_PHYS_HARD_CAP_MS,
   CHAOS_MATTER_RETURN_SECONDS,
   animateSnapshotsReturn,
   runMatterFallThenInteractive,
 } from '@/lib/chaosMatterPhysics';
-import { captureHomeChaosMarkup } from '@/lib/captureHomeChaosMarkup';
 import { useChaosFreezeStore } from '@/lib/chaosFreezeStore';
 import { prepareChaosFallTargets } from '@/lib/prepareChaosFallTargets';
 import { showToast } from '@/lib/toastStore';
-import { flushSync } from 'react-dom';
 
 export const AVATAR_CHAOS_CLICK_GAP_MS = 2000;
 
-/** Full `#000` overlay (toasts stay above via z-index). */
-const BLACK_SCREEN_MS = 1000;
-
 /** Matter `MouseConstraint` play window after the pile settles. */
-const INTERACTIVE_PHASE_MS = 6000;
+const INTERACTIVE_PHASE_MS = 0;
 
 const END_BUFFER_MS = 1100;
 
 /**
- * Chaos lockout: two black beats + physics cap + drag phase + Motion return + buffer.
+ * Chaos lockout: physics cap + drag phase + return + buffer.
  */
 export function estimateAvatarChaosDurationMs(): number {
   return (
-    BLACK_SCREEN_MS +
     CHAOS_MATTER_PHYS_HARD_CAP_MS +
     INTERACTIVE_PHASE_MS +
-    BLACK_SCREEN_MS +
     Math.ceil(CHAOS_MATTER_RETURN_SECONDS * 1000) +
     END_BUFFER_MS
   );
@@ -37,86 +29,38 @@ export function estimateAvatarChaosDurationMs(): number {
 
 export const AVATAR_CHAOS_TOTAL_MS = estimateAvatarChaosDurationMs();
 
-function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function paintFrames(n: number) {
-  for (let i = 0; i < n; i++) {
-    await new Promise<void>((r) => requestAnimationFrame(() => r()));
-  }
-}
-
-function setBlackScreen(on: boolean) {
-  document.body.classList.toggle('chaos-black-screen', on);
-}
-
-async function blackScreenHoldToast(
-  toastMessage: Parameters<typeof showToast>[0],
-  toastType: Parameters<typeof showToast>[1],
-) {
-  showToast(toastMessage, toastType);
-  setBlackScreen(true);
-  await sleep(BLACK_SCREEN_MS);
-  setBlackScreen(false);
-}
-
-function primeChaosFrozenVideos(doc: Document): void {
-  const host = doc.querySelector('[data-chaos-frozen-home]');
-  if (!host) return;
-  host.querySelectorAll('video').forEach((node) => {
-    if (!(node instanceof HTMLVideoElement)) return;
-    node.muted = true;
-    try {
-      node.playsInline = true;
-      void node.play().catch(() => {});
-    } catch {
-      /* ignore */
-    }
-  });
-}
-
 async function orchestrate(): Promise<void> {
   const doc = document;
-  let thawed = false;
   let cleanupSplits: (() => void) | null = null;
+  let active = false;
+  let savedScrollY = 0;
+  let bodyTop = '';
 
-  const thaw = () => {
-    if (thawed) return;
-    thawed = true;
-    setBlackScreen(false);
-    document.body.classList.remove('chaos-phase-dwell');
-    flushSync(() => {
-      useChaosFreezeStore.getState().setFrozenHomeMarkup(null);
-    });
+  const deactivate = () => {
+    if (!active) return;
+    active = false;
+    document.body.removeAttribute('data-chaos-active');
+    useChaosFreezeStore.getState().setChaosActive(false);
   };
 
   try {
-    const markup = captureHomeChaosMarkup(doc);
-    if (!markup.trim()) {
-      showToast('Nothing to shake. Weird.', 'warn');
-      return;
-    }
-
-    flushSync(() => {
-      useChaosFreezeStore.getState().setFrozenHomeMarkup(markup);
-    });
-
-    await new Promise<void>((r) => queueMicrotask(r));
-    await paintFrames(2);
-
-    await blackScreenHoldToast(
-      'Too many clicks. Destabilizing...',
-      'warn',
-    );
-
-    primeChaosFrozenVideos(doc);
+    active = true;
+    savedScrollY = window.scrollY || 0;
+    doc.getElementById('home')?.scrollIntoView({ behavior: 'auto', block: 'start' });
+    document.body.setAttribute('data-chaos-active', 'true');
+    document.body.setAttribute('data-chaos-scroll-lock', 'true');
+    bodyTop = `-${savedScrollY}px`;
+    document.body.style.position = 'fixed';
+    document.body.style.top = bodyTop;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
+    useChaosFreezeStore.getState().setChaosActive(true);
+    showToast('Too many clicks. Destabilizing...', 'warn');
 
     const { elements: elsRaw, cleanup } = prepareChaosFallTargets(doc);
     cleanupSplits = cleanup;
     const els = [...elsRaw];
-
-    flushChaosTransforms(els);
 
     if (els.length === 0) {
       showToast('Nothing to shake. Weird.', 'warn');
@@ -127,23 +71,28 @@ async function orchestrate(): Promise<void> {
       elements: els,
       interactivePhaseMs: INTERACTIVE_PHASE_MS,
       onFallSettled: () => {
-        showToast('Text gravity failure. Catching...', 'warn');
+        showToast('Text hit bottom. Bounce stabilized...', 'warn');
       },
     });
 
-    await blackScreenHoldToast('MAXIM_OS: Running recovery...', 'sys');
+    showToast('MAXIM_OS: Running recovery...', 'sys');
 
     await animateSnapshotsReturn(snaps);
 
     showToast("System stable. Don't do that again.", 'ok');
-
-    flushChaosTransforms(els);
   } catch (err) {
     console.warn('[avatarChaos]', err);
   } finally {
     cleanupSplits?.();
-    setBlackScreen(false);
-    thaw();
+    deactivate();
+    // Restore scroll position after chaos cleanup.
+    document.body.removeAttribute('data-chaos-scroll-lock');
+    document.body.style.removeProperty('position');
+    document.body.style.removeProperty('top');
+    document.body.style.removeProperty('left');
+    document.body.style.removeProperty('right');
+    document.body.style.removeProperty('width');
+    window.scrollTo(0, savedScrollY);
   }
 }
 

@@ -29,6 +29,8 @@ export function Butterfly() {
   const rafRef = useRef(0);
   const hoverToastAt = useRef(0);
   const cornerHoldUntilRef = useRef(0);
+  const cancelRef = useRef(false);
+  const timeoutIdsRef = useRef<number[]>([]);
 
   const [imgBroken, setImgBroken] = useState(false);
 
@@ -85,6 +87,11 @@ export function Butterfly() {
     };
 
     const run = () => {
+      if (cancelRef.current) {
+        restoringRef.current = false;
+        restoreVictimRef.current = null;
+        return;
+      }
       if (!document.contains(el)) {
         restoringRef.current = false;
         restoreVictimRef.current = null;
@@ -100,14 +107,21 @@ export function Butterfly() {
 
       el.textContent = original.slice(0, step) + corruptedSnapshot.slice(step);
       el.style.color = 'var(--green)';
-      window.setTimeout(() => {
+      const flashTimeout = window.setTimeout(() => {
+        if (cancelRef.current) return;
         if (document.contains(el) && step < original.length) {
           el.style.color = 'var(--red)';
         }
       }, 22);
+      timeoutIdsRef.current.push(flashTimeout);
 
       if (step >= original.length) {
-        window.setTimeout(() => {
+        const finishTimeout = window.setTimeout(() => {
+          if (cancelRef.current) {
+            restoringRef.current = false;
+            restoreVictimRef.current = null;
+            return;
+          }
           if (!document.contains(el)) {
             restoringRef.current = false;
             restoreVictimRef.current = null;
@@ -115,10 +129,12 @@ export function Butterfly() {
           }
           finish();
         }, RESTORE_CHAR_MS);
+        timeoutIdsRef.current.push(finishTimeout);
         return;
       }
 
-      window.setTimeout(run, RESTORE_CHAR_MS);
+      const nextTimeout = window.setTimeout(run, RESTORE_CHAR_MS);
+      timeoutIdsRef.current.push(nextTimeout);
     };
 
     run();
@@ -128,6 +144,7 @@ export function Butterfly() {
     const el = wrapRef.current;
     if (!el) return;
 
+    cancelRef.current = false;
     const onPointerEnter = () => {
       const now = Date.now();
       if (now - hoverToastAt.current < HOVER_TOAST_COOLDOWN_MS) return;
@@ -228,7 +245,12 @@ export function Butterfly() {
 
     rafRef.current = requestAnimationFrame(tick);
     return () => {
+      cancelRef.current = true;
       running = false;
+      restoringRef.current = false;
+      restoreVictimRef.current = null;
+      for (const id of timeoutIdsRef.current) window.clearTimeout(id);
+      timeoutIdsRef.current = [];
       window.clearInterval(scanId);
       el.removeEventListener('pointerenter', onPointerEnter);
       cancelAnimationFrame(rafRef.current);

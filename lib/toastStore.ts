@@ -24,15 +24,31 @@ export const TOAST_PREFIX: Record<ToastType, string> = {
 
 /** Each toast row stays visible for this long (chaos + fly copy use the same stack). */
 export const TOAST_AUTO_DISMISS_MS = 3000;
+const TOAST_STACK_LIMIT = 6;
+const TOAST_DEDUP_WINDOW_MS = 450;
+
+let lastToastKey = '';
+let lastToastAt = 0;
+let lastToastId = '';
 
 export const useToastStore = create<ToastState>((set, get) => ({
   toasts: [],
   push(message, type) {
+    const now = Date.now();
+    const toastKey = `${type}:${message}`;
+    if (toastKey === lastToastKey && now - lastToastAt < TOAST_DEDUP_WINDOW_MS) {
+      return lastToastId;
+    }
+
     const id =
       typeof crypto !== 'undefined' && crypto.randomUUID
         ? crypto.randomUUID()
         : `t-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
-    set({ toasts: [...get().toasts, { id, message, type }] });
+    const next = [...get().toasts, { id, message, type }];
+    set({ toasts: next.slice(-TOAST_STACK_LIMIT) });
+    lastToastKey = toastKey;
+    lastToastAt = now;
+    lastToastId = id;
     return id;
   },
   dismiss(id) {

@@ -6,6 +6,7 @@ import { ArrowDown, Github, FileText, Sparkles, TerminalSquare } from 'lucide-re
 import { hero, contact } from '@/data/portfolio';
 import { HeroHoldingIllustration } from './HeroHoldingIllustration';
 import { NeonButton } from './NeonButton';
+import { useChaosFreezeStore } from '@/lib/chaosFreezeStore';
 
 const ROLES = [
   'Full-Stack Developer',
@@ -20,8 +21,10 @@ export function HeroSection({ onOpenTerminal }: { onOpenTerminal?: () => void })
   const [typed, setTyped] = useState('');
   const [phase, setPhase] = useState<'typing' | 'pause' | 'erasing'>('typing');
   const isAvailable = (process.env.NEXT_PUBLIC_AVAILABLE ?? 'true').toLowerCase() === 'true';
+  const chaosActive = useChaosFreezeStore((s) => s.chaosActive);
 
   useEffect(() => {
+    if (chaosActive) return;
     const target = ROLES[roleIdx];
     let timeout: ReturnType<typeof setTimeout>;
     if (phase === 'typing') {
@@ -41,11 +44,12 @@ export function HeroSection({ onOpenTerminal }: { onOpenTerminal?: () => void })
       }
     }
     return () => clearTimeout(timeout);
-  }, [typed, phase, roleIdx]);
+  }, [typed, phase, roleIdx, chaosActive]);
 
   return (
     <section
       id="home"
+      data-chaos-include
       className="relative isolate min-h-[calc(100vh-4rem)] flex items-center overflow-hidden pt-8 pb-12 sm:pt-10 sm:pb-16 md:pt-12 md:pb-20"
     >
       <span aria-hidden className="absolute inset-0 -z-10 grid-bg opacity-40" />
@@ -73,6 +77,7 @@ export function HeroSection({ onOpenTerminal }: { onOpenTerminal?: () => void })
             initial={{ opacity: 0, x: -16 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1, duration: 0.25, ease: [1, 0, 0, 1] }}
+            data-chaos-include
             className="inline-flex items-center gap-2 px-3 py-2 pixel-border-dim mb-5 sm:mb-6 max-w-full flex-wrap bg-[#0a140a]/90"
           >
             <span className="relative h-2 w-2 bg-[#00ff41] shrink-0">
@@ -87,14 +92,14 @@ export function HeroSection({ onOpenTerminal }: { onOpenTerminal?: () => void })
             </span>
           </motion.div>
 
-          <p className="text-[#00e5ff] text-[10px] tracking-widest uppercase mb-3">&gt; whoami</p>
+          <p data-chaos-include className="text-[#00e5ff] text-[10px] tracking-widest uppercase mb-3">&gt; whoami</p>
 
-          <h1 className="hero-typewriter font-bold leading-snug text-[14px] text-[#00ff41] max-w-lg">
+          <h1 data-chaos-include className="hero-typewriter font-bold leading-snug text-[14px] text-[#00ff41] max-w-lg">
             <span className="block text-[#e8f5e9]">Hi, I&apos;m</span>
             <span className="block text-[#00e5ff]">Manikandan M</span>
           </h1>
 
-          <div className="mt-4 flex items-center gap-2 flex-wrap">
+          <div data-chaos-include className="mt-4 flex items-center gap-2 flex-wrap">
             <span className="text-[10px] text-[#4caf50]">I&apos;m a</span>
             <span className="relative inline-flex items-center px-2 py-1 neon-border-cyan bg-[#0a140a] text-[10px] text-[#00e5ff]">
               {typed}
@@ -102,12 +107,16 @@ export function HeroSection({ onOpenTerminal }: { onOpenTerminal?: () => void })
             </span>
           </div>
 
-          <p className="mt-5 max-w-xl text-[10px] leading-[2em] text-[#e8f5e9]/85">
+          <p data-chaos-include className="mt-5 max-w-xl text-[10px] leading-[2em] text-[#e8f5e9]/85">
             Pre-final year CSE @ KCT. I build during the day and break at night. HackX CTF 2025
             {' '}— 2nd place. The butterfly is a tribute. Currently making HTB CPTS happen.
           </p>
 
-          <div className="mt-4 max-w-xl border-2 border-[#1a2e1a] bg-[#050a05] p-3 shadow-[2px_2px_0_0_#1a2e1a]">
+          <div
+            data-chaos-include
+            data-chaos-force-hide-text
+            className="mt-4 max-w-xl border-2 border-[#1a2e1a] bg-[#050a05] p-3 shadow-[2px_2px_0_0_#1a2e1a]"
+          >
             <p className="text-[8px] tracking-[0.2em] text-[#4caf50]">&gt; STATUS ........... SOLVING HTB CPTS</p>
             <p className="mt-1 text-[8px] tracking-[0.2em] text-[#4caf50]">
               &gt; OPEN TO .......... INTERNSHIPS · FREELANCE · CTF TEAMS
@@ -118,7 +127,7 @@ export function HeroSection({ onOpenTerminal }: { onOpenTerminal?: () => void })
             </p>
           </div>
 
-          <div className="mt-6 flex flex-wrap items-center gap-2">
+          <div data-chaos-include data-chaos-force-hide-text className="mt-6 flex flex-wrap items-center gap-2">
             <NeonButton href="#projects" variant="primary" icon={<ArrowDown size={14} />}>
               View My Work
             </NeonButton>
@@ -142,7 +151,7 @@ export function HeroSection({ onOpenTerminal }: { onOpenTerminal?: () => void })
             </NeonButton>
           </div>
 
-          <div className="mt-8 flex flex-wrap gap-2">
+          <div data-chaos-include data-chaos-force-hide-text className="mt-8 flex flex-wrap gap-2">
             {hero.skills.slice(0, 8).map((skill) => (
               <span
                 key={skill}
@@ -160,7 +169,11 @@ export function HeroSection({ onOpenTerminal }: { onOpenTerminal?: () => void })
           transition={{ duration: 0.35, ease: [1, 0, 0, 1], delay: 0.15 }}
           className="lg:col-span-6 order-1 lg:order-2 relative"
         >
-          <div className="absolute -top-2 -right-2 hidden md:flex items-center gap-2 px-3 py-1.5 pixel-border-dim bg-[#0a140a] z-30">
+          <div
+            data-chaos-include
+            data-chaos-force-hide-text
+            className="absolute -top-2 -right-2 hidden md:flex items-center gap-2 px-3 py-1.5 pixel-border-dim bg-[#0a140a] z-30"
+          >
             <Sparkles size={12} className="text-[#00ff41]" />
             <span className="text-[8px] tracking-[0.25em] text-[#00e5ff] uppercase">CYBER + CODE</span>
           </div>
@@ -170,6 +183,8 @@ export function HeroSection({ onOpenTerminal }: { onOpenTerminal?: () => void })
 
       <a
         href="#about"
+        data-chaos-include
+        data-chaos-force-hide-text
         className="absolute left-1/2 -translate-x-1/2 bottom-4 md:bottom-6 flex flex-col items-center gap-1 text-[#4caf50] hover:text-[#00ff41] transition-none"
         aria-label="Scroll to about"
       >

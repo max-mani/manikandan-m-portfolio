@@ -76,6 +76,10 @@ body {
   overflow-x: hidden;
 }
 
+body[data-chaos-scroll-lock='true'] {
+  overflow: hidden;
+}
+
 /* CRT scanline overlay — full page */
 body::after {
   content: "";
@@ -583,28 +587,72 @@ select:disabled {
   animation: pixel-text-chaos-shake 0.08s steps(2) infinite;
 }
 
-/* Empty-screen dwell: backdrop lines only; launcher returns after chaos ends */
-body.chaos-phase-dwell [data-ft-terminal-launcher] {
-  visibility: hidden;
-  pointer-events: none;
-}
-
-/** Chaos intro / recovery blackout — below toasts (z-[10000]), above page content */
-body.chaos-black-screen::before {
-  content: '';
+.chaos-overlay-root {
   position: fixed;
   inset: 0;
-  z-index: 9995;
-  background: #000;
+  z-index: 9800;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.chaos-overlay-box {
+  position: fixed;
+  display: block;
+  border: 2px solid var(--border);
+  background: rgba(10, 20, 10, 0.9);
+  box-shadow: 2px 2px 0 var(--border);
+  will-change: transform;
+  user-select: none;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.chaos-overlay-sprite {
+  position: fixed;
+  display: block;
+  border: 2px solid var(--green);
+  box-shadow: 2px 2px 0 var(--green);
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  will-change: transform;
+  user-select: none;
   pointer-events: auto;
 }
 
-body.chaos-phase-dwell [data-chaos-frozen-home] [data-chaos-char-wrap],
-body.chaos-phase-dwell [data-chaos-frozen-home] svg,
-body.chaos-phase-dwell [data-chaos-frozen-home] img,
-body.chaos-phase-dwell [data-chaos-frozen-home] video,
-body.chaos-phase-dwell [data-chaos-frozen-home] canvas {
-  visibility: hidden !important;
+.chaos-overlay-char {
+  position: fixed;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  white-space: pre;
+  line-height: 1;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.75), 0 0 8px rgba(0, 255, 65, 0.16);
+  filter: saturate(1.05);
+  will-change: transform;
+  user-select: none;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+body[data-chaos-active='true'] .chaos-overlay-char {
+  animation: pixel-text-chaos-shake 0.1s steps(2) 2;
+}
+
+[data-chaos-source-text-hidden='true'],
+[data-chaos-source-text-hidden='true'] * {
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+  text-shadow: none !important;
+  caret-color: transparent !important;
+}
+
+body[data-chaos-active='true'] [data-chaos-force-hide-text],
+body[data-chaos-active='true'] [data-chaos-force-hide-text] * {
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+  text-shadow: none !important;
+  caret-color: transparent !important;
 }
 
 /* Phase 6 — 404 game + terminal */

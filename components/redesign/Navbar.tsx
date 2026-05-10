@@ -71,7 +71,10 @@ export function Navbar({ onOpenTerminal }: { onOpenTerminal?: () => void }) {
               : 'bg-[#050a05]/80 border-transparent',
           ].join(' ')}
         >
-          <nav className="max-w-7xl mx-auto px-2 sm:px-3 md:px-5 min-h-16 py-2 flex items-center gap-2 sm:gap-3">
+          <nav
+            data-chaos-include
+            className="max-w-7xl mx-auto px-2 sm:px-3 md:px-5 min-h-16 py-2 flex items-center gap-2 sm:gap-3"
+          >
           <div className="flex items-center gap-1.5 sm:gap-3 shrink-0 min-w-0">
             <AnimeBotAvatar
               size={48}
@@ -85,6 +88,7 @@ export function Navbar({ onOpenTerminal }: { onOpenTerminal?: () => void }) {
             />
             <a
               href="#home"
+              data-chaos-include
               className="group hidden sm:flex flex-col leading-tight min-w-0"
             >
               <span className="font-bold text-[10px] text-[#e8f5e9] group-hover:text-[#00ff41] transition-none truncate">
@@ -96,7 +100,10 @@ export function Navbar({ onOpenTerminal }: { onOpenTerminal?: () => void }) {
             </a>
           </div>
 
-          <ul className="hidden lg:flex flex-1 min-w-0 max-w-full items-center justify-center gap-x-1.5 xl:gap-x-2.5 list-none px-1 xl:px-2 lg:flex-nowrap lg:overflow-x-auto [scrollbar-width:thin] py-0.5">
+          <ul
+            data-chaos-include
+            className="hidden lg:flex flex-1 min-w-0 max-w-full items-center justify-center gap-x-1.5 xl:gap-x-2.5 list-none px-1 xl:px-2 lg:flex-nowrap lg:overflow-x-auto [scrollbar-width:thin] py-0.5"
+          >
             {SECTIONS.map((s) => (
               <li key={s.id} className="shrink-0">
                 <a
@@ -120,6 +127,7 @@ export function Navbar({ onOpenTerminal }: { onOpenTerminal?: () => void }) {
               href={contact.social.resume}
               target="_blank"
               rel="noopener noreferrer"
+              data-chaos-include
               className="hidden sm:inline-flex items-center gap-1 px-2 py-1.5 border-2 border-[#00e5ff] text-[#00e5ff] text-[8px] bg-[#0a140a] shadow-[2px_2px_0_0_#00e5ff] hover:border-[#00ff41] hover:text-[#00ff41] hover:shadow-[2px_2px_0_0_#00ff41] transition-none whitespace-nowrap"
             >
               <FileText size={12} />
@@ -129,6 +137,7 @@ export function Navbar({ onOpenTerminal }: { onOpenTerminal?: () => void }) {
             <button
               type="button"
               onClick={() => onOpenTerminal?.()}
+              data-chaos-include
               className="hidden sm:inline-flex items-center gap-1 px-2 py-1.5 border-2 border-[#00ff41] text-[#00ff41] text-[8px] bg-[#0a140a] shadow-[2px_2px_0_0_#00ff41] hover:border-[#00e5ff] hover:text-[#00e5ff] transition-none whitespace-nowrap"
               aria-label="Open floating terminal"
             >

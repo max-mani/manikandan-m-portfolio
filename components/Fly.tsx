@@ -46,6 +46,8 @@ export function Fly({ flyId }: FlyProps) {
   const wanderTargetRef = useRef<{ x: number; y: number } | null>(null);
   const phaseRef = useRef<Phase>('roam');
   const targetElRef = useRef<HTMLElement | null>(null);
+  const cachedTargetsRef = useRef<HTMLElement[]>([]);
+  const nextTargetRefreshAtRef = useRef(0);
   const nextLandAtRef = useRef(0);
   const sitUntilRef = useRef(0);
   const rafRef = useRef(0);
@@ -77,6 +79,14 @@ export function Fly({ flyId }: FlyProps) {
       x: randRange(pad, Math.max(pad, w - FLY_SIZE - pad)),
       y: randRange(pad, Math.max(pad, h - FLY_SIZE - pad)),
     };
+  };
+
+  const refreshTargetsIfNeeded = (now: number, force = false): HTMLElement[] => {
+    if (force || now >= nextTargetRefreshAtRef.current) {
+      cachedTargetsRef.current = collectCorruptibleTargets();
+      nextTargetRefreshAtRef.current = now + randRange(450, 900);
+    }
+    return cachedTargetsRef.current;
   };
 
   useEffect(() => {
@@ -112,7 +122,7 @@ export function Fly({ flyId }: FlyProps) {
       const phase = phaseRef.current;
 
       if (phase === 'roam') {
-        const visibleTargets = collectCorruptibleTargets();
+        const visibleTargets = refreshTargetsIfNeeded(now);
         if (visibleTargets.length === 0) {
           setRandomCorner(W, H);
           phaseRef.current = 'cornerSit';
@@ -145,6 +155,7 @@ export function Fly({ flyId }: FlyProps) {
           const pick = visibleTargets[Math.floor(Math.random() * visibleTargets.length)];
           targetElRef.current = pick;
           phaseRef.current = 'approach';
+          nextTargetRefreshAtRef.current = 0;
         }
       } else if (phase === 'approach') {
         setSprite(false);
@@ -210,7 +221,7 @@ export function Fly({ flyId }: FlyProps) {
         vel.vx = 0;
         vel.vy = 0;
         if (now >= sitUntilRef.current) {
-          const visibleTargets = collectCorruptibleTargets();
+          const visibleTargets = refreshTargetsIfNeeded(now, true);
           if (visibleTargets.length === 0) {
             sitUntilRef.current = now + randRange(CORNER_IDLE_MIN_MS, CORNER_IDLE_MAX_MS);
           } else {
