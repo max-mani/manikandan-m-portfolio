@@ -10,11 +10,15 @@ import pngToIco from 'png-to-ico';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
-const src = path.join(root, 'public', 'images', 'anime-bot-favicon.png');
+const srcCandidates = [
+  path.join(root, 'public', 'images', 'hero-avatar.png'),
+  path.join(root, 'public', 'images', 'anime-bot-favicon.png'),
+];
+const src = srcCandidates.find((p) => fs.existsSync(p));
 const dest = path.join(root, 'public', 'favicon.ico');
 
-if (!fs.existsSync(src)) {
-  console.error('Missing source:', src);
+if (!src) {
+  console.error('Missing favicon source. Add public/images/hero-avatar.png');
   process.exit(1);
 }
 

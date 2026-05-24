@@ -31,8 +31,21 @@ async function getGithubPushActivity(): Promise<GithubActivityPreview[]> {
   }
 }
 
+const LOGBOOK_BLOG_SLUGS = [
+  'ctf-notes-after-midnight',
+  'how-i-scope-side-projects',
+  'what-i-learned-from-broken-deploys',
+] as const;
+
 export default async function HomePage() {
-  const posts = getAllPosts().map((p) => ({
+  const posts = getAllPosts()
+    .filter((p) => LOGBOOK_BLOG_SLUGS.includes(p.slug as (typeof LOGBOOK_BLOG_SLUGS)[number]))
+    .sort(
+      (a, b) =>
+        LOGBOOK_BLOG_SLUGS.indexOf(a.slug as (typeof LOGBOOK_BLOG_SLUGS)[number]) -
+        LOGBOOK_BLOG_SLUGS.indexOf(b.slug as (typeof LOGBOOK_BLOG_SLUGS)[number])
+    )
+    .map((p) => ({
     slug: p.slug,
     title: p.title,
     date: p.date,
@@ -41,7 +54,9 @@ export default async function HomePage() {
     readTime: p.readTime,
   }));
 
-  const events = getAllEvents().map((e) => ({
+  const events = getAllEvents()
+    .filter((e) => e.slug === 'kictf-2026')
+    .map((e) => ({
     slug: e.slug,
     name: e.name,
     year: e.year,

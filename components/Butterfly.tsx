@@ -1,19 +1,19 @@
 'use client';
 
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { showToast } from '@/lib/toastStore';
 import { incPatch } from '@/lib/sysStatusStore';
-import { findFirstVisibleCorrupted } from '@/lib/flyCorruption';
+import { clearCorruptionState, findFirstVisibleCorrupted } from '@/lib/flyCorruption';
 
-const BF_SIZE = 160;
-const LERP = 0.05;
-const SCAN_MS = 4000;
-const ARRIVE_DIST = 30;
+const BF_SIZE = 36;
+const LERP = 0.02;
+const SCAN_MS = 5500;
+const ARRIVE_DIST = 24;
 const RESTORE_CHAR_MS = 40;
-const ROAM_MAX = 1.1;
-const HOVER_TOAST_COOLDOWN_MS = 4000;
-const CORNER_IDLE_MIN_MS = 2200;
-const CORNER_IDLE_MAX_MS = 3800;
+const ROAM_MAX = 0.35;
+const HOVER_BAR_TOAST_COOLDOWN_MS = 4000;
+const CORNER_IDLE_MIN_MS = 2800;
+const CORNER_IDLE_MAX_MS = 4200;
 
 export function Butterfly() {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -21,7 +21,7 @@ export function Butterfly() {
     x: typeof window !== 'undefined' ? window.innerWidth * 0.3 : 80,
     y: typeof window !== 'undefined' ? window.innerHeight * 0.2 : 80,
   });
-  const velRef = useRef({ vx: 0.4, vy: 0.3 });
+  const velRef = useRef({ vx: 0.15, vy: 0.12 });
   const phaseRef = useRef<'roam' | 'chase'>('roam');
   const chaseTargetRef = useRef<HTMLElement | null>(null);
   const restoreVictimRef = useRef<HTMLElement | null>(null);
@@ -31,8 +31,6 @@ export function Butterfly() {
   const cornerHoldUntilRef = useRef(0);
   const cancelRef = useRef(false);
   const timeoutIdsRef = useRef<number[]>([]);
-
-  const [imgBroken, setImgBroken] = useState(false);
 
   const setRandomCorner = useCallback((w: number, h: number) => {
     const pad = 10;
@@ -72,9 +70,7 @@ export function Butterfly() {
     const finish = () => {
       el.textContent = original;
       el.style.color = savedColor;
-      delete el.dataset.corrupted;
-      delete el.dataset.original;
-      delete el.dataset.originalColor;
+      clearCorruptionState(el);
       const preview = original.replace(/\s+/g, ' ').slice(0, 18);
       showToast(
         `🦋 butterfly_1993 restored "${preview}${original.length > 18 ? '...' : ''}"`,
@@ -138,7 +134,7 @@ export function Butterfly() {
     };
 
     run();
-  }, []);
+  }, [setRandomCorner]);
 
   useEffect(() => {
     const el = wrapRef.current;
@@ -147,7 +143,7 @@ export function Butterfly() {
     cancelRef.current = false;
     const onPointerEnter = () => {
       const now = Date.now();
-      if (now - hoverToastAt.current < HOVER_TOAST_COOLDOWN_MS) return;
+      if (now - hoverToastAt.current < HOVER_BAR_TOAST_COOLDOWN_MS) return;
       hoverToastAt.current = now;
       showToast('🦋 Butterfly Virus — 1993 | "Some of us remember."', 'sys');
     };
@@ -212,8 +208,8 @@ export function Butterfly() {
           rafRef.current = requestAnimationFrame(tick);
           return;
         }
-        vel.vx += (Math.random() - 0.5) * 0.08;
-        vel.vy += (Math.random() - 0.5) * 0.08;
+        vel.vx += (Math.random() - 0.5) * 0.04;
+        vel.vy += (Math.random() - 0.5) * 0.04;
         const sp = Math.hypot(vel.vx, vel.vy);
         if (sp > ROAM_MAX) {
           vel.vx = (vel.vx / sp) * ROAM_MAX;
@@ -260,27 +256,11 @@ export function Butterfly() {
   return (
     <div
       ref={wrapRef}
-      className="pointer-events-auto fixed left-0 top-0 z-[1000] cursor-none"
-      style={{ width: BF_SIZE, height: BF_SIZE, willChange: 'transform' }}
+      className="pointer-events-auto fixed left-0 top-0 z-[1000] flex cursor-none items-center justify-center select-none"
+      style={{ width: BF_SIZE, height: BF_SIZE, willChange: 'transform', fontSize: 28, lineHeight: 1 }}
       aria-hidden
     >
-      {imgBroken ? (
-        <div
-          className="h-[50px] w-[50px] border-2 border-[#00e5ff] bg-[#0a140a] shadow-[2px_2px_0_0_#00e5ff]"
-          aria-hidden
-        />
-      ) : (
-        <img
-          src="/sprites/butterfly.gif"
-          alt=""
-          width={BF_SIZE}
-          height={BF_SIZE}
-          className="block select-none"
-          style={{ imageRendering: 'pixelated' }}
-          draggable={false}
-          onError={() => setImgBroken(true)}
-        />
-      )}
+      🦋
     </div>
   );
 }

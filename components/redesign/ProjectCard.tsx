@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { CARD_STAGGER, STEP_EASE, VIEWPORT_ONCE } from '@/lib/pixelMotion';
 import { Github, ExternalLink, Star } from 'lucide-react';
 import type { Project } from '@/data/portfolio';
 
@@ -18,10 +19,10 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.15, delay: Math.min(index, 6) * 0.03, ease: [1, 0, 0, 1] }}
+      viewport={VIEWPORT_ONCE}
+      transition={{ duration: 0.12, delay: index * CARD_STAGGER, ease: STEP_EASE }}
       whileHover={{ x: -2, y: -2 }}
       className="group relative h-full overflow-hidden border-2 border-[#1a2e1a] bg-[#0a140a] shadow-[4px_4px_0_0_#1a2e1a] transition-none hover:border-[#00e5ff] hover:shadow-[4px_4px_0_0_#00e5ff]"
     >

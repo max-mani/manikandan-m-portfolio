@@ -1,23 +1,20 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  collectCorruptibleTargets,
-  corruptPlainText,
-} from '@/lib/flyCorruption';
+import React, { useEffect, useRef } from 'react';
+import { collectCorruptibleTargets, corruptElement } from '@/lib/flyCorruption';
 import { showToast } from '@/lib/toastStore';
 import { incCorruption } from '@/lib/sysStatusStore';
 
-const FLY_SIZE = 56;
-const ROAM_LERP = 0.02;
-const APPROACH_LERP = 0.08;
-const FLOOR_MS = 4000;
-const CEIL_MS = 7000;
+const FLY_SIZE = 28;
+const ROAM_LERP = 0.006;
+const APPROACH_LERP = 0.025;
+const FLOOR_MS = 6000;
+const CEIL_MS = 10000;
 const SIT_MIN_MS = 2000;
 const SIT_MAX_MS = 4000;
-const LAND_DIST = 34;
-const CORNER_IDLE_MIN_MS = 1800;
-const CORNER_IDLE_MAX_MS = 3200;
+const LAND_DIST = 28;
+const CORNER_IDLE_MIN_MS = 2200;
+const CORNER_IDLE_MAX_MS = 3600;
 
 type Phase = 'roam' | 'approach' | 'sit' | 'cornerSit';
 
@@ -33,15 +30,9 @@ function pickNextLandMs(): number {
 
 export function Fly({ flyId }: FlyProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
-  const flyImgRef = useRef<HTMLImageElement>(null);
-  const sitImgRef = useRef<HTMLImageElement>(null);
   const posRef = useRef({
     x: typeof window !== 'undefined' ? Math.random() * (window.innerWidth - FLY_SIZE) : 40,
     y: typeof window !== 'undefined' ? Math.random() * (window.innerHeight - FLY_SIZE) : 40,
-  });
-  const velRef = useRef({
-    vx: 0,
-    vy: 0,
   });
   const wanderTargetRef = useRef<{ x: number; y: number } | null>(null);
   const phaseRef = useRef<Phase>('roam');
@@ -51,9 +42,6 @@ export function Fly({ flyId }: FlyProps) {
   const nextLandAtRef = useRef(0);
   const sitUntilRef = useRef(0);
   const rafRef = useRef(0);
-  const spriteSitRef = useRef(false);
-  const [flyBroken, setFlyBroken] = useState(false);
-  const [sitBroken, setSitBroken] = useState(false);
 
   const setRandomCorner = (w: number, h: number) => {
     const corner = Math.floor(Math.random() * 4);
@@ -100,25 +88,11 @@ export function Fly({ flyId }: FlyProps) {
     sitUntilRef.current = performance.now() + randRange(CORNER_IDLE_MIN_MS, CORNER_IDLE_MAX_MS);
     nextLandAtRef.current = performance.now() + pickNextLandMs();
 
-    const setSprite = (sit: boolean) => {
-      if (spriteSitRef.current === sit) return;
-      spriteSitRef.current = sit;
-      const flyImg = flyImgRef.current;
-      const sitImg = sitImgRef.current;
-      if (flyImg && !flyBroken) {
-        flyImg.style.display = sit ? 'none' : 'block';
-      }
-      if (sitImg && !sitBroken) {
-        sitImg.style.display = sit ? 'block' : 'none';
-      }
-    };
-
     const tick = (now: number) => {
       if (!running) return;
 
       const { innerWidth: W, innerHeight: H } = window;
       const pos = posRef.current;
-      const vel = velRef.current;
       const phase = phaseRef.current;
 
       if (phase === 'roam') {
@@ -129,13 +103,11 @@ export function Fly({ flyId }: FlyProps) {
           sitUntilRef.current = now + randRange(CORNER_IDLE_MIN_MS, CORNER_IDLE_MAX_MS);
           targetElRef.current = null;
           wanderTargetRef.current = null;
-          setSprite(true);
           el.style.transform = `translate3d(${pos.x}px,${pos.y}px,0)`;
           rafRef.current = requestAnimationFrame(tick);
           return;
         }
 
-        setSprite(false);
         const wander = wanderTargetRef.current;
         if (!wander) {
           pickWanderTarget(W, H);
@@ -158,7 +130,6 @@ export function Fly({ flyId }: FlyProps) {
           nextTargetRefreshAtRef.current = 0;
         }
       } else if (phase === 'approach') {
-        setSprite(false);
         const tgt = targetElRef.current;
         if (!tgt || !document.contains(tgt)) {
           phaseRef.current = 'roam';
@@ -179,20 +150,17 @@ export function Fly({ flyId }: FlyProps) {
             const dy = cy - pos.y;
             const dist = Math.hypot(dx, dy);
             if (dist < LAND_DIST) {
-              const original = tgt.textContent ?? '';
-              const originalColor = getComputedStyle(tgt).color;
-              tgt.dataset.original = original;
-              tgt.dataset.originalColor = originalColor;
-              const corrupted = corruptPlainText(original);
-              tgt.textContent = corrupted;
-              tgt.dataset.corrupted = 'true';
-              tgt.style.color = 'var(--red)';
-              const preview = original.replace(/\s+/g, ' ').slice(0, 18);
-              showToast(`🪰 ${flyId} corrupted "${preview}${original.length > 18 ? '...' : ''}"`, 'corrupt');
-              incCorruption();
+              const preview = corruptElement(tgt);
+              if (preview) {
+                const original = tgt.dataset.original ?? '';
+                showToast(
+                  `🪰 ${flyId} corrupted "${preview}${original.length > 18 ? '...' : ''}"`,
+                  'corrupt',
+                );
+                incCorruption();
+              }
               phaseRef.current = 'sit';
               sitUntilRef.current = now + randRange(SIT_MIN_MS, SIT_MAX_MS);
-              setSprite(true);
             } else {
               pos.x += dx * APPROACH_LERP;
               pos.y += dy * APPROACH_LERP;
@@ -202,7 +170,6 @@ export function Fly({ flyId }: FlyProps) {
           }
         }
       } else if (phase === 'sit') {
-        setSprite(true);
         const tgt = targetElRef.current;
         if (tgt && document.contains(tgt)) {
           const r = tgt.getBoundingClientRect();
@@ -217,9 +184,6 @@ export function Fly({ flyId }: FlyProps) {
           sitUntilRef.current = now + randRange(CORNER_IDLE_MIN_MS, CORNER_IDLE_MAX_MS);
         }
       } else if (phase === 'cornerSit') {
-        setSprite(true);
-        vel.vx = 0;
-        vel.vy = 0;
         if (now >= sitUntilRef.current) {
           const visibleTargets = refreshTargetsIfNeeded(now, true);
           if (visibleTargets.length === 0) {
@@ -246,43 +210,11 @@ export function Fly({ flyId }: FlyProps) {
   return (
     <div
       ref={wrapRef}
-      className="pointer-events-none fixed left-0 top-0 z-[1000]"
-      style={{ width: FLY_SIZE, height: FLY_SIZE, willChange: 'transform' }}
+      className="pointer-events-none fixed left-0 top-0 z-[1000] flex items-center justify-center select-none"
+      style={{ width: FLY_SIZE, height: FLY_SIZE, willChange: 'transform', fontSize: 22, lineHeight: 1 }}
       aria-hidden
     >
-      {!flyBroken && (
-        <img
-          ref={flyImgRef}
-          src="/sprites/fly.gif"
-          width={FLY_SIZE}
-          height={FLY_SIZE}
-          className="block select-none"
-          style={{ imageRendering: 'pixelated', display: 'block' }}
-          draggable={false}
-          onError={() => setFlyBroken(true)}
-        />
-      )}
-      {!sitBroken && (
-        <img
-          ref={sitImgRef}
-          src="/sprites/fly-sit.png"
-          alt=""
-          width={FLY_SIZE}
-          height={FLY_SIZE}
-          className="block select-none"
-          style={{ imageRendering: 'pixelated', display: 'none' }}
-          draggable={false}
-          onError={() => setSitBroken(true)}
-        />
-      )}
-      {flyBroken && sitBroken && (
-        <div
-          className="flex h-[20px] w-[20px] items-center justify-center border-2 border-[#ffb300] bg-[#0a140a] text-[8px] text-[#ffb300]"
-          aria-hidden
-        >
-          x
-        </div>
-      )}
+      🪰
     </div>
   );
 }

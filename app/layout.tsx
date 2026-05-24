@@ -48,15 +48,15 @@ export const metadata: Metadata = {
   ],
   metadataBase: getMetadataBase(),
   alternates: { canonical: "/" },
-  /** Canonical favicon source is `/images/anime-bot-favicon.png`; `.ico` is generated from it via `npm run favicon`. */
+  /** Favicon from pixel profile at `/images/anime-bot.png`; `.ico` via `npm run favicon`. */
   icons: {
     icon: [
-      { url: "/images/anime-bot-favicon.png", type: "image/png", sizes: "32x32" },
-      { url: "/images/anime-bot-favicon.png", type: "image/png", sizes: "16x16" },
+      { url: "/images/anime-bot.png", type: "image/png", sizes: "32x32" },
+      { url: "/images/anime-bot.png", type: "image/png", sizes: "16x16" },
       { url: "/favicon.ico", sizes: "48x48", type: "image/x-icon" },
     ],
-    apple: [{ url: "/images/anime-bot-favicon.png", type: "image/png", sizes: "180x180" }],
-    shortcut: "/images/anime-bot-favicon.png",
+    apple: [{ url: "/images/anime-bot.png", type: "image/png", sizes: "180x180" }],
+    shortcut: "/favicon.ico",
   },
 };
 

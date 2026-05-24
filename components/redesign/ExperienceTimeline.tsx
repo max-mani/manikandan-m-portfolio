@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import { STEP_EASE, VIEWPORT_ONCE } from '@/lib/pixelMotion';
 import { Briefcase } from 'lucide-react';
 import { experience } from '@/data/portfolio';
 import { SectionHeading } from './SectionHeading';
@@ -27,10 +28,10 @@ export function ExperienceTimeline() {
             return (
               <motion.li
                 key={exp.id}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.15, delay: idx * 0.04, ease: [1, 0, 0, 1] }}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={VIEWPORT_ONCE}
+                transition={{ duration: 0.12, delay: idx * 0.06, ease: STEP_EASE }}
                 className="relative pl-12 md:pl-0 mb-8 md:mb-12 md:grid md:grid-cols-2 md:gap-10"
               >
                 <span

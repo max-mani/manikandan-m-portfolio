@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import { CTF_STAGGER, STEP_EASE, VIEWPORT_ONCE } from '@/lib/pixelMotion';
 import { Trophy, Flag, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { ctfs } from '@/data/portfolio';
@@ -48,10 +49,10 @@ export function CTFShowcase() {
             return (
               <motion.div
                 key={ctf.id}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.15, delay: idx * 0.04, ease: [1, 0, 0, 1] }}
+                initial={{ opacity: 0, x: -24 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={VIEWPORT_ONCE}
+                transition={{ duration: 0.12, delay: idx * CTF_STAGGER, ease: STEP_EASE }}
               >
                 <GlowCard accent={idx % 2 === 0 ? 'magenta' : 'cyan'} className="h-full">
                   <div className="flex items-start justify-between gap-3">

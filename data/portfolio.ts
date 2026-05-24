@@ -40,11 +40,8 @@ export interface Project {
   github?: string;
   live?: string;
   image?: string;
-  /** Filter category surfaced on the redesigned projects grid. */
   categories?: ProjectCategory[];
-  /** Year built / released, for sorting. */
   year?: string;
-  /** Whether this is a flagship / pinned project. */
   featured?: boolean;
 }
 
@@ -100,7 +97,8 @@ export const hero: HeroData = {
   name: "MANIKANDAN M",
   title: "Full Stack & Mobile Application Developer | Application Security Analyst | Cybersecurity & AI Enthusiast",
   intro: "Welcome to my portfolio.",
-  description: "Pre-final year Computer Science and Engineering student with strong hands-on experience in full-stack web development, mobile application development, AI-driven systems, and cybersecurity. Passionate about building scalable, real-world solutions across road safety, intelligent automation, and secure application architectures. Actively engaged in Capture The Flag (CTF) competitions, application security research, and reverse engineering. HackX CTF 2025 – 2nd Place Winner.",
+  description:
+    "Pre-final year CSE @ KCT. I build during the day and break at night. HackX CTF 2025 — 2nd place. The butterfly is a tribute. Currently making HTB CPTS happen.",
   focusAreas: [
     "Full Stack & Mobile Application Development",
     "Application Security & Ethical Hacking",
@@ -124,13 +122,13 @@ export const hero: HeroData = {
 
 // About Section
 export const about: AboutData = {
-  bio: "Pre-final year Computer Science and Engineering student at Kumaraguru College of Technology. I ship full-stack and mobile products, practice application security and CTF work in parallel, and reach for problems where reliable software, tooling, and a security lens actually matter.",
+  bio: "Pre-final year CSE @ KCT. I ship web and mobile apps, break things in CTFs, and chase problems where code and security actually meet.",
   details: [
-    "I have developed production-grade web and mobile applications, AI-based accident detection systems, and security-focused projects including vulnerability scanners and Capture The Flag (CTF) challenge solutions.",
-    "My work spans domains such as road safety, fintech, digital public infrastructure, and secure application design.",
-    "As an executive member of the Aeromodelling Club, I have contributed to drone technology initiatives and hands-on engineering projects, strengthening my teamwork, leadership, and applied problem-solving skills.",
-    "I actively participate in hackathons and national-level CTF competitions, continuously improving my expertise in application security, reverse engineering, binary exploitation, cryptography, and system-level analysis.",
-    "I am seeking opportunities to grow as a software developer and application security professional in challenging, impact-driven environments."
+    "Built production apps — Uyir (AI road safety), KMRL fleet platform, Aayiram on Play Store, and more.",
+    "Work spans road safety, fintech, insurance flows, and incident response tooling.",
+    "Executive member at the Aeromodelling Club — drones, workshops, hands-on builds.",
+    "Regular at hackathons and national CTFs — reverse engineering, pwn, crypto, forensics.",
+    "Open to internships, freelance, and CTF teams that move fast."
   ],
   education: {
     degree: "Bachelor of Engineering (B.E.) – Computer Science and Engineering",
@@ -147,28 +145,27 @@ export const about: AboutData = {
     "Tools & Platforms": ["Git", "Linux", "Docker", "Firebase", "Google Maps API"]
   },
   summary: [
-    "Application Security Analyst with hands-on experience in ethical hacking and vulnerability assessment",
-    "HackX CTF 2025 – 2nd Place Winner",
-    "Experienced in reverse engineering, binary exploitation, cryptography, and OSINT",
-    "Builder of security-focused systems including AI-driven detection platforms and secure application architectures",
-    "Continuously strengthening skills through CTFs, hackathons, and real-world projects"
+    "HackX CTF 2025 — 2nd place",
+    "HTB CPTS in progress — labs every week",
+    "Reverse engineering, pwn, crypto, forensics, OSINT",
+    "Shipped AI safety, metro ops, and Play Store mobile apps",
+    "Build by day, break by night — both halves feed each other"
   ]
 };
 
-// Projects
+export const footerTagline =
+  "Pre-final year CSE @ KCT. Full-stack dev, appsec analyst, CTF player — building and breaking in equal measure.";
+
+export const footerEasterEgg = "butterfly.exe is watching ✦";
+
+// Projects — exactly 10
 export const projects: Project[] = [
   {
     id: "uyir",
     name: "Uyir – AI-Based Road Accident Detection System",
-    description: "Real-time road accident detection system using surveillance cameras and AI. Automatically detects accidents and sends alerts to 108 emergency services and nearby ambulance drivers through a Flutter-based dashboard.",
+    description:
+      "Real-time road accident detection system using surveillance cameras and AI. Automatically detects accidents and sends alerts to 108 emergency services and nearby ambulance drivers through a Flutter-based dashboard.",
     technologies: ["Python", "FastAPI", "OpenCV", "Firebase", "Flutter", "Google Maps API"],
-    keyFeatures: [
-      "Real-time accident detection from images and video",
-      "AI-based severity analysis",
-      "Firebase push notifications",
-      "Live location tracking and ambulance coordination",
-      "Police and emergency response dashboard"
-    ],
     github: "https://github.com/max-mani/Kapaan",
     categories: ["AI", "Mobile", "Dev"],
     year: "2025",
@@ -177,15 +174,9 @@ export const projects: Project[] = [
   {
     id: "koreconnect",
     name: "Hot Kore (KoreConnect) – Canteen Food Ordering Platform",
-    description: "A full-stack food ordering and management platform designed for college canteens, enabling students to place orders online while providing admins with real-time order and menu management.",
+    description:
+      "A full-stack food ordering and management platform designed for college canteens, enabling students to place orders online while providing admins with real-time order and menu management.",
     technologies: ["MongoDB", "Express.js", "React", "Node.js"],
-    keyFeatures: [
-      "User authentication and role-based access",
-      "Menu and price management",
-      "Cart and order placement system",
-      "Order tracking and admin dashboard",
-      "Responsive UI for mobile and desktop"
-    ],
     live: "https://koreconnect.netlify.app/",
     github: "https://github.com/max-mani/KoreConnect",
     categories: ["Dev"],
@@ -194,21 +185,11 @@ export const projects: Project[] = [
   {
     id: "kmrl",
     name: "KMRL – Kochi Metro Rail Limited Digital Platform",
-    description: "A comprehensive digital platform built to modernize metro rail operations using real-time monitoring, digital twin technology, IoT integration, and AI-driven analytics. Designed to support fleet optimization, predictive maintenance, and passenger services.",
-    technologies: ["Node.js", "Express.js", "TypeScript", "MongoDB", "Socket.io", "JWT", "Next.js 14", "React 18", "Tailwind CSS", "Shadcn/UI", "Chart.js", "Framer Motion"],
-    keyFeatures: [
-      "Real-time train, station, and passenger monitoring",
-      "AI-powered fleet optimization and scheduling",
-      "Digital twin with interactive 3D visualization",
-      "Predictive maintenance using machine learning",
-      "IoT sensor data ingestion and analytics",
-      "Real-time alerts and notifications",
-      "What-if simulation scenarios",
-      "Secure authentication and role-based access"
-    ],
+    description:
+      "A comprehensive digital platform built to modernize metro rail operations using real-time monitoring, digital twin technology, IoT integration, and AI-driven analytics. Designed to support fleet optimization, predictive maintenance, and passenger services.",
+    technologies: ["Node.js", "Express.js", "TypeScript", "MongoDB", "Socket.io", "JWT"],
     live: "https://kmrl-fleet-optimization.netlify.app/",
     github: "https://github.com/max-mani/KMRL",
-    /* Drop `image` here until `/public/assets/projects/kmrl.png` exists — card shows themed placeholder */
     categories: ["Dev", "AI"],
     year: "2025",
     featured: true
@@ -216,19 +197,10 @@ export const projects: Project[] = [
   {
     id: "rti-assistant",
     name: "RTI Assistant – AI-Powered RTI Application Generator",
-    description: "An end-to-end AI-powered web application that helps users draft, refine, and export Indian RTI (Right to Information) applications. The system guides users through missing information and generates legally structured RTI drafts.",
-    technologies: ["Next.js (App Router)", "TypeScript", "Tailwind CSS", "Radix UI", "Node.js", "Express", "MongoDB", "JWT (httpOnly cookies)", "Google Gemini API"],
-    keyFeatures: [
-      "AI-powered RTI drafting using Gemini",
-      "Guided clarification for missing details",
-      "Editable generated RTI drafts",
-      "Multi-language support (English, Hindi, Tamil, etc.)",
-      "Export as TXT, PDF, and DOCX",
-      "Secure authentication and protected routes",
-      "Dark / Light mode with accessibility focus"
-    ],
+    description:
+      "An end-to-end AI-powered web application that helps users draft, refine, and export Indian RTI (Right to Information) applications. The system guides users through missing information and generates legally structured RTI drafts.",
+    technologies: ["Next.js (App Router)", "TypeScript", "Tailwind CSS", "Radix UI", "Node.js", "Express"],
     github: "https://github.com/max-mani/RTI-Application-Generator",
-    /* Placeholder until `/public/assets/projects/rti-assistant.png` exists */
     categories: ["Dev", "AI"],
     year: "2025",
     featured: true
@@ -236,35 +208,19 @@ export const projects: Project[] = [
   {
     id: "student-grouping",
     name: "Smart Team Formation System (Student Grouping System)",
-    description: "An AI-driven web application that automatically forms optimal student teams using clustering algorithms based on skills, performance, and compatibility. Intended for educational institutions and project-based courses.",
-    technologies: ["React 18", "TypeScript", "Tailwind CSS", "Vite", "Node.js", "Express", "TypeScript", "Multer", "Python", "scikit-learn", "pandas", "matplotlib", "seaborn"],
-    keyFeatures: [
-      "AI-based team formation using K-Means clustering",
-      "CSV upload with drag-and-drop interface",
-      "Skill and performance analysis",
-      "PCA and elbow method visualizations",
-      "Real-time processing with progress indicators",
-      "Downloadable PDF reports",
-      "Data cleaning and validation pipeline"
-    ],
+    description:
+      "An AI-driven web application that automatically forms optimal student teams using clustering algorithms based on skills, performance, and compatibility. Intended for educational institutions and project-based courses.",
+    technologies: ["React 18", "TypeScript", "Tailwind CSS", "Vite", "Node.js", "Express"],
     github: "https://github.com/max-mani/Student-Grouping-System",
-    /* Placeholder until `/public/assets/projects/student-grouping.png` exists */
     categories: ["AI", "Dev"],
     year: "2024"
   },
   {
     id: "cgpa",
     name: "CGPA & SGPA Calculator – KCT CSE",
-    description: "A modern web application to calculate SGPA and CGPA for students of Kumaraguru College of Technology (KCT), Computer Science & Engineering department, based on the official curriculum.",
+    description:
+      "A modern web application to calculate SGPA and CGPA for students of Kumaraguru College of Technology (KCT), Computer Science & Engineering department, based on the official curriculum.",
     technologies: ["Next.js (App Router)", "TypeScript", "React", "Tailwind CSS", "Shadcn UI", "pnpm"],
-    keyFeatures: [
-      "Semester-wise SGPA calculation",
-      "Overall CGPA calculation",
-      "Preloaded official KCT CSE curriculum",
-      "Supports electives, audit, and mandatory courses",
-      "Mobile-friendly and responsive UI",
-      "Clean, branded design with KCT styling"
-    ],
     live: "https://kct-cse-cgpa-calculator.netlify.app/",
     github: "https://github.com/max-mani/cgpa",
     categories: ["Dev"],
@@ -272,10 +228,10 @@ export const projects: Project[] = [
   },
   {
     id: "tripoo",
-    name: "Tripoo",
+    name: "Tripoo – Group Trip Planner",
     description:
-      "Tripoo is for friend squads who need one place to plan the whole trip: routes, stay ideas, split expenses, and who owes who. Built with Next.js, React, and TypeScript with Firebase Firestore sync so everyone sees updates live across multiple trips.",
-    technologies: ["Next.js", "React", "TypeScript"],
+      "Group-trip planner that turns a noisy WhatsApp thread into a real itinerary. Splits expenses live, vote-locks dates, and exports a single-page PDF you can hand to your mom before you leave.",
+    technologies: ["React", "Node.js", "Express", "MongoDB", "Tailwind"],
     live: "https://tripoo.netlify.app/",
     categories: ["Dev", "Mobile"],
     year: "2026"
@@ -283,19 +239,17 @@ export const projects: Project[] = [
   {
     id: "zerorespond",
     name: "ZeroRespond",
-    description:
-      "ZeroRespond is a self-hosted incident response setup that helps teams move fast from alert to action. It ties detections to clear playbooks, gives you reporting your team can actually share, and runs with a simple Docker deploy instead of expensive licensing.",
-    technologies: ["Web"],
+    description: "[USER TO FILL]",
+    technologies: ["Web", "Dev", "Cybersec"],
     live: "https://zerorespond.netlify.app/",
     categories: ["Dev", "Cybersec"],
     year: "2026"
   },
   {
     id: "saar-insurance",
-    name: "SAAR Insurance",
-    description:
-      "SAAR Insurance is the customer-facing motor insurance flow for SAAR Assurances, built for fast quote-to-payment onboarding. Users can get quotes, sign up with OTP, and complete policy payments without bouncing between clunky forms.",
-    technologies: ["Web"],
+    name: "SAAR Insurance Portal",
+    description: "[USER TO FILL]",
+    technologies: ["Web", "Dev", "Mobile"],
     live: "https://saar-insurance.netlify.app/",
     categories: ["Dev", "Mobile"],
     year: "2026"
@@ -303,15 +257,10 @@ export const projects: Project[] = [
   {
     id: "aayiram",
     name: "Aayiram – Smart Expense Tracker",
-    description: "Production mobile app that automatically reads transactional SMS messages on the user's device and converts them into structured, categorized expense records for hands-free financial tracking. Founded RedGoldCrew to build, launch, and maintain it on the Google Play Store.",
+    description:
+      "Production mobile app that automatically reads transactional SMS messages on the user's device and converts them into structured, categorized expense records for hands-free financial tracking. Published on Google Play Store.",
     technologies: [".NET MAUI", "C#", "SMS Parsing", "SQLite"],
-    keyFeatures: [
-      "Automatic SMS-based transaction detection",
-      "Smart expense categorization engine",
-      "On-device privacy-first parsing",
-      "Live on Google Play Store"
-    ],
-    categories: ["Mobile"],
+    categories: ["Mobile", "Dev"],
     year: "2025",
     featured: true,
     live: "https://play.google.com/store/apps/dev?id=8965940044992315715"
@@ -328,7 +277,7 @@ export const skills: SkillsData = {
   }
 };
 
-// Experience
+// Experience — exactly 3 entries
 export const experience: Experience[] = [
   {
     id: "aeromodelling",
@@ -337,12 +286,10 @@ export const experience: Experience[] = [
     period: "October 2024 – February 2025",
     description: [
       "Actively worked on drone technology and aeromodelling projects, contributing to hands-on design, experimentation, and technical learning initiatives within the club.",
-      "Participated in multiple drone-based innovation and experimentation projects",
-      "Assisted in organizing and conducting technical workshops and demonstrations",
-      "Collaborated with team members on aeromodelling design and testing",
-      "Strengthened teamwork, coordination, and leadership skills"
-    ],
-    image: "/assets/experience/aeromodelling.png"
+      "Participated in multiple drone-based innovation projects",
+      "Assisted in organizing technical workshops and demonstrations",
+      "Collaborated on aeromodelling design and testing"
+    ]
   },
   {
     id: "uyir",
@@ -350,15 +297,12 @@ export const experience: Experience[] = [
     role: "AI Model Developer",
     period: "February 2025 – Present",
     description: [
-      "Serving as an AI Model Developer for the UYIR Road Safety Project, a government-backed initiative focused on improving road safety through real-time accident detection using artificial intelligence.",
-      "Designed and developed machine learning models for real-time road accident detection",
+      "Serving as an AI Model Developer for the UYIR Road Safety Project, a government-backed initiative focused on improving road safety through real-time accident detection using AI.",
+      "Designed and developed ML models for real-time accident detection",
       "Built and optimized the end-to-end accident detection pipeline",
-      "Integrated AI models with mobile and web-based dashboards",
-      "Enabled real-time alerts and notifications for emergency response systems",
-      "Received recognition at a national-level hackathon for project impact"
+      "Integrated AI models with mobile and web-based dashboards"
     ],
-    technologies: ["Python", "FastAPI", "OpenCV", "Machine Learning", "Flutter", "Firebase"],
-    image: "/assets/experience/uyir.png"
+    technologies: ["Python", "FastAPI", "OpenCV", "Machine Learning", "Flutter", "Firebase"]
   },
   {
     id: "aayiram",
@@ -366,31 +310,33 @@ export const experience: Experience[] = [
     role: "Founder & Lead Developer",
     period: "November 2025 – January 2026",
     description: [
-      "Founded RedGoldCrew, a product-focused development team that designed, built, and launched Aayiram, a finance and expense tracking mobile application. The app automatically reads transactional SMS messages from users' devices and converts them into structured, categorized expense records, enabling seamless and hands-free financial tracking.",
-      "Founded and led RedGoldCrew, the core team responsible for the conception, development, and launch of Aayiram",
-      "Architected and implemented automatic SMS-based transaction detection and parsing",
-      "Designed the expense categorization and tracking engine for accurate financial insights",
-      "Led the team's growth from an initial founding group to 6 active contributors",
-      "Oversaw end-to-end product delivery, including development, testing, and deployment",
-      "Successfully published and maintained the application on the Google Play Store",
-      "Delivered a production-ready application currently live and available to public users"
+      "Founded RedGoldCrew, a product-focused development team that designed, built, and launched Aayiram, a finance and expense tracking mobile application. The app automatically reads transactional SMS messages from users' devices and converts them into structured, categorized expense records.",
+      "Founded and led RedGoldCrew through conception to launch",
+      "Architected automatic SMS-based transaction detection and parsing",
+      "Designed the expense categorization and tracking engine"
     ],
-    technologies: [".NET MAUI", "C#", "SMS Parsing"],
-    image: "/assets/aayiram.png"
+    technologies: [".NET MAUI", "C#", "SMS Parsing"]
   }
 ];
 
-// CTF Challenges
+// CTF — exactly 5 trophies
 export const ctfs: CTF[] = [
   {
     id: "hackx",
     name: "HackX CTF 2025",
     platform: "HackX",
-    achievements: ["2nd Place"],
+    achievements: [],
     year: "2025",
-    description: "Secured 2nd place in HackX CTF 2025, a competitive cybersecurity contest focused on practical offensive and defensive security skills across multiple domains.",
-    domains: ["Reverse Engineering", "Binary Exploitation (Pwn)", "Cryptography", "Linux Internals", "OSINT"],
-    image: "/assets/ctf/hackx.png"
+    description:
+      "Secured 2nd place in HackX CTF 2025, a competitive cybersecurity contest focused on practical offensive and defensive security skills across multiple domains.",
+    ranking: "2nd Place",
+    domains: [
+      "Reverse Engineering",
+      "Binary Exploitation (Pwn)",
+      "Cryptography",
+      "Linux Internals",
+      "OSINT"
+    ]
   },
   {
     id: "tamil-nadu-hackathon",
@@ -398,8 +344,9 @@ export const ctfs: CTF[] = [
     platform: "IIT Madras",
     achievements: ["Participant"],
     year: "2025",
-    description: "Participated in the Capture The Flag competition conducted during Tamil Nadu Hackathon 2025 at IIT Madras. This marked my first exposure to a large-scale, national-level academic CTF event.",
-    ranking: "First on-site CTF experience at IIT Madras"
+    description:
+      "Participated in the CTF competition conducted during Tamil Nadu Hackathon 2025 at IIT Madras. First exposure to a large-scale national-level academic CTF event.",
+    ranking: "Participant"
   },
   {
     id: "cipher-chase",
@@ -407,9 +354,18 @@ export const ctfs: CTF[] = [
     platform: "IIIT Bangalore | Unstop",
     achievements: ["Top 10 Finish"],
     year: "2025",
-    description: "Achieved a Top 10 ranking in the Cipher Chase 24-hour CTF competition organized by IIIT Bangalore as part of Synergy '25. One of the most challenging endurance-based CTFs participated in.",
-    domains: ["Reverse Engineering", "Web Exploitation", "Binary Exploitation (Pwn)", "Cryptography", "Forensics", "Steganography", "Machine Learning Security"],
-    ranking: "Top 10 teams"
+    description:
+      "Achieved a Top 10 ranking in the Cipher Chase 24-hour CTF organized by IIIT Bangalore as part of Synergy '25. One of the most challenging endurance-based CTFs participated in.",
+    ranking: "Top 10 teams",
+    domains: [
+      "Reverse Engineering",
+      "Web Exploitation",
+      "Binary Exploitation (Pwn)",
+      "Cryptography",
+      "Forensics",
+      "Steganography",
+      "Machine Learning Security"
+    ]
   },
   {
     id: "yukthi",
@@ -417,8 +373,9 @@ export const ctfs: CTF[] = [
     platform: "Tamil Nadu Police Cyber Talent Hunt",
     achievements: ["Top 33 (Finals)", "Top 50 (Prelims)"],
     year: "2025",
-    description: "Participated in Yukthi CTF 2.0, a large-scale cybersecurity talent hunt organized by the Tamil Nadu Police. Successfully advanced through prelims and reached the offline finals.",
-    ranking: "Top 33 teams (Finals), Top 50 teams (Prelims)"
+    description:
+      "Participated in Yukthi CTF 2.0, organized by the Tamil Nadu Police. Successfully advanced through prelims and reached the offline finals.",
+    ranking: "Top 33 (Finals)"
   },
   {
     id: "hackerverse",
@@ -426,12 +383,13 @@ export const ctfs: CTF[] = [
     platform: "Hackerverse",
     achievements: ["84 out of 2939 participants", "718 points"],
     year: "2024",
-    description: "Participated in Hackerverse CTF as my first formal Capture The Flag competition, marking the beginning of my hands-on cybersecurity journey.",
-    ranking: "84 out of 2939 participants"
+    description:
+      "Participated in Hackerverse CTF as my first formal Capture The Flag competition, marking the beginning of my hands-on cybersecurity journey.",
+    ranking: "84 out of 2939"
   }
 ];
 
-// Certifications
+// Certifications — exactly 3
 export const certifications: Certification[] = [
   {
     id: "cnsp",
@@ -439,7 +397,8 @@ export const certifications: Certification[] = [
     issuer: "SecOps Group",
     date: "2025",
     level: "Entry-Level",
-    description: "Certified Network Security Practitioner (CNSP) is an entry-level certification that validates foundational knowledge of network security concepts, protocols, and common attack surfaces across enterprise environments."
+    description:
+      "Validates foundational knowledge of network security concepts, protocols, and common attack surfaces across enterprise environments."
   },
   {
     id: "cap",
@@ -447,16 +406,18 @@ export const certifications: Certification[] = [
     issuer: "SecOps Group",
     date: "2025",
     level: "Entry-Level",
-    description: "Certified AppSec Practitioner (CAP) validates foundational understanding of application security principles, common web vulnerabilities, and secure coding practices aligned with industry standards such as OWASP."
+    description:
+      "Validates foundational understanding of application security principles, common web vulnerabilities, and secure coding practices aligned with OWASP."
   },
   {
     id: "htb-cpts",
     name: "HTB Certified Penetration Testing Specialist (HTB CPTS)",
     issuer: "Hack The Box",
     date: "2025",
-    level: "Intermediate (Hands-on, Practical)",
+    level: "Intermediate",
     status: "In Progress",
-    description: "HTB Certified Penetration Testing Specialist (CPTS) is a highly practical, industry-focused penetration testing certification. It emphasizes real-world attack simulation, vulnerability chaining, and professional-grade reporting."
+    description:
+      "A highly practical, industry-focused penetration testing certification. Emphasizes real-world attack simulation, vulnerability chaining, and professional-grade reporting."
   }
 ];
 

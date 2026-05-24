@@ -1,29 +1,23 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { STEP_EASE } from '@/lib/pixelMotion';
 
 /** Hero “holding” illustration is `loop.mp4` only — no separate poster image. */
 const HERO_VIDEO_LABEL =
   'Manikandan holding Development and Cybersecurity together — looping hero video';
 
-export function HeroHoldingIllustration() {
-  const ref = useRef<HTMLDivElement>(null);
+interface HeroHoldingIllustrationProps {
+  bootDone?: boolean;
+}
+
+export function HeroHoldingIllustration({ bootDone = false }: HeroHoldingIllustrationProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [videoFailed, setVideoFailed] = React.useState(false);
-  const [posterFailed, setPosterFailed] = React.useState(false);
-  const [reducedMotion, setReducedMotion] = React.useState(false);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  const sx = useSpring(x, { stiffness: 200, damping: 28 });
-  const sy = useSpring(y, { stiffness: 200, damping: 28 });
-
-  const rotateX = useTransform(sy, [-0.5, 0.5], ['4deg', '-4deg']);
-  const rotateY = useTransform(sx, [-0.5, 0.5], ['-5deg', '5deg']);
-  const translateX = useTransform(sx, [-0.5, 0.5], ['-4px', '4px']);
-  const translateY = useTransform(sy, [-0.5, 0.5], ['-4px', '4px']);
+  const [videoFailed, setVideoFailed] = useState(false);
+  const [posterFailed, setPosterFailed] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
     const v = videoRef.current;
@@ -47,29 +41,12 @@ export function HeroHoldingIllustration() {
     return () => mq.removeEventListener('change', syncPlayback);
   }, []);
 
-  function handleMove(e: React.MouseEvent<HTMLDivElement>) {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    const px = (e.clientX - rect.left) / rect.width - 0.5;
-    const py = (e.clientY - rect.top) / rect.height - 0.5;
-    x.set(px);
-    y.set(py);
-  }
-  function handleLeave() {
-    x.set(0);
-    y.set(0);
-  }
-
   return (
     <motion.div
-      ref={ref}
-      onMouseMove={handleMove}
-      onMouseLeave={handleLeave}
-      style={{ perspective: 1200 }}
       className="relative w-full max-w-[680px] mx-auto"
       initial={{ opacity: 0, scale: 0.98 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.35, ease: [1, 0, 0, 1] }}
+      animate={bootDone ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.98 }}
+      transition={{ duration: 0.35, ease: STEP_EASE }}
     >
       <span
         aria-hidden
@@ -81,7 +58,6 @@ export function HeroHoldingIllustration() {
       />
 
       <motion.div
-        style={{ rotateX, rotateY, translateX, translateY, transformStyle: 'preserve-3d' }}
         className="relative overflow-hidden scanline-overlay border-2 border-[#00ff41] shadow-[4px_4px_0_0_#00ff41] aspect-[1280/853] w-full bg-[#050a05]"
       >
         {videoFailed || reducedMotion ? (
@@ -121,8 +97,17 @@ export function HeroHoldingIllustration() {
       </motion.div>
 
       <motion.div
-        animate={{ y: [0, -6, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
+        initial={{ opacity: 0, x: -40 }}
+        animate={bootDone ? { opacity: 1, x: 0, y: [0, -6, 0] } : { opacity: 0, x: -40 }}
+        transition={
+          bootDone
+            ? {
+                opacity: { duration: 0.2, ease: STEP_EASE },
+                x: { duration: 0.25, ease: STEP_EASE, delay: 0.1 },
+                y: { duration: 6, repeat: Infinity, ease: 'linear' },
+              }
+            : { duration: 0.2, ease: STEP_EASE }
+        }
         data-chaos-include
         data-chaos-force-hide-text
         className="hidden md:flex absolute -left-4 top-1/3 z-20 items-center gap-2 px-2 py-1 pixel-border-dim bg-[#0a140a]"
@@ -131,8 +116,17 @@ export function HeroHoldingIllustration() {
         <span className="text-[8px] tracking-[0.25em] text-[#00e5ff] uppercase">DEV.LEFT</span>
       </motion.div>
       <motion.div
-        animate={{ y: [0, 6, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: 'linear', delay: 0.5 }}
+        initial={{ opacity: 0, x: 40 }}
+        animate={bootDone ? { opacity: 1, x: 0, y: [0, 6, 0] } : { opacity: 0, x: 40 }}
+        transition={
+          bootDone
+            ? {
+                opacity: { duration: 0.2, ease: STEP_EASE },
+                x: { duration: 0.25, ease: STEP_EASE, delay: 0.15 },
+                y: { duration: 6, repeat: Infinity, ease: 'linear', delay: 0.5 },
+              }
+            : { duration: 0.2, ease: STEP_EASE }
+        }
         data-chaos-include
         data-chaos-force-hide-text
         className="hidden md:flex absolute -right-4 bottom-1/3 z-20 items-center gap-2 px-2 py-1 pixel-border-dim bg-[#0a140a]"

@@ -38,9 +38,6 @@ export function Game404() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef(0);
 
-  const flySpriteRef = useRef<HTMLImageElement | null>(null);
-  const butterflySpriteRef = useRef<HTMLImageElement | null>(null);
-
   const gameStateRef = useRef<GameState>('idle');
   const [gameState, setGameState] = useState<GameState>('idle');
   const [score, setScore] = useState(0);
@@ -88,16 +85,6 @@ export function Game404() {
     gameStateRef.current = 'playing';
     setGameState('playing');
   }, [resetWorld]);
-
-  useEffect(() => {
-    const fly = new Image();
-    fly.src = '/sprites/fly.gif';
-    flySpriteRef.current = fly;
-
-    const butterfly = new Image();
-    butterfly.src = '/sprites/butterfly.gif';
-    butterflySpriteRef.current = butterfly;
-  }, []);
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -243,24 +230,14 @@ export function Game404() {
       if (now < freezeUntilRef.current) ctx.fillText('FREEZE ACTIVE', GAME_W - 156, 16);
 
       for (const fly of fliesRef.current) {
-        const sprite = flySpriteRef.current;
-        if (sprite && sprite.complete && sprite.naturalWidth > 0) {
-          ctx.drawImage(sprite, fly.x, fly.y, fly.w, fly.h);
-        } else {
-          ctx.fillStyle = '#ffb300';
-          ctx.fillRect(fly.x, fly.y, fly.w, fly.h);
-        }
+        ctx.font = '16px "Press Start 2P", monospace';
+        ctx.fillText('🪰', fly.x, fly.y + fly.h);
       }
 
       if (bonusRef.current) {
         const bonus = bonusRef.current;
-        const sprite = butterflySpriteRef.current;
-        if (sprite && sprite.complete && sprite.naturalWidth > 0) {
-          ctx.drawImage(sprite, bonus.x, bonus.y, bonus.size, bonus.size);
-        } else {
-          ctx.fillStyle = '#00e5ff';
-          ctx.fillRect(bonus.x, bonus.y, bonus.size, bonus.size);
-        }
+        ctx.font = '18px "Press Start 2P", monospace';
+        ctx.fillText('🦋', bonus.x, bonus.y + bonus.size);
       }
 
       const blink = now < invulnerableUntilRef.current && Math.floor(now / 80) % 2 === 0;

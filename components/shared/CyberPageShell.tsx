@@ -3,6 +3,7 @@
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
 import { TerminalCommandBackdrop } from '@/components/shared/TerminalCommandBackdrop';
+import { HackerBackground } from '@/components/shared/HackerBackground';
 
 type CyberPageShellProps = {
   children: ReactNode;
@@ -25,6 +26,7 @@ export function CyberPageShell({ children, contentClassName }: CyberPageShellPro
 
   return (
     <>
+      <HackerBackground />
       <TerminalCommandBackdrop />
       <div
         className={[
@@ -36,7 +38,7 @@ export function CyberPageShell({ children, contentClassName }: CyberPageShellPro
       >
         <span
           aria-hidden
-          className="pointer-events-none fixed inset-0 z-0 grid-bg opacity-[0.2] sm:opacity-[0.24]"
+          className="pointer-events-none fixed inset-0 z-0 grid-bg opacity-[0.14] sm:opacity-[0.18]"
         />
         <div className="relative z-[1] flex min-h-screen flex-col">{children}</div>
       </div>

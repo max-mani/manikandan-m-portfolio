@@ -2,7 +2,7 @@
 title: "KICTF 2026"
 slug: "kictf-2026"
 year: 2026
-description: "KICTF 2026 CTF event writeups"
+description: "KICTF 2026 CTF event writeups — 7 challenges"
 ---
 
 # Heart Beat

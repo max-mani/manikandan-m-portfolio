@@ -6,6 +6,8 @@ import { GraduationCap, MapPin, Github, ArrowUpRight } from 'lucide-react';
 import { about, hero, stats, contact } from '@/data/portfolio';
 import { SectionHeading } from './SectionHeading';
 import { GlowCard } from './GlowCard';
+import { CountUpStat } from '@/components/shared/CountUpStat';
+import { STEP_EASE, VIEWPORT_ONCE } from '@/lib/pixelMotion';
 
 export function AboutSection() {
   return (
@@ -19,10 +21,10 @@ export function AboutSection() {
 
         <div className="mt-12 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 8 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.25, ease: [1, 0, 0, 1] }}
+            viewport={VIEWPORT_ONCE}
+            transition={{ duration: 0.12, ease: STEP_EASE }}
             className="lg:col-span-7"
           >
             <GlowCard accent="violet" className="h-full">
@@ -57,10 +59,10 @@ export function AboutSection() {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 8 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.25, delay: 0.05, ease: [1, 0, 0, 1] }}
+            viewport={VIEWPORT_ONCE}
+            transition={{ duration: 0.12, delay: 0.05, ease: STEP_EASE }}
             className="lg:col-span-5 grid grid-cols-2 gap-4"
           >
             {stats.map((s, idx) => (
@@ -73,7 +75,7 @@ export function AboutSection() {
                 className="!p-0"
               >
                 <div className="p-4">
-                  <div className="text-[14px] font-bold text-[#00ff41]">{s.value}</div>
+                  <CountUpStat value={s.value} className="text-[14px] font-bold text-[#00ff41]" />
                   <div className="mt-1 text-[8px] uppercase tracking-[0.2em] text-[#4caf50]">
                     {s.label}
                   </div>
@@ -101,10 +103,10 @@ export function AboutSection() {
         </div>
 
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 8 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.25, delay: 0.1, ease: [1, 0, 0, 1] }}
+          viewport={VIEWPORT_ONCE}
+          transition={{ duration: 0.12, delay: 0.1, ease: STEP_EASE }}
           className="mt-10 grid grid-cols-2 md:grid-cols-5 gap-3"
         >
           {hero.focusAreas.map((area, i) => (

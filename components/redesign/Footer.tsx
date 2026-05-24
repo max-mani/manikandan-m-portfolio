@@ -3,20 +3,15 @@
 import React from 'react';
 import Link from 'next/link';
 import { Github, Linkedin, Mail, ArrowUp } from 'lucide-react';
-import { contact } from '@/data/portfolio';
+import { contact, footerTagline, footerEasterEgg } from '@/data/portfolio';
 
 export function Footer() {
-  const year = new Date().getFullYear();
-
   return (
     <footer className="relative border-t-2 border-[#1a2e1a] py-10 mt-10">
       <div className="cyber-divider absolute top-0 inset-x-0" />
       <div className="max-w-7xl mx-auto px-3 sm:px-5 md:px-6 grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
         <div>
-          <p className="text-[10px] text-[#e8f5e9]/65 max-w-sm leading-[2em]">
-            Pre-final year CSE student holding development and cybersecurity together — the way Spidey
-            held the ferry.
-          </p>
+          <p className="text-[10px] text-[#e8f5e9]/65 max-w-sm leading-[2em]">{footerTagline}</p>
         </div>
 
         <div className="md:text-center">
@@ -92,11 +87,14 @@ export function Footer() {
       </div>
 
       <div className="max-w-7xl mx-auto px-3 sm:px-5 md:px-6 mt-8 pt-6 border-t-2 border-[#1a2e1a] flex flex-col md:flex-row gap-3 items-center justify-between">
-        <p className="text-[8px] text-[#4caf50]">© {year} Manikandan M. All systems nominal.</p>
+        <p className="text-[8px] text-[#4caf50]">© 2026 Manikandan M. All systems nominal.</p>
         <p className="text-[8px] text-[#4caf50]/80 text-center md:text-right">
-          Built in {year} · Next.js · Tailwind v4 · Framer Motion
+          Built in 2026 · Next.js · Tailwind v4 · Framer Motion
         </p>
       </div>
+      <p className="max-w-7xl mx-auto px-3 sm:px-5 md:px-6 mt-3 text-center text-[8px] text-[#4caf50]/60 tracking-widest">
+        {footerEasterEgg}
+      </p>
     </footer>
   );
 }

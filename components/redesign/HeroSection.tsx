@@ -7,6 +7,8 @@ import { hero, contact } from '@/data/portfolio';
 import { HeroHoldingIllustration } from './HeroHoldingIllustration';
 import { NeonButton } from './NeonButton';
 import { useChaosFreezeStore } from '@/lib/chaosFreezeStore';
+import { TypewriterTermLabel } from '@/components/shared/TypewriterTermLabel';
+import { STEP_EASE } from '@/lib/pixelMotion';
 
 const ROLES = [
   'Full-Stack Developer',
@@ -16,7 +18,13 @@ const ROLES = [
   'AI/ML Engineer',
 ];
 
-export function HeroSection({ onOpenTerminal }: { onOpenTerminal?: () => void }) {
+export function HeroSection({
+  onOpenTerminal,
+  bootDone = false,
+}: {
+  onOpenTerminal?: () => void;
+  bootDone?: boolean;
+}) {
   const [roleIdx, setRoleIdx] = useState(0);
   const [typed, setTyped] = useState('');
   const [phase, setPhase] = useState<'typing' | 'pause' | 'erasing'>('typing');
@@ -66,17 +74,17 @@ export function HeroSection({ onOpenTerminal }: { onOpenTerminal?: () => void })
         }}
       />
 
-      <div className="max-w-7xl mx-auto px-3 sm:px-5 md:px-6 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-12 items-center">
+      <motion.div className="max-w-7xl mx-auto px-3 sm:px-5 md:px-6 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-12 items-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, ease: [1, 0, 0, 1] }}
+          animate={bootDone ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          transition={{ duration: 0.35, ease: STEP_EASE }}
           className="lg:col-span-6 order-2 lg:order-1"
         >
           <motion.div
             initial={{ opacity: 0, x: -16 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.1, duration: 0.25, ease: [1, 0, 0, 1] }}
+            animate={bootDone ? { opacity: 1, x: 0 } : { opacity: 0, x: -16 }}
+            transition={{ delay: 0.1, duration: 0.25, ease: STEP_EASE }}
             data-chaos-include
             className="inline-flex items-center gap-2 px-3 py-2 pixel-border-dim mb-5 sm:mb-6 max-w-full flex-wrap bg-[#0a140a]/90"
           >
@@ -92,24 +100,26 @@ export function HeroSection({ onOpenTerminal }: { onOpenTerminal?: () => void })
             </span>
           </motion.div>
 
-          <p data-chaos-include className="text-[#00e5ff] text-[10px] tracking-widest uppercase mb-3">&gt; whoami</p>
+          <TypewriterTermLabel
+            text="> whoami"
+            className="text-[#00e5ff] text-[10px] tracking-widest uppercase mb-3"
+          />
 
           <h1 data-chaos-include className="hero-typewriter font-bold leading-snug text-[14px] text-[#00ff41] max-w-lg">
             <span className="block text-[#e8f5e9]">Hi, I&apos;m</span>
             <span className="block text-[#00e5ff]">Manikandan M</span>
           </h1>
 
-          <div data-chaos-include className="mt-4 flex items-center gap-2 flex-wrap">
+          <motion.div data-chaos-include className="mt-4 flex items-center gap-2 flex-wrap">
             <span className="text-[10px] text-[#4caf50]">I&apos;m a</span>
             <span className="relative inline-flex items-center px-2 py-1 neon-border-cyan bg-[#0a140a] text-[10px] text-[#00e5ff]">
               {typed}
               <span className="ml-0.5 w-[2px] h-[1em] bg-[#00e5ff] animate-blink" />
             </span>
-          </div>
+          </motion.div>
 
           <p data-chaos-include className="mt-5 max-w-xl text-[10px] leading-[2em] text-[#e8f5e9]/85">
-            Pre-final year CSE @ KCT. I build during the day and break at night. HackX CTF 2025
-            {' '}— 2nd place. The butterfly is a tribute. Currently making HTB CPTS happen.
+            {hero.description}
           </p>
 
           <div
@@ -165,8 +175,8 @@ export function HeroSection({ onOpenTerminal }: { onOpenTerminal?: () => void })
 
         <motion.div
           initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.35, ease: [1, 0, 0, 1], delay: 0.15 }}
+          animate={bootDone ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.98 }}
+          transition={{ duration: 0.35, ease: STEP_EASE, delay: 0.15 }}
           className="lg:col-span-6 order-1 lg:order-2 relative"
         >
           <div
@@ -177,9 +187,9 @@ export function HeroSection({ onOpenTerminal }: { onOpenTerminal?: () => void })
             <Sparkles size={12} className="text-[#00ff41]" />
             <span className="text-[8px] tracking-[0.25em] text-[#00e5ff] uppercase">CYBER + CODE</span>
           </div>
-          <HeroHoldingIllustration />
+          <HeroHoldingIllustration bootDone={bootDone} />
         </motion.div>
-      </div>
+      </motion.div>
 
       <a
         href="#about"

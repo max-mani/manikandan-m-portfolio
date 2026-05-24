@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-/** Sets `data-mode="maxim"` on `<body>` for MAXIM_OS flat palette (no cyber mesh). */
+/** Sets `data-mode="maxim"` on `<body>` for MAXIM_OS terminal palette + hacker mesh. */
 export function BodyMode() {
   useEffect(() => {
     const prev = document.body.getAttribute("data-mode");

@@ -21,6 +21,7 @@ import { Footer } from './Footer';
 import { BodyMode } from './BodyMode';
 import { Preloader } from '@/components/Preloader';
 import { TerminalCommandBackdrop } from '@/components/shared/TerminalCommandBackdrop';
+import { HackerBackground } from '@/components/shared/HackerBackground';
 import {
   FloatingTerminal,
   FloatingTerminalLauncher,
@@ -45,11 +46,12 @@ export function HomeClient({ posts, events, activity }: HomeClientProps) {
     <>
       <BodyMode />
       {!bootDone && <Preloader onDone={onBootDone} />}
+      <HackerBackground />
       <TerminalCommandBackdrop />
       <Navbar onOpenTerminal={openTerminal} />
 
       <main className="relative z-[1]">
-        <HeroSection onOpenTerminal={openTerminal} />
+        <HeroSection onOpenTerminal={openTerminal} bootDone={bootDone} />
         <AboutSection />
         <SkillsBento />
         <ProjectsGrid />

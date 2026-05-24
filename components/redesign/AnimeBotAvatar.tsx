@@ -9,9 +9,11 @@ import {
   runAvatarChaosSequence,
 } from '@/lib/avatarChaos';
 
+const HERO_AVATAR_SRC = '/images/anime-bot.png';
+
 interface AnimeBotAvatarProps {
   size?: number;
-  /** `portrait` uses `/images/anime-bot.png` (pixel profile); `mark` is a compact monogram placeholder. */
+  /** `portrait` uses `/images/hero-avatar.png` (pixel profile); `mark` is a compact monogram placeholder. */
   variant?: 'portrait' | 'mark';
   /** Show the rotating ring + halo. Defaults to true. */
   withHalo?: boolean;
@@ -101,7 +103,7 @@ export function AnimeBotAvatar({
         </>
       )}
       <span className="relative flex h-full w-full items-center justify-center overflow-hidden border-2 border-[#00ff41] bg-[#0a140a] shadow-[2px_2px_0_0_#00ff41]">
-        {variant === 'mark' || portraitFailed ? (
+        {variant === 'mark' ? (
           <span
             aria-hidden
             className="select-none font-bold leading-none tracking-tight text-[#00ff41]"
@@ -112,9 +114,17 @@ export function AnimeBotAvatar({
           >
             M
           </span>
+        ) : portraitFailed ? (
+          /* USER PROVIDES: hero-avatar.png */
+          <span
+            className="select-none text-[8px] text-[#00ff41] text-center leading-snug px-1"
+            aria-hidden
+          >
+            [ AVATAR ]
+          </span>
         ) : (
           <Image
-            src="/images/anime-bot.png"
+            src={HERO_AVATAR_SRC}
             alt={resolvedAlt}
             fill
             sizes={`${size}px`}

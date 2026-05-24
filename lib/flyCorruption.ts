@@ -25,35 +25,72 @@ export const CORRUPTION_GLYPHS = [
   '▓',
 ] as const;
 
-const REPLACE_CHANCE = 0.35;
+export const FLY_TARGET_SELECTOR =
+  'main p, main h1, main h2, main h3, main li, main span:not([aria-hidden]), main .term-label';
 
-export function corruptPlainText(text: string): string {
+const EXCLUDED_ANCESTORS =
+  'nav, footer, button, input, textarea, a, [data-ft-terminal], [data-pixel-toast-stack], [data-chaos-fall-root], [data-chaos-trigger], [data-chaos-force-hide-text]';
+
+function parseCorruptionMap(raw: string | undefined): Record<number, string> {
+  if (!raw) return {};
+  try {
+    const parsed = JSON.parse(raw) as Record<string, string>;
+    const out: Record<number, string> = {};
+    for (const [k, v] of Object.entries(parsed)) {
+      const idx = Number(k);
+      if (!Number.isNaN(idx)) out[idx] = v;
+    }
+    return out;
+  } catch {
+    return {};
+  }
+}
+
+function buildCorruptedText(original: string, map: Record<number, string>): string {
   let out = '';
-  for (const ch of text) {
-    if (ch === ' ' || ch === '\n' || ch === '\t') {
-      out += ch;
-      continue;
-    }
-    if (Math.random() < REPLACE_CHANCE) {
-      const i = Math.floor(Math.random() * CORRUPTION_GLYPHS.length);
-      out += CORRUPTION_GLYPHS[i];
-    } else {
-      out += ch;
-    }
+  for (let i = 0; i < original.length; i++) {
+    out += map[i] ?? original[i];
   }
   return out;
 }
 
-export const FLY_TARGET_SELECTOR =
-  'h1:not(.hero-typewriter), h2, h3, .section-label, .term-label';
+export function corruptOneLetter(
+  text: string,
+  alreadyCorrupted: Set<number> = new Set(),
+): { text: string; index: number; glyph: string } | null {
+  const candidates: number[] = [];
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (ch !== ' ' && ch !== '\n' && ch !== '\t' && !alreadyCorrupted.has(i)) {
+      candidates.push(i);
+    }
+  }
+  if (candidates.length === 0) return null;
+
+  const index = candidates[Math.floor(Math.random() * candidates.length)];
+  const glyph = CORRUPTION_GLYPHS[Math.floor(Math.random() * CORRUPTION_GLYPHS.length)];
+  return {
+    index,
+    glyph,
+    text: text.slice(0, index) + glyph + text.slice(index + 1),
+  };
+}
+
+/** @deprecated Use corruptElement — kept for any legacy callers */
+export function corruptPlainText(text: string): string {
+  const result = corruptOneLetter(text);
+  return result?.text ?? text;
+}
 
 function isSafeTextTarget(el: HTMLElement): boolean {
   if (el.isContentEditable) return false;
   if (el.getAttribute('aria-hidden') === 'true') return false;
-  if (el.closest('nav, footer, [data-ft-terminal], [data-pixel-toast-stack]')) return false;
+  if (el.closest(EXCLUDED_ANCESTORS)) return false;
+  if (el.classList.contains('hero-typewriter')) return false;
   if (el.childElementCount > 0) return false;
   const text = el.textContent ?? '';
-  return text.trim().length > 0;
+  if (text.trim().length < 2) return false;
+  return true;
 }
 
 function isVisibleInViewport(el: HTMLElement): boolean {
@@ -69,8 +106,6 @@ export function collectCorruptibleTargets(): HTMLElement[] {
   const nodes = document.querySelectorAll<HTMLElement>(FLY_TARGET_SELECTOR);
   const list: HTMLElement[] = [];
   nodes.forEach((el) => {
-    if (el.dataset.corrupted === 'true') return;
-    if (el.classList.contains('hero-typewriter')) return;
     if (!isSafeTextTarget(el)) return;
     if (!isVisibleInViewport(el)) return;
     list.push(el);
@@ -85,4 +120,35 @@ export function findFirstVisibleCorrupted(): HTMLElement | null {
     if (isVisibleInViewport(el)) return el;
   }
   return null;
+}
+
+/** Corrupt one letter on a target element; returns preview text for toast. */
+export function corruptElement(el: HTMLElement): string | null {
+  const original = el.dataset.original ?? (el.textContent ?? '');
+  if (!original.trim()) return null;
+
+  if (!el.dataset.original) {
+    el.dataset.original = original;
+    el.dataset.originalColor = getComputedStyle(el).color;
+  }
+
+  const map = parseCorruptionMap(el.dataset.corruptionMap);
+  const corruptedIdx = new Set(Object.keys(map).map(Number));
+  const result = corruptOneLetter(original, corruptedIdx);
+  if (!result) return null;
+
+  map[result.index] = result.glyph;
+  el.dataset.corruptionMap = JSON.stringify(map);
+  el.textContent = buildCorruptedText(original, map);
+  el.dataset.corrupted = 'true';
+  el.style.color = 'var(--red)';
+
+  return original.replace(/\s+/g, ' ').slice(0, 18);
+}
+
+export function clearCorruptionState(el: HTMLElement): void {
+  delete el.dataset.corrupted;
+  delete el.dataset.original;
+  delete el.dataset.originalColor;
+  delete el.dataset.corruptionMap;
 }

@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Github, ArrowUpRight, ChevronDown } from 'lucide-react';
 import { projects, contact } from '@/data/portfolio';
 import type { ProjectCategory } from '@/data/portfolio';
@@ -84,20 +83,9 @@ export function ProjectsGrid() {
         </div>
 
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-          <AnimatePresence mode="popLayout">
-            {visibleProjects.map((project, idx) => (
-              <motion.div
-                key={project.id}
-                layout
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.98 }}
-                transition={{ duration: 0.12, ease: [1, 0, 0, 1] }}
-              >
-                <ProjectCard project={project} index={idx} />
-              </motion.div>
-            ))}
-          </AnimatePresence>
+          {visibleProjects.map((project, idx) => (
+            <ProjectCard key={project.id} project={project} index={idx} />
+          ))}
         </div>
 
         {hasMoreProjects && (

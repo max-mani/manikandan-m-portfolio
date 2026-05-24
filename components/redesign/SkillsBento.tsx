@@ -12,6 +12,7 @@ import {
 import { skills } from '@/data/portfolio';
 import { SectionHeading } from './SectionHeading';
 import { GlowCard } from './GlowCard';
+import { SKILL_TAG_STAGGER, STEP_EASE, VIEWPORT_ONCE } from '@/lib/pixelMotion';
 
 type Accent = 'cyan' | 'violet' | 'green' | 'magenta';
 
@@ -67,10 +68,10 @@ export function SkillsBento() {
             return (
               <motion.div
                 key={category}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 8 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.15, delay: idx * 0.03, ease: [1, 0, 0, 1] }}
+                viewport={VIEWPORT_ONCE}
+                transition={{ duration: 0.12, delay: idx * 0.03, ease: STEP_EASE }}
                 className={span}
               >
                 <GlowCard accent={meta.accent} className="h-full">
@@ -91,13 +92,24 @@ export function SkillsBento() {
                     </div>
                   </div>
 
-                  <ul className="mt-4 space-y-2">
-                    {items.map((item) => (
-                      <li key={item}>
-                        <div className="text-[10px] text-[#e8f5e9]/85">{item}</div>
-                      </li>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {items.map((item, tagIdx) => (
+                      <motion.span
+                        key={item}
+                        initial={{ opacity: 0, y: 6 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={VIEWPORT_ONCE}
+                        transition={{
+                          duration: 0.1,
+                          delay: tagIdx * SKILL_TAG_STAGGER,
+                          ease: STEP_EASE,
+                        }}
+                        className="px-2 py-1 text-[10px] text-[#e8f5e9]/85 bg-[#050a05] border border-[#1a2e1a]"
+                      >
+                        {item}
+                      </motion.span>
                     ))}
-                  </ul>
+                  </div>
                 </GlowCard>
               </motion.div>
             );
